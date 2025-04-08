@@ -1,0 +1,56 @@
+# === Xcode build artifacts and user settings ===
+build/
+DerivedData/
+
+# User-specific Xcode settings
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# Ignore all user data in .xcodeproj and .xcworkspace
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# Xcode scheme management (user-specific)
+*.xcodeproj/xcuserdata/**/xcschemes/xcschememanagement.plist
+*.xcworkspace/xcuserdata/**/xcschemes/xcschememanagement.plist
+
+# Xcode project/workspace local schemes (optional: include shared ones if collaborating)
+*.xcodeproj/xcuserdata/**/*.xcscheme
+*.xcworkspace/xcuserdata/**/*.xcscheme
+
+# Shared schemes are OK to include if team uses them
+!*.xcodeproj/xcshareddata/xcschemes/*.xcscheme
+!*.xcworkspace/xcshareddata/xcschemes/*.xcscheme
+
+# === Swift Package Manager ===
+.build/
+.vscode/
+Package.resolved
+
+# === CocoaPods ===
+Pods/
+
+# === Carthage ===
+Carthage/Build/
+
+# === Fastlane artifacts ===
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# === Miscellaneous ===
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.DS_Store
+
+# === Playgrounds ===
+timeline.xctimeline
+playground.xcworkspace
+
+# Xcode
+xcuserdata/
