@@ -7,6 +7,7 @@ struct EditTransactionView: View {
     @Query(sort: \Envelope.name) private var envelopes: [Envelope]
     
     let transaction: TransactionRecord
+    let targetEnvelope: Envelope
     
     @State private var selectedEnvelope: Envelope?
     @State private var amount: Int?
@@ -93,6 +94,29 @@ struct EditTransactionView: View {
         handleDismiss()
     }
     
+    func handleDeleteTransaction() {
+        // 거래 내역 삭제 전에 봉투 잔액 업데이트
+        if transaction.type == .expense {
+            // 지출 취소: currentBudget 증가
+            targetEnvelope.spent -= transaction.amount
+        } else if transaction.type == .income {
+            // 수입 취소: currentBudget 감소
+            targetEnvelope.income -= transaction.amount
+        }
+        
+        // 거래 내역 삭제
+        modelContext.delete(transaction)
+        
+        // SwiftData 저장
+        do {
+            try modelContext.save()
+        } catch {
+            print("거래 내역 삭제 실패: \(error)")
+        }
+        
+        handleDismiss()
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -113,11 +137,11 @@ struct EditTransactionView: View {
                     )
                     
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("거래 유형")
+                        Text("유형")
                             .font(.system(size: 16))
-                        Picker("거래 유형", selection: $transactionType) {
-                            Text("지출").tag(TransactionType.expense)
+                        Picker("유형", selection: $transactionType) {
                             Text("수입").tag(TransactionType.income)
+                            Text("지출").tag(TransactionType.expense)
                         }
                         .pickerStyle(.segmented)
                     }
@@ -182,20 +206,30 @@ struct EditTransactionView: View {
                     
                     Spacer()
                     
-                    HStack {
-                        Spacer()
+                    HStack(spacing: 20) {
+                        Button(action: handleDeleteTransaction) {
+                            Text("삭제")
+                                .font(.system(size: 20, weight: .light))
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .padding(.vertical, 12)
+                        .background(Color(red: 0.95, green: 0.3, blue: 0.3))
+                        .cornerRadius(8)
+                        
                         Button(action: handleEditTransaction) {
                             Text("수정 완료")
                                 .font(.system(size: 20, weight: .light))
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
                         }
                         .padding(.vertical, 12)
-                        .padding(.horizontal, 32)
-                        .background(Color.blue)
+                        .background(Color(red: 0.3, green: 0.5, blue: 0.95))
                         .cornerRadius(8)
-                        Spacer()
                     }
+                    .padding(.horizontal)
                 }
                 .padding()
             }
@@ -229,7 +263,7 @@ struct EditTransactionView: View {
     let envelope = Envelope(name: "테스트", budget: 100000, isRecurring: false)
     let transaction = TransactionRecord(amount: 10000, date: Date(), type: .expense, envelope: envelope, note: "테스트", isRecurring: false)
     
-    return EditTransactionView(transaction: transaction)
+    return EditTransactionView(transaction: transaction, targetEnvelope: envelope)
         .modelContainer(container)
         .environmentObject(DateSelectionState())
 }

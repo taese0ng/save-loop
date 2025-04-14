@@ -4,8 +4,7 @@ import SwiftData
 struct TransactionRow: View {
     let transaction: TransactionRecord
     @State private var showingActionSheet: Bool = false
-    var onEdit: (() -> Void)? = nil
-    var onDelete: (() -> Void)? = nil
+    var onClickMenu: (() -> Void)? = nil
     
     private let dateFormatter: DateFormatter = {
         let formatter: DateFormatter = DateFormatter()
@@ -46,7 +45,7 @@ struct TransactionRow: View {
             Spacer().frame(width: 10)
             
             Button(action: {
-                showingActionSheet = true
+                onClickMenu!()
             }) {
                 VStack(spacing: 3) {
                     Circle()
@@ -61,14 +60,6 @@ struct TransactionRow: View {
                 }
                 .frame(width: 24, height: 24)
             }
-            .confirmationDialog("", isPresented: $showingActionSheet, titleVisibility: .hidden) {
-                if let onEdit = onEdit {
-                    Button("수정", action: onEdit)
-                }
-                if let onDelete = onDelete {
-                    Button("삭제", role: .destructive, action: onDelete)
-                }
-            }
         }
         .padding()
         .background(Color.white)
@@ -79,5 +70,5 @@ struct TransactionRow: View {
 
 #Preview {
     let transaction = TransactionRecord(amount:3000, date: Date(), type: .expense, note:"", isRecurring:false)
-    TransactionRow(transaction: transaction, onEdit: {}, onDelete: {})
+    TransactionRow(transaction: transaction, onClickMenu:{})
 }
