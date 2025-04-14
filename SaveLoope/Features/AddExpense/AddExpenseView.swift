@@ -86,6 +86,9 @@ struct AddExpenseView: View {
                        itemTitle: { $0.name },
                        onSelection: { envelope in
                            selectedEnvelope = envelope
+                           if !envelope.isRecurring {
+                               isRecurring = false
+                           }
                        }
                    )
                    
@@ -121,13 +124,7 @@ struct AddExpenseView: View {
                    }
                    .buttonStyle(PlainButtonStyle())
                    .sheet(isPresented: $showingDatePicker) {
-                       DatePicker("",
-                                selection: $date,
-                                displayedComponents: .date)
-                           .datePickerStyle(.graphical)
-                           .environment(\.locale, Locale(identifier: "ko_KR"))
-                           .environment(\.calendar, Calendar(identifier: .gregorian))
-                           .padding()
+                       MonthCalendarView(selectedDate: dateSelection.selectedDate, date: $date)
                            .presentationDetents([.height(400)])
                            .presentationDragIndicator(.visible)
                            .onChange(of: date) { oldValue, newValue in
@@ -150,6 +147,7 @@ struct AddExpenseView: View {
                    if (selectedEnvelope != nil && selectedEnvelope!.isRecurring) {
                        Toggle("매달 반복해서 생성", isOn: $isRecurring)
                            .padding(.vertical, 8)
+                           .tint(.blue)
                    }
                    
                    Spacer()

@@ -1,10 +1,12 @@
 import SwiftUI
 import SwiftData
 
-struct AddBalanceView: View {
+struct EditTransactionView: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
     @Environment(\.modelContext) private var modelContext: ModelContext
     @Query(sort: \Envelope.name) private var envelopes: [Envelope]
+    
+    let transaction: TransactionRecord
     
     @State private var selectedEnvelope: Envelope?
     @State private var amount: Int?
@@ -13,6 +15,7 @@ struct AddBalanceView: View {
     @State private var showingAlert: Bool = false
     @State private var alertMessage: String = ""
     @State private var note: String = ""
+    @State private var transactionType: TransactionType = .expense
     @State private var isRecurring: Bool = false
     @EnvironmentObject private var dateSelection: DateSelectionState
 
@@ -43,8 +46,7 @@ struct AddBalanceView: View {
         dismiss()
     }
     
-
-    func handleAddBalance() {
+    func handleEditTransaction() {
         // 입력값 검증
         guard let envelope = selectedEnvelope else {
             alertMessage = "봉투를 선택해주세요"
@@ -53,23 +55,39 @@ struct AddBalanceView: View {
         }
         
         // 금액 검증
-        guard let amountInt: Int = amount, amountInt > 0 else {
+        guard let amountInt = amount, amountInt > 0 else {
             alertMessage = "올바른 금액을 입력해주세요"
             showingAlert = true
             return
         }
         
-        // BalanceRecord 생성 및 저장
-        let newRecord = TransactionRecord(amount: amountInt, date: date, type: .income, envelope: envelope, note: note, isRecurring: isRecurring)
-       
-        if isRecurring {
-            newRecord.parentId = newRecord.id
+        // 원래 봉투의 spent/income 값 업데이트
+        if transaction.type == .expense {
+            transaction.envelope?.spent -= transaction.amount
+        } else {
+            transaction.envelope?.income -= transaction.amount
         }
-
-        modelContext.insert(newRecord)
         
-        // 수입 추가 시 currentBudget 증가
-        envelope.income += amountInt
+        // 새로운 봉투의 spent/income 값 업데이트
+        if transactionType == .expense {
+            envelope.spent += amountInt
+        } else {
+            envelope.income += amountInt
+        }
+        
+        // 트랜잭션 정보 업데이트
+        transaction.amount = amountInt
+        transaction.date = date
+        transaction.envelope = envelope
+        transaction.note = note
+        transaction.type = transactionType
+        transaction.isRecurring = isRecurring
+        
+        if isRecurring {
+            transaction.parentId = transaction.id
+        } else {
+            transaction.parentId = nil
+        }
         
         // 성공적으로 저장되면 화면 닫기
         handleDismiss()
@@ -77,32 +95,42 @@ struct AddBalanceView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView{
+            ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    
                     RadioButtonGroup(
-                        title: "잔액추가 봉투",
+                        title: "봉투 선택",
                         items: filteredEnvelopes,
                         selectedItem: selectedEnvelope,
                         isRecurring: { $0.isRecurring },
                         itemTitle: { $0.name },
                         onSelection: { envelope in
                             selectedEnvelope = envelope
+                            // 반복 생성 봉투가 아닌 경우 토글 비활성화
                             if !envelope.isRecurring {
                                 isRecurring = false
                             }
                         }
                     )
                     
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("거래 유형")
+                            .font(.system(size: 16))
+                        Picker("거래 유형", selection: $transactionType) {
+                            Text("지출").tag(TransactionType.expense)
+                            Text("수입").tag(TransactionType.income)
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    
                     LabeledNumberField(
-                        label: "추가 금액",
+                        label: "금액",
                         value: $amount,
                         placeholder: "0",
                         required: true,
                         prefix: "원"
                     )
                     
-                    Text("추가 날짜")
+                    Text("날짜")
                         .font(.system(size: 16))
                     Button(action: {
                         showingDatePicker = true
@@ -145,8 +173,8 @@ struct AddBalanceView: View {
                             RoundedRectangle(cornerRadius: 5)
                                 .stroke(Color(.systemGray4), lineWidth: 1)
                         )
-
-                    if (selectedEnvelope != nil && selectedEnvelope!.isRecurring) {
+                    
+                    if selectedEnvelope?.isRecurring == true {
                         Toggle("매달 반복해서 생성", isOn: $isRecurring)
                             .padding(.vertical, 8)
                             .tint(.blue)
@@ -154,11 +182,11 @@ struct AddBalanceView: View {
                     
                     Spacer()
                     
-                    HStack{
+                    HStack {
                         Spacer()
-                        Button(action: handleAddBalance) {
-                            Text("잔액 추가")
-                                .font(.system(size:20, weight: .light))
+                        Button(action: handleEditTransaction) {
+                            Text("수정 완료")
+                                .font(.system(size: 20, weight: .light))
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
                         }
@@ -168,32 +196,40 @@ struct AddBalanceView: View {
                         .cornerRadius(8)
                         Spacer()
                     }
-                    
                 }
                 .padding()
-            } 
+            }
+            .navigationTitle("거래 수정")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(leading: CloseButton(onDismiss: handleDismiss))
             .toolbarBackground(Color(.systemBackground), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .navigationTitle("잔액추가")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
             .alert("알림", isPresented: $showingAlert) {
                 Button("확인", role: .cancel) { }
             } message: {
                 Text(alertMessage)
             }
             .onAppear {
-                if !filteredEnvelopes.isEmpty {
-                   selectedEnvelope = filteredEnvelopes[0]
-                }
+                // 초기값 설정
+                selectedEnvelope = transaction.envelope
+                amount = transaction.amount
+                date = transaction.date
+                note = transaction.note
+                transactionType = transaction.type
+                isRecurring = transaction.isRecurring
             }
         }
     }
 }
 
-
-struct AddBalanceView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddBalanceView()
-    }
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Envelope.self, TransactionRecord.self, configurations: config)
+    
+    let envelope = Envelope(name: "테스트", budget: 100000, isRecurring: false)
+    let transaction = TransactionRecord(amount: 10000, date: Date(), type: .expense, envelope: envelope, note: "테스트", isRecurring: false)
+    
+    return EditTransactionView(transaction: transaction)
+        .modelContainer(container)
+        .environmentObject(DateSelectionState())
 }

@@ -82,6 +82,7 @@ struct AddEnvelopeView: View {
                     
                     Toggle("매달 반복해서 생성", isOn: $isRecurring)
                         .padding(.vertical, 8)
+                        .tint(.blue)
                 }
                 .padding(.horizontal)
 

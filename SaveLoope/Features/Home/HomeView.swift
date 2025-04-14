@@ -51,10 +51,12 @@ struct HomeView: View {
     
     private var filteredEnvelopes: [Envelope] {
         let calendar: Calendar = Calendar.current
-        return allEnvelopes.filter { envelope in
-            calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: dateSelection.selectedDate) &&
-            calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
-        }
+        return allEnvelopes
+            .filter { envelope in
+                calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: dateSelection.selectedDate) &&
+                calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
+            }
+            .sorted { $0.createdAt < $1.createdAt }  // 생성된 순서로 정렬
     }
 
     func moveAddBalancePage() {

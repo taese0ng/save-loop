@@ -6,6 +6,7 @@ struct DetailEnvelopeView: View {
     @Environment(\.modelContext) private var modelContext: ModelContext
     @Bindable var envelope: Envelope
     @Query private var transactions: [TransactionRecord]
+    @State private var selectedTransaction: TransactionRecord? = nil
     
     private let dateFormatter: DateFormatter = {
         let formatter: DateFormatter = DateFormatter()
@@ -25,6 +26,31 @@ struct DetailEnvelopeView: View {
     var filteredTransactions: [TransactionRecord] {
         transactions.filter { $0.envelope == envelope }
             .sorted { $0.date > $1.date }
+    }
+
+    func handleDismiss() {
+        dismiss()
+    }
+    
+    func deleteTransaction(_ transaction: TransactionRecord) {
+        // 거래 내역 삭제 전에 봉투 잔액 업데이트
+        if transaction.type == .expense {
+            // 지출 취소: currentBudget 증가
+            envelope.spent -= transaction.amount
+        } else if transaction.type == .income {
+            // 수입 취소: currentBudget 감소
+            envelope.income -= transaction.amount
+        }
+        
+        // 거래 내역 삭제
+        modelContext.delete(transaction)
+        
+        // SwiftData 저장
+        do {
+            try modelContext.save()
+        } catch {
+            print("거래 내역 삭제 실패: \(error)")
+        }
     }
     
     var body: some View {
@@ -68,6 +94,9 @@ struct DetailEnvelopeView: View {
                             ForEach(filteredTransactions) { transaction in
                                 TransactionRow(
                                     transaction: transaction,
+                                    onEdit: {
+                                        selectedTransaction = transaction
+                                    },
                                     onDelete: {
                                         deleteTransaction(transaction)
                                     }
@@ -83,31 +112,9 @@ struct DetailEnvelopeView: View {
             .navigationTitle(envelope.name)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
-        }
-    }
-    
-    func handleDismiss() {
-        dismiss()
-    }
-    
-    func deleteTransaction(_ transaction: TransactionRecord) {
-        // 거래 내역 삭제 전에 봉투 잔액 업데이트
-        if transaction.type == .expense {
-            // 지출 취소: currentBudget 증가
-            envelope.spent -= transaction.amount
-        } else if transaction.type == .income {
-            // 수입 취소: currentBudget 감소
-            envelope.income -= transaction.amount
-        }
-        
-        // 거래 내역 삭제
-        modelContext.delete(transaction)
-        
-        // SwiftData 저장
-        do {
-            try modelContext.save()
-        } catch {
-            print("거래 내역 삭제 실패: \(error)")
+            .sheet(item: $selectedTransaction) { transaction in
+                EditTransactionView(transaction: transaction)
+            }
         }
     }
 }
