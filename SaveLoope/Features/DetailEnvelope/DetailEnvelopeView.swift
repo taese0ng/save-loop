@@ -3,6 +3,7 @@ import SwiftData
 
 struct DetailEnvelopeView: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
+    @Environment(\.modelContext) private var modelContext: ModelContext
     @Bindable var envelope: Envelope
     @Query private var transactions: [TransactionRecord]
     
@@ -65,7 +66,12 @@ struct DetailEnvelopeView: View {
                                 .padding()
                         } else {
                             ForEach(filteredTransactions) { transaction in
-                                TransactionRow(transaction: transaction)
+                                TransactionRow(
+                                    transaction: transaction,
+                                    onDelete: {
+                                        deleteTransaction(transaction)
+                                    }
+                                )
                             }
                         }
                     }
@@ -77,74 +83,32 @@ struct DetailEnvelopeView: View {
             .navigationTitle(envelope.name)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
-   
         }
-
     }
     
     func handleDismiss() {
         dismiss()
     }
-}
-
-struct InfoRow: View {
-    let title: String
-    let value: String
     
-    var body: some View {
-        HStack {
-            Text(title)
-                .foregroundColor(.gray)
-            Spacer()
-            Text(value)
-                .fontWeight(.medium)
+    func deleteTransaction(_ transaction: TransactionRecord) {
+        // 거래 내역 삭제 전에 봉투 잔액 업데이트
+        if transaction.type == .expense {
+            // 지출 취소: currentBudget 증가
+            envelope.spent -= transaction.amount
+        } else if transaction.type == .income {
+            // 수입 취소: currentBudget 감소
+            envelope.income -= transaction.amount
         }
-    }
-}
-
-struct TransactionRow: View {
-    let transaction: TransactionRecord
-    
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
-        formatter.locale = Locale(identifier: "ko_KR")
-        return formatter
-    }()
-    
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack{
-                    Text(dateFormatter.string(from: transaction.date))
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    
-                    if transaction.parentId != nil {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .foregroundColor(.blue)
-                            .font(.caption)
-                    }
-                }
-                
-                if !transaction.note.isEmpty {
-                    Text(transaction.note)
-                        .font(.subheadline)
-                        .foregroundColor(.black)
-                }
-            }
-            
-            Spacer()
-            
-            Text("\(transaction.type == .income ? "+" : "-")\(transaction.amount.formattedWithSeparator)원")
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .foregroundColor(transaction.type == .income ? .blue : .red)
+        
+        // 거래 내역 삭제
+        modelContext.delete(transaction)
+        
+        // SwiftData 저장
+        do {
+            try modelContext.save()
+        } catch {
+            print("거래 내역 삭제 실패: \(error)")
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(8)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
     }
 }
 

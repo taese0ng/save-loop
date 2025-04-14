@@ -138,17 +138,17 @@ struct HomeView: View {
         
         // 현재 월의 봉투들
         let currentMonthEnvelopes = [
-            Envelope(name: "식비", budget: 500000, spent: 200000, goal: 0),
-            Envelope(name: "교통비", budget: 100000, spent: 50000, goal: 0),
-            Envelope(name: "쇼핑", budget: 300000, spent: 100000, goal: 0)
+            Envelope(name: "식비", budget: 500000, income:10000, spent: 200000, goal: 0),
+            Envelope(name: "교통비", budget: 100000, income:0, spent: 50000, goal: 0),
+            Envelope(name: "쇼핑", budget: 300000, income:0, spent: 100000, goal: 0)
         ]
         
         // 이전 월의 봉투들
         if let lastMonth = calendar.date(byAdding: .month, value: -1, to: currentDate) {
             let lastMonthEnvelopes = [
-                Envelope(name: "식비", budget: 500000, spent: 200000, goal: 0),
-                Envelope(name: "교통비", budget: 100000, spent: 50000, goal: 0),
-                Envelope(name: "쇼핑", budget: 300000, spent: 100000, goal: 0)
+                Envelope(name: "식비", budget: 500000, income:0, spent: 200000, goal: 0),
+                Envelope(name: "교통비", budget: 100000, income:0, spent: 50000, goal: 0),
+                Envelope(name: "쇼핑", budget: 300000, income:0, spent: 100000, goal: 0)
             ]
             
             for envelope in lastMonthEnvelopes {

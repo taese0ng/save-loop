@@ -53,6 +53,7 @@ struct AddEnvelopeView: View {
             let newEnvelope = Envelope(
                 name: envelopeName,
                 budget: amount,
+                income: 0,
                 spent: 0,
                 goal: (goalAmount ?? 0),
                 isRecurring: isRecurring

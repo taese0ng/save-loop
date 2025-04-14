@@ -68,8 +68,8 @@ struct AddBalanceView: View {
 
         modelContext.insert(newRecord)
         
-        // 선택된 봉투의 budget 업데이트
-        envelope.budget += amountInt
+        // 수입 추가 시 currentBudget 증가
+        envelope.income += amountInt
         
         // 성공적으로 저장되면 화면 닫기
         handleDismiss()

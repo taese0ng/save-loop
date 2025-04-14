@@ -41,6 +41,7 @@ class HomeViewModel: ObservableObject {
                     let newEnvelope = Envelope(
                         name: envelope.name,
                         budget: envelope.budget,
+                        income: 0,
                         spent: 0,
                         goal: envelope.goal,
                         isRecurring: true,
@@ -158,7 +159,7 @@ class HomeViewModel: ObservableObject {
                     // 매칭된 봉투가 있는 경우 금액 업데이트
                     if let envelope = matchingCurrentEnvelope {
                         if transaction.type == .income {
-                            envelope.budget += transaction.amount
+                            envelope.income += transaction.amount
                         } else if transaction.type == .expense {
                             envelope.spent += transaction.amount
                         }
