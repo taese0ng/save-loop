@@ -4,7 +4,7 @@ import SwiftData
 struct AddBalanceView: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
     @Environment(\.modelContext) private var modelContext: ModelContext
-    @Query(sort: \Envelope.name) private var envelopes: [Envelope]
+    @Query(sort: \Envelope.createdAt) private var envelopes: [Envelope]
     
     @State private var selectedEnvelope: Envelope?
     @State private var amount: Int?

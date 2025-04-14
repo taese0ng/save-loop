@@ -39,7 +39,7 @@ enum NavigationRoute: Hashable {
 
 struct HomeView: View {
     @ObservedObject private var viewModel = HomeViewModel()
-    @Query(sort: \Envelope.name) private var allEnvelopes: [Envelope]
+    @Query(sort: \Envelope.createdAt) private var allEnvelopes: [Envelope]
     @Environment(\.modelContext) private var modelContext: ModelContext
     
     @State private var navigationPath: NavigationRoute?
@@ -56,7 +56,6 @@ struct HomeView: View {
                 calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: dateSelection.selectedDate) &&
                 calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
             }
-            .sorted { $0.createdAt < $1.createdAt }  // 생성된 순서로 정렬
     }
 
     func moveAddBalancePage() {

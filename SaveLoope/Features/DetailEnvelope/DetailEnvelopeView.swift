@@ -1,5 +1,7 @@
 import SwiftUI
 import SwiftData
+import Foundation
+
 
 struct DetailEnvelopeView: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
@@ -7,6 +9,8 @@ struct DetailEnvelopeView: View {
     @Bindable var envelope: Envelope
     @Query private var transactions: [TransactionRecord]
     @State private var selectedTransaction: TransactionRecord? = nil
+    @State private var showingEditSheet: Bool = false
+    @State private var shouldDismiss: Bool = false
     
     private let dateFormatter: DateFormatter = {
         let formatter: DateFormatter = DateFormatter()
@@ -87,9 +91,25 @@ struct DetailEnvelopeView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationTitle(envelope.name)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
+            .navigationBarItems(
+                leading: BackButton(onDismiss: handleDismiss),
+                trailing: Button(action: {
+                    showingEditSheet = true
+                }) {
+                    Image(systemName: "square.and.pencil")
+                        .foregroundColor(.black)
+                }
+            )
             .sheet(item: $selectedTransaction) { transaction in
                 EditTransactionView(transaction: transaction, targetEnvelope: envelope)
+            }
+            .sheet(isPresented: $showingEditSheet) {
+                EditEnvelopeView(shouldDismiss: $shouldDismiss, envelope: envelope)
+            }
+            .onChange(of: shouldDismiss) { newValue in
+                if newValue {
+                    dismiss()
+                }
             }
         }
     }
