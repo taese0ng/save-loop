@@ -72,8 +72,13 @@ struct EditEnvelopeView: View {
                 envelope.parentId = nil
             }
             
+            // 명시적으로 저장 (아이클라우드 동기화 포함)
+            try modelContext.save()
+            print("✅ 봉투 수정 저장 완료 (아이클라우드 동기화 시작)")
+            
             handleDismiss()
         } catch {
+            print("❌ 봉투 수정 저장 실패: \(error.localizedDescription)")
             alertMessage = "봉투 수정 중 오류가 발생했습니다"
             showingAlert = true
         }
@@ -93,10 +98,15 @@ struct EditEnvelopeView: View {
             // 봉투 삭제
             modelContext.delete(envelope)
             
+            // 명시적으로 저장 (아이클라우드 동기화 포함)
+            try modelContext.save()
+            print("✅ 봉투 삭제 완료 (아이클라우드 동기화 시작)")
+            
             // 네비게이션 스택을 초기화하여 홈 화면으로 돌아가기
             shouldDismiss = true
             presentationMode.wrappedValue.dismiss()
         } catch {
+            print("❌ 봉투 삭제 실패: \(error.localizedDescription)")
             alertMessage = "봉투 삭제 중 오류가 발생했습니다"
             showingAlert = true
         }

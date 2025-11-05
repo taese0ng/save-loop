@@ -78,8 +78,19 @@ struct AddExpenseView: View {
        // 선택된 봉투의 spent 업데이트
        envelope.spent += amountInt
        
-       // 성공적으로 저장되면 화면 닫기
-       handleDismiss()
+       // 명시적으로 저장 (아이클라우드 동기화 포함)
+       do {
+           try modelContext.save()
+           print("✅ 지출 등록 저장 완료 (아이클라우드 동기화 시작)")
+           // 성공적으로 저장되면 화면 닫기
+           handleDismiss()
+       } catch {
+           print("❌ 지출 등록 저장 실패: \(error.localizedDescription)")
+           // 롤백: 변경사항 되돌리기
+           envelope.spent -= amountInt
+           alertMessage = "지출 등록 중 오류가 발생했습니다"
+           showingAlert = true
+       }
    }
    
    var body: some View {

@@ -79,8 +79,19 @@ struct AddBalanceView: View {
         // 수입 추가 시 income 증가
         envelope.income += amountInt
         
-        // 성공적으로 저장되면 화면 닫기
-        handleDismiss()
+        // 명시적으로 저장 (아이클라우드 동기화 포함)
+        do {
+            try modelContext.save()
+            print("✅ 잔액 추가 저장 완료 (아이클라우드 동기화 시작)")
+            // 성공적으로 저장되면 화면 닫기
+            handleDismiss()
+        } catch {
+            print("❌ 잔액 추가 저장 실패: \(error.localizedDescription)")
+            // 롤백: 변경사항 되돌리기
+            envelope.income -= amountInt
+            alertMessage = "잔액 추가 중 오류가 발생했습니다"
+            showingAlert = true
+        }
     }
     
     var body: some View {

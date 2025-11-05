@@ -59,6 +59,14 @@ class HomeViewModel: ObservableObject {
             
             // 생성된 반복 봉투들이 있으면 해당 거래내역도 생성
             checkAndCreateRecurringTransactions(using: context)
+            
+            // 명시적으로 저장 (아이클라우드 동기화 포함)
+            do {
+                try context.save()
+                print("✅ 반복 봉투 생성 완료 (아이클라우드 동기화 시작)")
+            } catch {
+                print("❌ 반복 봉투 저장 실패: \(error.localizedDescription)")
+            }
         } catch {
             print("봉투 데이터를 가져오는데 실패했습니다: \(error)")
         }
@@ -160,6 +168,14 @@ class HomeViewModel: ObservableObject {
                         }
                     }
                 }
+            }
+            
+            // 명시적으로 저장 (아이클라우드 동기화 포함)
+            do {
+                try context.save()
+                print("✅ 반복 거래 내역 생성 완료 (아이클라우드 동기화 시작)")
+            } catch {
+                print("❌ 반복 거래 내역 저장 실패: \(error.localizedDescription)")
             }
         } catch {
             print("거래 내역 데이터를 처리하는데 실패했습니다: \(error)")

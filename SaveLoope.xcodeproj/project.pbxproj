@@ -29,9 +29,22 @@
 		0D116E5C2D6FCBC4009FBCCD /* SaveLoopeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaveLoopeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0D6AA62E2EBB71540026C273 /* Exceptions for "SaveLoope" folder in "SaveLoope" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 0D116E3F2D6FCBC3009FBCCD /* SaveLoope */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0D116E422D6FCBC3009FBCCD /* SaveLoope */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0D6AA62E2EBB71540026C273 /* Exceptions for "SaveLoope" folder in "SaveLoope" target */,
+			);
 			path = SaveLoope;
 			sourceTree = "<group>";
 		};
@@ -399,6 +412,7 @@
 				DEVELOPMENT_TEAM = T4M724FLA6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SaveLoope/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "봉투부";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -429,6 +443,7 @@
 				DEVELOPMENT_TEAM = T4M724FLA6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SaveLoope/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "봉투부";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

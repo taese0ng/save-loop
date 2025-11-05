@@ -65,7 +65,17 @@ struct AddEnvelopeView: View {
             }
             
             modelContext.insert(newEnvelope)
-            handleDismiss()
+            
+            // 명시적으로 저장 (아이클라우드 동기화 포함)
+            do {
+                try modelContext.save()
+                print("✅ 봉투 저장 완료 (아이클라우드 동기화 시작)")
+                handleDismiss()
+            } catch {
+                print("❌ 봉투 저장 실패: \(error.localizedDescription)")
+                alertMessage = "봉투 저장 중 오류가 발생했습니다"
+                showingAlert = true
+            }
         } catch {
             alertMessage = "봉투 생성 중 오류가 발생했습니다"
             showingAlert = true

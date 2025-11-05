@@ -97,8 +97,17 @@ struct EditTransactionView: View {
             transaction.parentId = nil
         }
         
-        // 성공적으로 저장되면 화면 닫기
-        handleDismiss()
+        // 명시적으로 저장 (아이클라우드 동기화 포함)
+        do {
+            try modelContext.save()
+            print("✅ 거래 수정 저장 완료 (아이클라우드 동기화 시작)")
+            // 성공적으로 저장되면 화면 닫기
+            handleDismiss()
+        } catch {
+            print("❌ 거래 수정 저장 실패: \(error.localizedDescription)")
+            alertMessage = "거래 수정 중 오류가 발생했습니다"
+            showingAlert = true
+        }
     }
     
     func handleDeleteTransaction() {
@@ -114,14 +123,20 @@ struct EditTransactionView: View {
         // 거래 내역 삭제
         modelContext.delete(transaction)
         
-        // SwiftData 저장
+        // 명시적으로 저장 (아이클라우드 동기화 포함)
         do {
             try modelContext.save()
+            print("✅ 거래 삭제 완료 (아이클라우드 동기화 시작)")
+            handleDismiss()
         } catch {
-            print("거래 내역 삭제 실패: \(error)")
+            print("❌ 거래 삭제 실패: \(error.localizedDescription)")
+            // 롤백
+            if transaction.type == .expense {
+                targetEnvelope.spent += transaction.amount
+            } else if transaction.type == .income {
+                targetEnvelope.income += transaction.amount
+            }
         }
-        
-        handleDismiss()
     }
     
     var body: some View {
