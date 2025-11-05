@@ -6,7 +6,7 @@ struct CloseButton: View {
     var body: some View {
         Button(action: onDismiss) {
             Image(systemName: "xmark")
-                .foregroundColor(.black)
+                .foregroundColor(.gray)
         }
     }
 }

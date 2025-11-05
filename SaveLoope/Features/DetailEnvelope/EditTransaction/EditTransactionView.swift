@@ -207,6 +207,7 @@ struct EditTransactionView: View {
                     }
                     .padding()
                 }
+                .background(Color.white)
                 
                 VStack(spacing: 0) {
                     Divider()
@@ -237,13 +238,13 @@ struct EditTransactionView: View {
                         .cornerRadius(8)
                     }
                     .padding()
+                    .background(Color.white)
                 }
-                .background(Color(.systemBackground))
             }
             .navigationTitle("거래 수정")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: CloseButton(onDismiss: handleDismiss))
-            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+            .toolbarBackground(.white, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .alert("알림", isPresented: $showingAlert) {
                 Button("확인", role: .cancel) { }

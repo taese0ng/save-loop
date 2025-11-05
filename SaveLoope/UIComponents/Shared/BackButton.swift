@@ -6,7 +6,7 @@ struct BackButton: View {
     var body: some View {
         Button(action: onDismiss) {
             Image(systemName: "chevron.left")
-                .foregroundColor(.black)
+                .foregroundColor(.gray)
         }
     }
 }

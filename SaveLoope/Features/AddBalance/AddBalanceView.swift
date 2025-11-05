@@ -171,8 +171,9 @@ struct AddBalanceView: View {
                     
                 }
                 .padding()
-            } 
-            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+            }
+            .background(Color.white)
+            .toolbarBackground(.white, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationTitle("잔액추가")
             .navigationBarTitleDisplayMode(.inline)

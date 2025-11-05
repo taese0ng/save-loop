@@ -170,10 +170,11 @@ struct AddExpenseView: View {
                }
                .padding()
             }
+           .background(Color.white)
            .navigationTitle("지출등록")
            .navigationBarTitleDisplayMode(.inline)
            .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
-           .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+           .toolbarBackground(.white, for: .navigationBar)
            .toolbarBackground(.visible, for: .navigationBar)
            .alert("알림", isPresented: $showingAlert) {
                Button("확인", role: .cancel) { }

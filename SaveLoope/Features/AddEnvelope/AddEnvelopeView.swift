@@ -100,10 +100,11 @@ struct AddEnvelopeView: View {
                 Text(alertMessage)
             }
             .padding()
+            .background(Color.white)
             .navigationTitle("봉투 추가")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))           
-            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+            .toolbarBackground(.white, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
         }
     }

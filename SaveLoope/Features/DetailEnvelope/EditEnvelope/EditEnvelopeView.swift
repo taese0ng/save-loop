@@ -156,10 +156,11 @@ struct EditEnvelopeView: View {
                 Text("봉투와 관련된 모든 거래 내역이 삭제됩니다. 정말 삭제하시겠습니까?")
             }
             .padding()
+            .background(Color.white)
             .navigationTitle("봉투 수정")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: CloseButton(onDismiss: handleDismiss))
-            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+            .toolbarBackground(.white, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .onAppear {
                 // 초기값 설정
