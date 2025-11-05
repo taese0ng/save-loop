@@ -54,3 +54,8 @@ playground.xcworkspace
 
 # Xcode
 xcuserdata/
+
+# Claude AI Context Files
+CLAUDE.md
+Claude_Context/
+AppClaude_Context*.md
