@@ -87,7 +87,7 @@ struct DetailEnvelopeView: View {
                 }
                 .padding()
             }
-            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+            .toolbarBackground(.white, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationTitle(envelope.name)
             .navigationBarTitleDisplayMode(.inline)
