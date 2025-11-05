@@ -63,14 +63,16 @@ struct EditTransactionView: View {
             return
         }
         
-        // 원래 봉투의 spent/income 값 업데이트
-        if transaction.type == .expense {
-            transaction.envelope?.spent -= transaction.amount
-        } else {
-            transaction.envelope?.income -= transaction.amount
+        // 원래 봉투의 spent/income 값 복원 (기존 금액 되돌리기)
+        if let oldEnvelope = transaction.envelope {
+            if transaction.type == .expense {
+                oldEnvelope.spent -= transaction.amount
+            } else {
+                oldEnvelope.income -= transaction.amount
+            }
         }
         
-        // 새로운 봉투의 spent/income 값 업데이트
+        // 새로운 봉투에 새 금액과 타입 적용
         if transactionType == .expense {
             envelope.spent += amountInt
         } else {
@@ -86,8 +88,12 @@ struct EditTransactionView: View {
         transaction.isRecurring = isRecurring
         
         if isRecurring {
-            transaction.parentId = transaction.id
+            // 반복 거래인 경우: parentId가 없으면 자기 자신을 parent로 설정
+            if transaction.parentId == nil {
+                transaction.parentId = transaction.id
+            }
         } else {
+            // 반복이 아닌 경우: parentId 제거
             transaction.parentId = nil
         }
         

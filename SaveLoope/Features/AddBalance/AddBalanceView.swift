@@ -59,16 +59,24 @@ struct AddBalanceView: View {
             return
         }
         
-        // BalanceRecord 생성 및 저장
-        let newRecord = TransactionRecord(amount: amountInt, date: date, type: .income, envelope: envelope, note: note, isRecurring: isRecurring)
+        // TransactionRecord 생성 및 저장
+        let newRecord = TransactionRecord(
+            amount: amountInt, 
+            date: date, 
+            type: .income, 
+            envelope: envelope, 
+            note: note, 
+            isRecurring: isRecurring
+        )
        
+        // 반복 거래인 경우 parentId를 자기 자신으로 설정
         if isRecurring {
             newRecord.parentId = newRecord.id
         }
 
         modelContext.insert(newRecord)
         
-        // 수입 추가 시 currentBudget 증가
+        // 수입 추가 시 income 증가
         envelope.income += amountInt
         
         // 성공적으로 저장되면 화면 닫기
@@ -146,7 +154,7 @@ struct AddBalanceView: View {
                                 .stroke(Color(.systemGray4), lineWidth: 1)
                         )
 
-                    if (selectedEnvelope != nil && selectedEnvelope!.isRecurring) {
+                    if let envelope = selectedEnvelope, envelope.isRecurring {
                         Toggle("매달 반복해서 생성", isOn: $isRecurring)
                             .padding(.vertical, 8)
                             .tint(.blue)

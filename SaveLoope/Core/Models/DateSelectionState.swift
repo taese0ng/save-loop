@@ -1,6 +1,7 @@
 import SwiftUI
 
 // 날짜 선택 상태를 관리하는 환경 객체
+@MainActor
 class DateSelectionState: ObservableObject {
     @Published var selectedDate: Date = Date()
     

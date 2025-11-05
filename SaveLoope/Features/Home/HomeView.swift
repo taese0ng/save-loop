@@ -1,6 +1,5 @@
 import SwiftUI
 import SwiftData
-import CoreData // Envelope 포함하는 경우를 위해
 import Foundation
 
 enum NavigationRoute: Hashable {
@@ -153,6 +152,7 @@ struct HomeView: View {
             ]
             
             for envelope in lastMonthEnvelopes {
+                envelope.createdAt = lastMonth
                 context.insert(envelope)
             }
         }

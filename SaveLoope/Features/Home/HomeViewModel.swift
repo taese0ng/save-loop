@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import Foundation
 
+@MainActor
 class HomeViewModel: ObservableObject {
     /// 전체 남은 예산 합계 계산
     func totalRemaining(from envelopes: [Envelope]) -> Int {
@@ -24,14 +25,19 @@ class HomeViewModel: ObservableObject {
         do {
             let allEnvelopes = try context.fetch(envelopeDescriptor)
             
-            // 반복 생성이 필요한 봉투들만 필터링
-            let recurringEnvelopes = allEnvelopes.filter { $0.isRecurring && calendar.component(.month, from: $0.createdAt) == previousMonth && calendar.component(.year, from: $0.createdAt) == previousYear }
-            let currentEnvelopes = allEnvelopes.filter { calendar.component(.month, from: $0.createdAt) == currentMonth && calendar.component(.year, from: $0.createdAt) == currentYear }
+            // 반복 생성이 설정된 모든 봉투 찾기 (parentId가 자기 자신인 것들)
+            let originalRecurringEnvelopes = allEnvelopes.filter { $0.isRecurring && $0.parentId == $0.id }
             
-            for envelope in recurringEnvelopes {
+            // 현재 월의 봉투들
+            let currentEnvelopes = allEnvelopes.filter { 
+                calendar.component(.month, from: $0.createdAt) == currentMonth && 
+                calendar.component(.year, from: $0.createdAt) == currentYear 
+            }
+            
+            for originalEnvelope in originalRecurringEnvelopes {
                 // 이미 현재 월에 생성된 봉투가 있는지 확인
                 let existingEnvelope = currentEnvelopes.first { existing in
-                    existing.parentId == envelope.id &&
+                    (existing.parentId == originalEnvelope.id || existing.id == originalEnvelope.id) &&
                     calendar.component(.year, from: existing.createdAt) == currentYear &&
                     calendar.component(.month, from: existing.createdAt) == currentMonth
                 }
@@ -39,13 +45,13 @@ class HomeViewModel: ObservableObject {
                 // 현재 월에 해당하는 봉투가 없으면 생성
                 if existingEnvelope == nil {
                     let newEnvelope = Envelope(
-                        name: envelope.name,
-                        budget: envelope.budget,
+                        name: originalEnvelope.name,
+                        budget: originalEnvelope.budget,
                         income: 0,
                         spent: 0,
-                        goal: envelope.goal,
+                        goal: originalEnvelope.goal,
                         isRecurring: true,
-                        parentId: envelope.id
+                        parentId: originalEnvelope.id
                     )
                     context.insert(newEnvelope)
                 }
@@ -55,7 +61,6 @@ class HomeViewModel: ObservableObject {
             checkAndCreateRecurringTransactions(using: context)
         } catch {
             print("봉투 데이터를 가져오는데 실패했습니다: \(error)")
-            // TODO: 에러 처리 로직 추가 (예: 사용자에게 알림 표시)
         }
     }
     
@@ -65,10 +70,6 @@ class HomeViewModel: ObservableObject {
         let currentDate: Date = Date()
         let currentYear: Int = calendar.component(.year, from: currentDate)
         let currentMonth: Int = calendar.component(.month, from: currentDate)
-
-        let previousMonthDate: Date = calendar.date(byAdding: .month, value: -1, to: currentDate)!
-        let previousYear: Int = calendar.component(.year, from: previousMonthDate)
-        let previousMonth: Int = calendar.component(.month, from: previousMonthDate)
         
         // 모든 Envelope와 TransactionRecord를 가져옴
         let envelopeDescriptor = FetchDescriptor<Envelope>()
@@ -78,11 +79,9 @@ class HomeViewModel: ObservableObject {
             let allEnvelopes = try context.fetch(envelopeDescriptor)
             let allTransactions = try context.fetch(transactionDescriptor)
             
-            // 이전 달의 반복 거래 내역 필터링
-            let recurringTransactions = allTransactions.filter { transaction in
-                transaction.isRecurring && 
-                calendar.component(.month, from: transaction.date) == previousMonth && 
-                calendar.component(.year, from: transaction.date) == previousYear
+            // 반복 생성이 설정된 원본 거래 내역 (parentId가 자기 자신인 것들)
+            let originalRecurringTransactions = allTransactions.filter { 
+                $0.isRecurring && $0.parentId == $0.id
             }
             
             // 현재 달에 이미 생성된 거래 내역 필터링
@@ -97,10 +96,10 @@ class HomeViewModel: ObservableObject {
                 calendar.component(.year, from: envelope.createdAt) == currentYear
             }
             
-            for transaction in recurringTransactions {
+            for originalTransaction in originalRecurringTransactions {
                 // 이미 현재 월에 생성된 거래 내역이 있는지 확인
                 let existingTransaction = currentTransactions.first { existing in
-                    existing.parentId == transaction.id &&
+                    (existing.parentId == originalTransaction.id || existing.id == originalTransaction.id) &&
                     calendar.component(.year, from: existing.date) == currentYear &&
                     calendar.component(.month, from: existing.date) == currentMonth
                 }
@@ -110,17 +109,11 @@ class HomeViewModel: ObservableObject {
                     // 해당 거래에 연결된 봉투가 있는 경우, 현재 달의 해당하는 봉투 찾기
                     var matchingCurrentEnvelope: Envelope? = nil
                     
-                    if let oldEnvelope = transaction.envelope {
+                    if let oldEnvelope = originalTransaction.envelope {
                         // parentId를 기반으로 현재 달의 봉투 찾기
+                        let originalEnvelopeId = oldEnvelope.parentId ?? oldEnvelope.id
                         matchingCurrentEnvelope = currentEnvelopes.first { envelope in
-                            envelope.parentId == oldEnvelope.id
-                        }
-                        
-                        // parentId가 없는 경우 봉투 이름으로 매칭 시도
-                        if matchingCurrentEnvelope == nil {
-                            matchingCurrentEnvelope = currentEnvelopes.first { envelope in
-                                envelope.name == oldEnvelope.name
-                            }
+                            envelope.id == originalEnvelopeId || envelope.parentId == originalEnvelopeId
                         }
                         
                         // 매칭되는 봉투가 없으면 이 거래 내역은 생성하지 않고 다음으로 넘어감
@@ -133,42 +126,43 @@ class HomeViewModel: ObservableObject {
                     }
                     
                     // 현재 날짜의 동일한 일자로 설정
-                    let dayComponent = calendar.component(.day, from: transaction.date)
+                    let dayComponent = calendar.component(.day, from: originalTransaction.date)
                     var newDate = calendar.date(from: DateComponents(year: currentYear, month: currentMonth, day: dayComponent)) ?? currentDate
                     
-                    // 월말 처리 (예: 30일이 없는 2월 등)
+                    // 월말 처리 (예: 30일이 없는 2월 등) - 수정된 로직
                     if calendar.component(.month, from: newDate) != currentMonth {
-                        let range: Range<Int> = calendar.range(of: .day, in: .month, for: Date(timeIntervalSince1970: 0))!
-                        let lastDay: Int = range.count
-                        newDate = calendar.date(from: DateComponents(year: currentYear, month: currentMonth, day: lastDay))!
+                        // 현재 월의 마지막 날 계산
+                        if let range = calendar.range(of: .day, in: .month, for: currentDate) {
+                            let lastDay: Int = range.upperBound - 1
+                            newDate = calendar.date(from: DateComponents(year: currentYear, month: currentMonth, day: lastDay)) ?? currentDate
+                        }
                     }
                     
                     // 새 거래 내역 생성
                     let newTransaction = TransactionRecord(
-                        amount: transaction.amount,
+                        amount: originalTransaction.amount,
                         date: newDate,
-                        type: transaction.type,
+                        type: originalTransaction.type,
                         envelope: matchingCurrentEnvelope,
-                        note: transaction.note,
+                        note: originalTransaction.note,
                         isRecurring: true,
-                        parentId: transaction.id
+                        parentId: originalTransaction.id
                     )
                     
                     context.insert(newTransaction)
                     
                     // 매칭된 봉투가 있는 경우 금액 업데이트
                     if let envelope = matchingCurrentEnvelope {
-                        if transaction.type == .income {
-                            envelope.income += transaction.amount
-                        } else if transaction.type == .expense {
-                            envelope.spent += transaction.amount
+                        if originalTransaction.type == .income {
+                            envelope.income += originalTransaction.amount
+                        } else if originalTransaction.type == .expense {
+                            envelope.spent += originalTransaction.amount
                         }
                     }
                 }
             }
         } catch {
             print("거래 내역 데이터를 처리하는데 실패했습니다: \(error)")
-            // TODO: 에러 처리 로직 추가 (예: 사용자에게 알림 표시)
         }
     }
     

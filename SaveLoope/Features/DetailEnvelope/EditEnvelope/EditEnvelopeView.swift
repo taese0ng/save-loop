@@ -62,10 +62,13 @@ struct EditEnvelopeView: View {
             envelope.goal = goalAmount ?? 0
             envelope.isRecurring = isRecurring
             
-            // 반복 생성이 필요한 경우 parentId 설정
+            // 반복 생성이 필요한 경우 parentId를 자기 자신으로 설정
             if isRecurring {
-                envelope.parentId = envelope.id
+                if envelope.parentId == nil {
+                    envelope.parentId = envelope.id
+                }
             } else {
+                // 반복이 아닌 경우 parentId 제거
                 envelope.parentId = nil
             }
             

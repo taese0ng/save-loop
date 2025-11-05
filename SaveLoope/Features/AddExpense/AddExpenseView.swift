@@ -59,11 +59,19 @@ struct AddExpenseView: View {
        }
        
        // 지출 기록 생성 및 저장
-       let newRecord = TransactionRecord(amount: amountInt, date: date, type: .expense, envelope: envelope, note: note, isRecurring: isRecurring)
+       let newRecord = TransactionRecord(
+           amount: amountInt, 
+           date: date, 
+           type: .expense, 
+           envelope: envelope, 
+           note: note, 
+           isRecurring: isRecurring
+       )
        
+       // 반복 거래인 경우 parentId를 자기 자신으로 설정
        if isRecurring {
-            newRecord.parentId = newRecord.id
-        }
+           newRecord.parentId = newRecord.id
+       }
 
        modelContext.insert(newRecord)
        
@@ -144,7 +152,7 @@ struct AddExpenseView: View {
                                .stroke(Color(.systemGray4), lineWidth: 1)
                        )
 
-                   if (selectedEnvelope != nil && selectedEnvelope!.isRecurring) {
+                   if let envelope = selectedEnvelope, envelope.isRecurring {
                        Toggle("매달 반복해서 생성", isOn: $isRecurring)
                            .padding(.vertical, 8)
                            .tint(.blue)

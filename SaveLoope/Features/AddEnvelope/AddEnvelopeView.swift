@@ -59,7 +59,7 @@ struct AddEnvelopeView: View {
                 isRecurring: isRecurring
             )
             
-            // 반복 생성이 필요한 경우 parentId 설정
+            // 반복 생성이 필요한 경우 parentId를 자기 자신으로 설정
             if isRecurring {
                 newEnvelope.parentId = newEnvelope.id
             }
