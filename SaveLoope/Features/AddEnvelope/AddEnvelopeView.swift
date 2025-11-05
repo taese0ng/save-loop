@@ -74,32 +74,34 @@ struct AddEnvelopeView: View {
 
     var body: some View {
          NavigationView {
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(spacing: 16) {
-                    LabeledTextField(label: "봉투 이름", text: $envelopeName, required: true)
-                    LabeledNumberField(label: "시작 잔액", value: $initialAmount, placeholder: "0", required: true, prefix: "원")
-                    LabeledNumberField(label: "목표 잔액", value: $goalAmount, placeholder: "0", prefix: "원")
-                    
-                    Toggle("매달 반복해서 생성", isOn: $isRecurring)
-                        .padding(.vertical, 8)
-                        .tint(.blue)
-                }
-                .padding(.horizontal)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    VStack(spacing: 16) {
+                        LabeledTextField(label: "봉투 이름", text: $envelopeName, required: true)
+                        LabeledNumberField(label: "시작 잔액", value: $initialAmount, placeholder: "0", required: true, prefix: "원")
+                        LabeledNumberField(label: "목표 잔액", value: $goalAmount, placeholder: "0", prefix: "원")
+                        
+                        Toggle("매달 반복해서 생성", isOn: $isRecurring)
+                            .padding(.vertical, 8)
+                            .tint(.blue)
+                    }
 
-                Spacer()
+                    Spacer()
+                        .frame(height: 40)
 
-                HStack{
-                    Spacer()
-                    AddEnvelopeButton(action: handleAddEnvelope)
-                    Spacer()
+                    HStack{
+                        Spacer()
+                        AddEnvelopeButton(action: handleAddEnvelope)
+                        Spacer()
+                    }
                 }
+                .padding()
             }
             .alert("알림", isPresented: $showingAlert) {
                 Button("확인", role: .cancel) { }
             } message: {
                 Text(alertMessage)
             }
-            .padding()
             .background(Color.white)
             .navigationTitle("봉투 추가")
             .navigationBarTitleDisplayMode(.inline)
