@@ -6,33 +6,52 @@ struct EnvelopeListView: View {
     let envelopes: [Envelope]
     let onAddEnvelope: () -> Void
     let onEnvelopeTap: (Envelope) -> Void
+    
+    // 플로팅 버튼 크기 상수
+    private let floatingButtonSize: CGFloat = 56
+    private let floatingButtonPadding: CGFloat = 20
 
     var body: some View {
-        List {
-            ForEach(envelopes) { envelope in
-                Button(action: { onEnvelopeTap(envelope) }) {
-                    EnvelopeCardView(envelope: envelope)
-                }
-                .buttonStyle(PlainButtonStyle())
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
-                .padding(.horizontal)
-                .padding(.vertical, 5)
-                .listRowSeparator(.hidden)
-            }
-            if !hasNotAddButton {
-                Section {
-                    HStack{
-                        AddEnvelopeButton(action: onAddEnvelope)
+        ZStack(alignment: .bottomTrailing) {
+            List {
+                ForEach(envelopes) { envelope in
+                    Button(action: { onEnvelopeTap(envelope) }) {
+                        EnvelopeCardView(envelope: envelope)
                     }
-                    .frame(maxWidth: .infinity)
+                    .buttonStyle(PlainButtonStyle())
+                    .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
-                    .padding(.vertical, 10)
+                    .padding(.horizontal)
+                    .padding(.vertical, 5)
                     .listRowSeparator(.hidden)
                 }
+                
+                // 리스트 하단 공백 (플로팅 버튼과 겹치지 않도록)
+                if !hasNotAddButton {
+                    Color.clear
+                        .frame(height: floatingButtonSize + floatingButtonPadding)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                }
+            }
+            .listStyle(.plain)
+            
+            // 플로팅 버튼 (우측 하단)
+            if !hasNotAddButton {
+                Button(action: onAddEnvelope) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundColor(.white)
+                        .frame(width: floatingButtonSize, height: floatingButtonSize)
+                        .background(Color.blue)
+                        .clipShape(Circle())
+                        .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
+                }
+                .padding(.trailing, floatingButtonPadding)
+                .padding(.bottom, floatingButtonPadding)
             }
         }
-        .listStyle(.plain)
     }
 }
 
