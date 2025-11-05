@@ -45,6 +45,7 @@ public struct LabeledNumberField: View {
             
             HStack(spacing: 4) {
                 TextField(placeholder, text: $displayText)
+                    .keyboardType(.numberPad)
                     .textContentType(.none)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .onChange(of: displayText) { oldValue, newValue in
