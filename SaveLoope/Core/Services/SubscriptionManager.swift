@@ -1,56 +1,6 @@
 import Foundation
 import StoreKit
 
-/// 구독 제품 식별자
-enum SubscriptionProduct: String, CaseIterable {
-    case monthly = "dev.taeseong.SaveLoope.monthly"
-    case yearly = "dev.taeseong.SaveLoope.yearly"
-    case lifetime = "dev.taeseong.SaveLoope.lifetime"
-
-    var displayName: String {
-        switch self {
-        case .monthly: return "월간 구독"
-        case .yearly: return "연간 구독"
-        case .lifetime: return "평생 이용권"
-        }
-    }
-
-    var description: String {
-        switch self {
-        case .monthly: return "매월 자동 갱신"
-        case .yearly: return "매년 자동 갱신 (2개월 무료)"
-        case .lifetime: return "한 번 구매로 영구 사용"
-        }
-    }
-
-    var icon: String {
-        switch self {
-        case .monthly: return "calendar"
-        case .yearly: return "calendar.badge.clock"
-        case .lifetime: return "infinity.circle.fill"
-        }
-    }
-}
-
-/// 구독 상태
-enum SubscriptionStatus {
-    case notSubscribed
-    case subscribed(Product)
-    case expired
-}
-
-/// 구독 정보 (갱신 예정, 변경 예정 등)
-struct SubscriptionInfo {
-    let currentProduct: Product
-    let willRenew: Bool
-    let renewalDate: Date?
-    let pendingProduct: Product? // 다음 갱신 시 변경될 제품
-
-    var isPendingChange: Bool {
-        pendingProduct != nil && pendingProduct?.id != currentProduct.id
-    }
-}
-
 /// 구독 관리 클래스
 @MainActor
 class SubscriptionManager: ObservableObject {
@@ -373,8 +323,3 @@ class SubscriptionManager: ObservableObject {
     }
 }
 
-/// StoreKit 에러
-enum StoreError: Error {
-    case failedVerification
-    case purchaseFailed
-}
