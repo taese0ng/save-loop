@@ -5,7 +5,7 @@ struct MainTabView: View {
     @EnvironmentObject private var dateSelection: DateSelectionState
 
    enum Tab {
-       case envelopes, more
+       case envelopes, calendar, more
    }
 
    var body: some View {
@@ -15,6 +15,9 @@ struct MainTabView: View {
            switch selectedTab {
                case .envelopes:
                    HomeView()
+                       .environmentObject(dateSelection)
+               case .calendar:
+                   CalendarView()
                        .environmentObject(dateSelection)
                case .more:
                    SettingsView()
@@ -27,6 +30,13 @@ struct MainTabView: View {
                // 🔹 홈 탭
                TabButton(icon: "house.fill", title: "홈", isSelected: selectedTab == .envelopes) {
                    selectedTab = .envelopes
+               }
+
+               Spacer()
+
+               // 🔹 캘린더 탭
+               TabButton(icon: "calendar", title: "캘린더", isSelected: selectedTab == .calendar) {
+                   selectedTab = .calendar
                }
 
                Spacer()

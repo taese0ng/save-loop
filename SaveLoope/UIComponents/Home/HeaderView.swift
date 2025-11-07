@@ -23,9 +23,10 @@ struct HeaderView: View {
     }
 
     private var formattedDate: String {
-        let formatter: DateFormatter = DateFormatter()
-        formatter.dateFormat = "yyyy년 MM월"
-        return formatter.string(from: currentDate)
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: currentDate)
+        let month = calendar.component(.month, from: currentDate)
+        return "\(year)년 \(month)월"
     }
 
     /// 특정 날짜가 최근 3개월 이내인지 확인
