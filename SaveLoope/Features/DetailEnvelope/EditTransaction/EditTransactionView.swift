@@ -197,7 +197,6 @@ struct EditTransactionView: View {
             }
             .navigationTitle("거래 수정")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: CloseButton(onDismiss: handleDismiss))
             .toolbarBackground(.white, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .alert("알림", isPresented: $showingAlert) {

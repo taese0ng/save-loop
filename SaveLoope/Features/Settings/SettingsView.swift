@@ -60,10 +60,12 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(Color.white)
             .sheet(isPresented: $showingSubscriptionView) {
-                SubscriptionView()
+                SubscriptionView(showsCloseButton: false)
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $showingPlanComparison) {
-                PlanComparisonSheet(subscriptionManager: subscriptionManager)
+                PlanComparisonSheet(subscriptionManager: subscriptionManager, showsCloseButton: false)
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
             }

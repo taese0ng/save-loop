@@ -172,7 +172,6 @@ struct EditEnvelopeView: View {
             .background(Color.white)
             .navigationTitle("봉투 수정")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: CloseButton(onDismiss: handleDismiss))
             .toolbarBackground(.white, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .onAppear {

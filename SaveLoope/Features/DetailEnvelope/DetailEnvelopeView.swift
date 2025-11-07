@@ -102,9 +102,13 @@ struct DetailEnvelopeView: View {
             )
             .sheet(item: $selectedTransaction) { transaction in
                 EditTransactionView(transaction: transaction, targetEnvelope: envelope)
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $showingEditSheet) {
                 EditEnvelopeView(shouldDismiss: $shouldDismiss, envelope: envelope)
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
             }
             .onChange(of: shouldDismiss) { newValue in
                 if newValue {

@@ -114,6 +114,7 @@ struct HeaderView: View {
                     )
                 }
                 .presentationDetents([.height(400)])
+                .presentationDragIndicator(.visible)
             }
 
             Spacer()

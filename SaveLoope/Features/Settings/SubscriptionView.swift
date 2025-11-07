@@ -2,6 +2,8 @@ import SwiftUI
 import StoreKit
 
 struct SubscriptionView: View {
+    var showsCloseButton: Bool = true
+
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @Environment(\.dismiss) private var dismiss
     @State private var showingAlert = false
@@ -95,10 +97,12 @@ struct SubscriptionView: View {
             .navigationTitle("프리미엄 멤버십")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "xmark")
-                            .foregroundColor(.gray)
+                if showsCloseButton {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: { dismiss() }) {
+                            Image(systemName: "xmark")
+                                .foregroundColor(.gray)
+                        }
                     }
                 }
             }

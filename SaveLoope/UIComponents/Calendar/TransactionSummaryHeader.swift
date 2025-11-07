@@ -13,7 +13,7 @@ struct TransactionSummaryHeader: View {
     var body: some View {
         HStack(spacing: 30) {
             HStack(spacing: 8) {
-                Image(systemName: "arrow.down.circle.fill")
+                Image(systemName: "plus.circle.fill")
                     .foregroundColor(.blue)
                     .font(.title3)
                 VStack(alignment: .leading, spacing: 2) {
@@ -29,7 +29,7 @@ struct TransactionSummaryHeader: View {
             }
 
             HStack(spacing: 8) {
-                Image(systemName: "arrow.up.circle.fill")
+                Image(systemName: "minus.circle.fill")
                     .foregroundColor(.red)
                     .font(.title3)
                 VStack(alignment: .leading, spacing: 2) {
