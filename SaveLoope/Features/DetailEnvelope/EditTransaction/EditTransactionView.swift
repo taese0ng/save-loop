@@ -28,14 +28,7 @@ struct EditTransactionView: View {
             calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
         }
     }
-    
-    private let dateFormatter: DateFormatter = {
-        let formatter: DateFormatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
-        formatter.locale = Locale(identifier: "ko_KR")
-        return formatter
-    }()
-    
+
     private let numberFormatter: NumberFormatter = {
         let formatter: NumberFormatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -157,17 +150,12 @@ struct EditTransactionView: View {
                                 }
                             }
                         )
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("유형")
-                                .font(.system(size: 16))
-                            Picker("유형", selection: $transactionType) {
-                                Text("수입").tag(TransactionType.income)
-                                Text("지출").tag(TransactionType.expense)
-                            }
-                            .pickerStyle(.segmented)
-                        }
-                        
+
+                        TransactionTypePicker(
+                            label: "유형",
+                            selectedType: $transactionType
+                        )
+
                         LabeledNumberField(
                             label: "금액",
                             value: $amount,
@@ -175,92 +163,37 @@ struct EditTransactionView: View {
                             required: true,
                             prefix: "원"
                         )
-                        
-                        Text("날짜")
-                            .font(.system(size: 16))
-                        Button(action: {
-                            showingDatePicker = true
-                        }) {
-                            HStack {
-                                Text(dateFormatter.string(from: date))
-                                    .foregroundColor(.black)
-                                Spacer()
-                                Image(systemName: "calendar")
-                                    .foregroundColor(.gray)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 8)
-                            .background(Color(.systemBackground))
-                            .cornerRadius(5)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(Color(.systemGray4), lineWidth: 1)
-                            )
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        .sheet(isPresented: $showingDatePicker) {
-                            MonthCalendarView(selectedDate: dateSelection.selectedDate, date: $date)
-                                .presentationDetents([.height(400)])
-                                .presentationDragIndicator(.visible)
-                                .onChange(of: date) { oldValue, newValue in
-                                    showingDatePicker = false
-                                }
-                        }
-                        
-                        Text("설명")
-                            .font(.system(size: 16))
-                        TextField("설명", text: $note)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 8)
-                            .background(Color(.systemBackground))
-                            .cornerRadius(5)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 5)
-                                    .stroke(Color(.systemGray4), lineWidth: 1)
-                            )
-                        
+
+                        DatePickerButton(
+                            label: "날짜",
+                            date: $date,
+                            showingDatePicker: $showingDatePicker,
+                            selectedDate: dateSelection.selectedDate
+                        )
+
+                        NoteTextField(
+                            label: "설명",
+                            text: $note,
+                            placeholder: "설명"
+                        )
+
                         if selectedEnvelope?.isRecurring == true {
-                            Toggle("매달 반복해서 생성", isOn: $isRecurring)
-                                .padding(.vertical, 8)
-                                .tint(.blue)
+                            RecurringToggle(
+                                label: "매달 반복해서 생성",
+                                isOn: $isRecurring
+                            )
                         }
                     }
                     .padding()
                 }
                 .background(Color.white)
-                
-                VStack(spacing: 0) {
-                    Divider()
-                    
-                    HStack(spacing: 20) {
-                        Button(action: {
-                            showingDeleteAlert = true
-                        }) {
-                            Text("삭제")
-                                .font(.system(size: 20, weight: .light))
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                        }
-                        .padding(.vertical, 12)
-                        .background(Color(red: 0.95, green: 0.3, blue: 0.3))
-                        .cornerRadius(8)
-                        
-                        Button(action: handleEditTransaction) {
-                            Text("수정 완료")
-                                .font(.system(size: 20, weight: .light))
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                        }
-                        .padding(.vertical, 12)
-                        .background(Color(red: 0.3, green: 0.5, blue: 0.95))
-                        .cornerRadius(8)
-                    }
-                    .padding()
-                    .background(Color.white)
-                }
+
+                ActionButtons(
+                    deleteTitle: "삭제",
+                    confirmTitle: "수정 완료",
+                    onDelete: { showingDeleteAlert = true },
+                    onConfirm: handleEditTransaction
+                )
             }
             .navigationTitle("거래 수정")
             .navigationBarTitleDisplayMode(.inline)
