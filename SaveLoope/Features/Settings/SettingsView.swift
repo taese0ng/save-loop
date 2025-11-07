@@ -25,201 +25,36 @@ struct SettingsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // 커스텀 헤더 (개발자 모드 활성화용 탭 제스처)
-            HStack {
-                Text("설정")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                
-                if isDeveloperModeEnabled {
-                    Image(systemName: "hammer.fill")
-                        .foregroundColor(.orange)
-                        .font(.title3)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 20)
-            .padding(.top, 20)
-            .padding(.bottom, 10)
-            .background(Color.white)
-            .contentShape(Rectangle())
-            .onTapGesture {
-                // 개발자 모드가 비활성화 상태일 때만 탭 카운트
-                if !isDeveloperModeEnabled {
-                    handleDeveloperModeTap()
-                }
-            }
-            
+            SettingsHeader(
+                isDeveloperModeEnabled: $isDeveloperModeEnabled,
+                onDeveloperModeTap: handleDeveloperModeTap
+            )
+
             List {
-                // 프리미엄 멤버십 섹션
-                Section {
-                    Button(action: {
-                        showingSubscriptionView = true
-                    }) {
-                        HStack(spacing: 12) {
-                            Image(systemName: subscriptionManager.isSubscribed ? "star.fill" : "star")
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.blue, .purple],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 24)
-                            
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("프리미엄 멤버십")
-                                    .foregroundColor(.primary)
-                                
-                                if subscriptionManager.isSubscribed,
-                                   case .subscribed(let product) = subscriptionManager.subscriptionStatus {
-                                    Text("\(product.displayName) 구독 중")
-                                        .font(.caption)
-                                        .foregroundStyle(
-                                            LinearGradient(
-                                                colors: [.blue, .purple],
-                                                startPoint: .leading,
-                                                endPoint: .trailing
-                                            )
-                                        )
-                                } else {
-                                    Text("무제한 기능 사용하기")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                } header: {
-                    Text("멤버십")
-                }
+                MembershipSection(
+                    subscriptionManager: subscriptionManager,
+                    onTap: { showingSubscriptionView = true }
+                )
 
-                // 플랜 비교 섹션
-                Section {
-                    Button(action: {
-                        showingPlanComparison = true
-                    }) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "chart.bar.doc.horizontal")
-                                .foregroundColor(.blue)
-                                .frame(width: 24)
+                PlanComparisonSection(
+                    onTap: { showingPlanComparison = true }
+                )
 
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("플랜 비교")
-                                    .foregroundColor(.primary)
+                CloudSyncSection(
+                    subscriptionManager: subscriptionManager,
+                    cloudSyncManager: cloudSyncManager,
+                    showingSubscriptionView: $showingSubscriptionView,
+                    showingCloudUnavailableAlert: $showingCloudUnavailableAlert,
+                    showingSyncChangeAlert: $showingSyncChangeAlert
+                )
 
-                                Text("무료 vs 프리미엄 기능 비교")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-
-                            Spacer()
-
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-
-                // iCloud 동기화 섹션
-                Section {
-                    HStack {
-                        Image(systemName: "icloud")
-                            .foregroundColor(.blue)
-                            .frame(width: 24)
-                        Text("iCloud 동기화")
-                        Spacer()
-                        Toggle("", isOn: Binding(
-                            get: { cloudSyncManager.isCloudSyncEnabled },
-                            set: { newValue in
-                                // iCloud를 켜려고 할 때만 상태 확인
-                                if newValue {
-                                    // 1. 구독 상태 확인
-                                    if !subscriptionManager.isSubscribed {
-                                        showingSubscriptionView = true
-                                        return
-                                    }
-
-                                    // 2. iCloud 계정 상태 확인
-                                    if !cloudSyncManager.isCloudAvailable {
-                                        showingCloudUnavailableAlert = true
-                                        return
-                                    }
-                                }
-
-                                cloudSyncManager.isCloudSyncEnabled = newValue
-                                showingSyncChangeAlert = true
-                            }
-                        ))
-                        .labelsHidden()
-                        .tint(.blue)
-                    }
-                    
-                    // iCloud 상태 표시
-                    if !cloudSyncManager.isCloudAvailable {
-                        HStack(spacing: 8) {
-                            Image(systemName: "exclamationmark.triangle.fill")
-                                .foregroundColor(.orange)
-                                .font(.caption)
-                            Text(cloudSyncManager.cloudAccountError ?? "iCloud를 사용할 수 없습니다")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                } header: {
-                    Text("동기화")
-                } footer: {
-                    VStack(alignment: .leading, spacing: 4) {
-                        if !subscriptionManager.isSubscribed {
-                            Text("⭐️ iCloud 동기화는 프리미엄 전용 기능입니다")
-                                .foregroundColor(.blue)
-                        }
-                        Text("iCloud를 사용하여 여러 기기 간에 데이터를 동기화합니다. 설정 변경은 앱을 재시작한 후 적용됩니다.")
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
                 // 개발자 전용 섹션
                 if isDeveloperModeEnabled {
-                    Section {
-                        Button(action: {
-                            showingResetAlert = true
-                        }) {
-                            HStack {
-                                Image(systemName: "trash")
-                                    .foregroundColor(.red)
-                                    .frame(width: 24)
-                                Text("데이터 초기화")
-                                    .foregroundColor(.red)
-                            }
-                        }
-                        
-                        // 개발자 모드 비활성화 버튼
-                        Button(action: {
-                            isDeveloperModeEnabled = false
-                            showingDeveloperModeAlert = true
-                        }) {
-                            HStack {
-                                Image(systemName: "hammer.fill")
-                                    .foregroundColor(.orange)
-                                    .frame(width: 24)
-                                Text("개발자 모드 비활성화")
-                                    .foregroundColor(.orange)
-                            }
-                        }
-                    } header: {
-                        Text("개발자 도구")
-                    } footer: {
-                        Text("⚠️ 개발자 전용 기능입니다. 데이터 초기화 시 모든 봉투(Envelope)와 거래 기록(Transaction Record)이 삭제됩니다.")
-                            .foregroundColor(.secondary)
-                    }
+                    DeveloperSection(
+                        showingResetAlert: $showingResetAlert,
+                        isDeveloperModeEnabled: $isDeveloperModeEnabled,
+                        showingDeveloperModeAlert: $showingDeveloperModeAlert
+                    )
                 }
             }
             .scrollContentBackground(.hidden)
