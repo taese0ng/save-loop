@@ -36,6 +36,27 @@ struct CalendarView: View {
         calendar.range(of: .day, in: .month, for: currentMonthDate)?.count ?? 30
     }
 
+    // 현재 월의 전체 거래내역 합산
+    private var monthlyTotals: (income: Double, expense: Double, balance: Double) {
+        let monthTransactions = allTransactions.filter { transaction in
+            calendar.component(.year, from: transaction.date) == selectedYear &&
+            calendar.component(.month, from: transaction.date) == selectedMonth
+        }
+
+        var income: Double = 0
+        var expense: Double = 0
+
+        for transaction in monthTransactions {
+            if transaction.type == .income {
+                income += Double(transaction.amount)
+            } else {
+                expense += Double(transaction.amount)
+            }
+        }
+
+        return (income, expense, income - expense)
+    }
+
     // 날짜별 거래내역 합산 계산
     private func getTransactionTotal(for day: Int) -> (income: Double, expense: Double) {
         guard let date = calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: day)) else {
@@ -86,6 +107,15 @@ struct CalendarView: View {
         VStack(spacing: 0) {
             // 헤더 (홈과 동일한 컴포넌트 재활용)
             HeaderView(currentDate: $dateSelection.selectedDate)
+
+            // 월별 요약 섹션
+            MonthSummaryView(
+                totalIncome: monthlyTotals.income,
+                totalExpense: monthlyTotals.expense,
+                balance: monthlyTotals.balance
+            )
+            .padding(.horizontal)
+            .padding(.vertical, 16)
 
             // 요일 헤더
             HStack(spacing: 0) {
@@ -157,6 +187,69 @@ struct CalendarView: View {
             }
         }
         .background(Color.white)
+    }
+}
+
+// 월별 요약 섹션
+struct MonthSummaryView: View {
+    let totalIncome: Double
+    let totalExpense: Double
+    let balance: Double
+
+    private func formatAmount(_ amount: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        return formatter.string(from: NSNumber(value: amount)) ?? "0"
+    }
+
+    var body: some View {
+        HStack(spacing: 16) {
+            // 총 수입
+            VStack(alignment: .leading, spacing: 4) {
+                Text("총 수입")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                Text("+\(formatAmount(totalIncome))원")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.blue)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            // 총 지출
+            VStack(alignment: .leading, spacing: 4) {
+                Text("총 지출")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                Text("-\(formatAmount(totalExpense))원")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.red)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            // 총액
+            VStack(alignment: .leading, spacing: 4) {
+                Text("총액")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                Text("\(balance >= 0 ? "+" : "")\(formatAmount(balance))원")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(balance >= 0 ? .blue : .red)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.gray.opacity(0.1))
+        )
     }
 }
 
