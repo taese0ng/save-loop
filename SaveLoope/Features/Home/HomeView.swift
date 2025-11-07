@@ -38,22 +38,49 @@ enum NavigationRoute: Hashable {
 
 struct HomeView: View {
     @ObservedObject private var viewModel = HomeViewModel()
+    @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @Query(sort: \Envelope.createdAt) private var allEnvelopes: [Envelope]
     @Environment(\.modelContext) private var modelContext: ModelContext
-    
+
     @State private var navigationPath: NavigationRoute?
+    @State private var showingLimitAlert = false
+    @State private var showingSubscription = false
     @EnvironmentObject private var dateSelection: DateSelectionState
     
     private var isCurrentMonth: Bool {
         dateSelection.isCurrentMonth
     }
-    
+
+    /// 특정 날짜가 최근 3개월 이내인지 확인
+    private func isWithinThreeMonths(_ date: Date) -> Bool {
+        let calendar = Calendar.current
+        let now = Date()
+
+        // 3개월 전 날짜 계산
+        guard let threeMonthsAgo = calendar.date(byAdding: .month, value: -2, to: now) else {
+            return false
+        }
+
+        // 해당 월의 첫날로 정규화
+        let normalizedDate = calendar.date(from: calendar.dateComponents([.year, .month], from: date)) ?? date
+        let normalizedThreeMonthsAgo = calendar.date(from: calendar.dateComponents([.year, .month], from: threeMonthsAgo)) ?? threeMonthsAgo
+
+        return normalizedDate >= normalizedThreeMonthsAgo
+    }
+
     private var filteredEnvelopes: [Envelope] {
         let calendar: Calendar = Calendar.current
+        let selectedDate = dateSelection.selectedDate
+
+        // 무료 사용자이고 3개월 이전 데이터를 조회하려는 경우 빈 배열 반환
+        if !subscriptionManager.isSubscribed && !isWithinThreeMonths(selectedDate) {
+            return []
+        }
+
         return allEnvelopes
             .filter { envelope in
-                calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: dateSelection.selectedDate) &&
-                calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
+                calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: selectedDate) &&
+                calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: selectedDate)
             }
     }
 
@@ -62,7 +89,20 @@ struct HomeView: View {
     }
     
     func moveAddEnvelopePage() {
-        navigationPath = .addEnvelope
+        // 현재 월의 봉투 개수 확인
+        let currentMonthEnvelopesCount = filteredEnvelopes.count
+
+        // 프리미엄 기능 체크
+        let canCreate = PremiumFeatureManager.shared.canCreateMoreEnvelopes(
+            currentCount: currentMonthEnvelopesCount,
+            isSubscribed: subscriptionManager.isSubscribed
+        )
+
+        if canCreate {
+            navigationPath = .addEnvelope
+        } else {
+            showingLimitAlert = true
+        }
     }
 
     func moveAddExpensePage() {
@@ -121,6 +161,22 @@ struct HomeView: View {
             }
             .onAppear {
                 viewModel.checkAndCreateRecurringEnvelopes(using: modelContext)
+
+                // 무료 사용자가 3개월 이전 데이터를 보고 있으면 현재 월로 이동
+                if !subscriptionManager.isSubscribed && !isWithinThreeMonths(dateSelection.selectedDate) {
+                    dateSelection.selectedDate = Date()
+                }
+            }
+            .alert("제한 도달", isPresented: $showingLimitAlert) {
+                Button("취소", role: .cancel) { }
+                Button("프리미엄 보기") {
+                    showingSubscription = true
+                }
+            } message: {
+                Text(PremiumFeatureManager.shared.getEnvelopeLimitMessage())
+            }
+            .sheet(isPresented: $showingSubscription) {
+                SubscriptionView()
             }
         }
     }

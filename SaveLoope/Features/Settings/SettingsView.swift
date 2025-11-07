@@ -3,12 +3,15 @@ import SwiftData
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @Environment(\.modelContext) private var modelContext: ModelContext
     @EnvironmentObject private var cloudSyncManager: CloudSyncManager
     @State private var showingResetAlert: Bool = false
     @State private var showingSyncChangeAlert: Bool = false
     @State private var showingCloudUnavailableAlert: Bool = false
-    
+    @State private var showingSubscriptionView: Bool = false
+    @State private var showingPlanComparison: Bool = false
+
     // 개발자 모드 관련 (앱 세션 동안만 유지, 재시작 시 자동 비활성화)
     @State private var isDeveloperModeEnabled: Bool = false
     @State private var showingDeveloperModeAlert: Bool = false
@@ -48,6 +51,83 @@ struct SettingsView: View {
             }
             
             List {
+                // 프리미엄 멤버십 섹션
+                Section {
+                    Button(action: {
+                        showingSubscriptionView = true
+                    }) {
+                        HStack(spacing: 12) {
+                            Image(systemName: subscriptionManager.isSubscribed ? "star.fill" : "star")
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.blue, .purple],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .frame(width: 24)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("프리미엄 멤버십")
+                                    .foregroundColor(.primary)
+                                
+                                if subscriptionManager.isSubscribed,
+                                   case .subscribed(let product) = subscriptionManager.subscriptionStatus {
+                                    Text("\(product.displayName) 구독 중")
+                                        .font(.caption)
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                colors: [.blue, .purple],
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                } else {
+                                    Text("무제한 기능 사용하기")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                } header: {
+                    Text("멤버십")
+                }
+
+                // 플랜 비교 섹션
+                Section {
+                    Button(action: {
+                        showingPlanComparison = true
+                    }) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "chart.bar.doc.horizontal")
+                                .foregroundColor(.blue)
+                                .frame(width: 24)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("플랜 비교")
+                                    .foregroundColor(.primary)
+
+                                Text("무료 vs 프리미엄 기능 비교")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+
                 // iCloud 동기화 섹션
                 Section {
                     HStack {
@@ -60,10 +140,20 @@ struct SettingsView: View {
                             get: { cloudSyncManager.isCloudSyncEnabled },
                             set: { newValue in
                                 // iCloud를 켜려고 할 때만 상태 확인
-                                if newValue && !cloudSyncManager.isCloudAvailable {
-                                    showingCloudUnavailableAlert = true
-                                    return
+                                if newValue {
+                                    // 1. 구독 상태 확인
+                                    if !subscriptionManager.isSubscribed {
+                                        showingSubscriptionView = true
+                                        return
+                                    }
+
+                                    // 2. iCloud 계정 상태 확인
+                                    if !cloudSyncManager.isCloudAvailable {
+                                        showingCloudUnavailableAlert = true
+                                        return
+                                    }
                                 }
+
                                 cloudSyncManager.isCloudSyncEnabled = newValue
                                 showingSyncChangeAlert = true
                             }
@@ -86,8 +176,14 @@ struct SettingsView: View {
                 } header: {
                     Text("동기화")
                 } footer: {
-                    Text("iCloud를 사용하여 여러 기기 간에 데이터를 동기화합니다. 설정 변경은 앱을 재시작한 후 적용됩니다.")
-                        .foregroundColor(.secondary)
+                    VStack(alignment: .leading, spacing: 4) {
+                        if !subscriptionManager.isSubscribed {
+                            Text("⭐️ iCloud 동기화는 프리미엄 전용 기능입니다")
+                                .foregroundColor(.blue)
+                        }
+                        Text("iCloud를 사용하여 여러 기기 간에 데이터를 동기화합니다. 설정 변경은 앱을 재시작한 후 적용됩니다.")
+                            .foregroundColor(.secondary)
+                    }
                 }
                 
                 // 개발자 전용 섹션
@@ -128,6 +224,14 @@ struct SettingsView: View {
             }
             .scrollContentBackground(.hidden)
             .background(Color.white)
+            .sheet(isPresented: $showingSubscriptionView) {
+                SubscriptionView()
+            }
+            .sheet(isPresented: $showingPlanComparison) {
+                PlanComparisonSheet(subscriptionManager: subscriptionManager)
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.visible)
+            }
             .alert("데이터 초기화", isPresented: $showingResetAlert) {
                 Button("취소", role: .cancel) { }
                 Button("초기화", role: .destructive) {
@@ -224,6 +328,139 @@ struct SettingsView: View {
         
         // 비밀번호 입력 필드 초기화
         passwordInput = ""
+    }
+}
+
+// MARK: - Plan Comparison Sheet
+struct PlanComparisonSheet: View {
+    @ObservedObject var subscriptionManager: SubscriptionManager
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // 무료 플랜
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("무료 플랜")
+                                .font(.title3)
+                                .fontWeight(.bold)
+
+                            if !subscriptionManager.isSubscribed {
+                                Text("현재 플랜")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 4)
+                                    .background(Color.green)
+                                    .cornerRadius(12)
+                            }
+
+                            Spacer()
+                        }
+
+                        VStack(alignment: .leading, spacing: 12) {
+                            PlanFeatureRow(icon: "envelope.fill", text: "봉투 3개까지", isIncluded: true)
+                            PlanFeatureRow(icon: "list.bullet", text: "봉투당 거래 30개까지", isIncluded: true)
+                            PlanFeatureRow(icon: "calendar", text: "최근 3개월 데이터 접근", isIncluded: true)
+                            PlanFeatureRow(icon: "icloud.fill", text: "iCloud 동기화", isIncluded: false)
+                        }
+                    }
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(16)
+
+                    Divider()
+
+                    // 프리미엄 플랜
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("프리미엄 플랜")
+                                .font(.title3)
+                                .fontWeight(.bold)
+
+                            if subscriptionManager.isSubscribed {
+                                Text("현재 플랜")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 4)
+                                    .background(
+                                        LinearGradient(
+                                            colors: [.blue, .purple],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .cornerRadius(12)
+                            }
+
+                            Spacer()
+                        }
+
+                        VStack(alignment: .leading, spacing: 12) {
+                            PlanFeatureRow(icon: "envelope.fill", text: "무제한 봉투", isIncluded: true, isPremium: true)
+                            PlanFeatureRow(icon: "list.bullet", text: "무제한 거래 기록", isIncluded: true, isPremium: true)
+                            PlanFeatureRow(icon: "calendar", text: "무제한 데이터 접근", isIncluded: true, isPremium: true)
+                            PlanFeatureRow(icon: "icloud.fill", text: "iCloud 동기화", isIncluded: true, isPremium: true)
+                        }
+                    }
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(16)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .strokeBorder(
+                                LinearGradient(
+                                    colors: [.blue, .purple],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 2
+                            )
+                    )
+                }
+                .padding()
+            }
+            .navigationTitle("플랜 비교")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Plan Feature Row
+struct PlanFeatureRow: View {
+    let icon: String
+    let text: String
+    let isIncluded: Bool
+    var isPremium: Bool = false
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: isIncluded ? "checkmark.circle.fill" : "xmark.circle.fill")
+                .foregroundColor(isIncluded ? (isPremium ? .blue : .green) : .gray)
+                .font(.system(size: 14))
+
+            Image(systemName: icon)
+                .foregroundColor(isPremium ? .blue : .primary)
+                .font(.system(size: 14))
+                .frame(width: 20)
+
+            Text(text)
+                .font(.subheadline)
+                .foregroundColor(isIncluded ? .primary : .secondary)
+        }
     }
 }
 

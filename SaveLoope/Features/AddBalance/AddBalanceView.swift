@@ -5,15 +5,19 @@ struct AddBalanceView: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
     @Environment(\.modelContext) private var modelContext: ModelContext
     @Query(sort: \Envelope.createdAt) private var envelopes: [Envelope]
-    
+    @Query(sort: \TransactionRecord.date) private var allTransactions: [TransactionRecord]
+
+    @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @State private var selectedEnvelope: Envelope?
     @State private var amount: Int?
     @State private var date: Date = Date()
     @State private var showingDatePicker: Bool = false
     @State private var showingAlert: Bool = false
     @State private var alertMessage: String = ""
+    @State private var alertTitle: String = "알림"
     @State private var note: String = ""
     @State private var isRecurring: Bool = false
+    @State private var showingSubscription = false
     @EnvironmentObject private var dateSelection: DateSelectionState
 
     private var filteredEnvelopes: [Envelope] {
@@ -47,15 +51,32 @@ struct AddBalanceView: View {
     func handleAddBalance() {
         // 입력값 검증
         guard let envelope = selectedEnvelope else {
+            alertTitle = "알림"
             alertMessage = "봉투를 선택해주세요"
             showingAlert = true
             return
         }
-        
+
         // 금액 검증
         guard let amountInt: Int = amount, amountInt > 0 else {
+            alertTitle = "알림"
             alertMessage = "올바른 금액을 입력해주세요"
             showingAlert = true
+            return
+        }
+
+        // 프리미엄 기능 체크: 봉투당 거래 내역 개수 제한
+        let envelopeTransactionsCount = allTransactions.filter { $0.envelope?.id == envelope.id }.count
+        let canAddTransaction = PremiumFeatureManager.shared.canAddMoreTransactions(
+            currentCount: envelopeTransactionsCount,
+            isSubscribed: subscriptionManager.isSubscribed
+        )
+
+        if !canAddTransaction {
+            alertTitle = "제한 도달"
+            alertMessage = PremiumFeatureManager.shared.getTransactionLimitMessage()
+            showingAlert = true
+            showingSubscription = true
             return
         }
         
@@ -197,10 +218,18 @@ struct AddBalanceView: View {
             .navigationTitle("잔액추가")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
-            .alert("알림", isPresented: $showingAlert) {
+            .alert(alertTitle, isPresented: $showingAlert) {
                 Button("확인", role: .cancel) { }
+                if showingSubscription {
+                    Button("프리미엄 보기") {
+                        // sheet will open automatically
+                    }
+                }
             } message: {
                 Text(alertMessage)
+            }
+            .sheet(isPresented: $showingSubscription) {
+                SubscriptionView()
             }
             .onAppear {
                 if !filteredEnvelopes.isEmpty {

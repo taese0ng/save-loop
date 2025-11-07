@@ -1,0 +1,157 @@
+{
+  "identifier" : "B7E3F8D2",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "30000",
+      "familyShareable" : false,
+      "internalID" : "6670832001",
+      "localizations" : [
+        {
+          "description" : "한 번 구매로 영구 사용",
+          "displayName" : "평생 이용권",
+          "locale" : "ko"
+        },
+        {
+          "description" : "One-time purchase for lifetime access",
+          "displayName" : "Lifetime Access",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "dev.taeseong.SaveLoope.lifetime",
+      "referenceName" : "SaveLoope Lifetime",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6670832000",
+    "_developerTeamID" : "YOUR_TEAM_ID",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 760579200.0,
+    "_locale" : "ko_KR",
+    "_storefront" : "KOR",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21511875",
+      "localizations" : [
+        {
+          "description" : "SaveLoope 프리미엄 멤버십",
+          "displayName" : "SaveLoope Premium",
+          "locale" : "ko"
+        },
+        {
+          "description" : "SaveLoope Premium Membership",
+          "displayName" : "SaveLoope Premium",
+          "locale" : "en_US"
+        }
+      ],
+      "name" : "SaveLoope Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3900",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6670832002",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "매월 자동 갱신되는 프리미엄 멤버십",
+              "displayName" : "월간 구독",
+              "locale" : "ko"
+            },
+            {
+              "description" : "Premium membership with monthly auto-renewal",
+              "displayName" : "Monthly Subscription",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "dev.taeseong.SaveLoope.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "SaveLoope Monthly",
+          "subscriptionGroupID" : "21511875",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "39000",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6670832003",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "매년 자동 갱신되는 프리미엄 멤버십 (2개월 무료)",
+              "displayName" : "연간 구독",
+              "locale" : "ko"
+            },
+            {
+              "description" : "Premium membership with yearly auto-renewal (2 months free)",
+              "displayName" : "Yearly Subscription",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "dev.taeseong.SaveLoope.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "SaveLoope Yearly",
+          "subscriptionGroupID" : "21511875",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

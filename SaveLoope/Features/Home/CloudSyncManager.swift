@@ -6,7 +6,7 @@ import CloudKit
 @MainActor
 class CloudSyncManager: ObservableObject {
     static let shared = CloudSyncManager()
-    
+
     @Published var isCloudSyncEnabled: Bool {
         didSet {
             UserDefaults.standard.set(isCloudSyncEnabled, forKey: "isCloudSyncEnabled")
@@ -16,14 +16,44 @@ class CloudSyncManager: ObservableObject {
             }
         }
     }
-    
+
     @Published var cloudAccountStatus: CKAccountStatus = .couldNotDetermine
     @Published var cloudAccountError: String?
-    
+
+    private var subscriptionCheckTimer: Timer?
+
     private init() {
         self.isCloudSyncEnabled = UserDefaults.standard.bool(forKey: "isCloudSyncEnabled")
         Task {
             await checkCloudAccountStatus()
+            await checkSubscriptionAndDisableSyncIfNeeded()
+        }
+
+        // 주기적으로 구독 상태 확인 (5분마다)
+        startSubscriptionMonitoring()
+    }
+
+    deinit {
+        subscriptionCheckTimer?.invalidate()
+    }
+
+    /// 구독 상태 모니터링 시작
+    private func startSubscriptionMonitoring() {
+        subscriptionCheckTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                await self?.checkSubscriptionAndDisableSyncIfNeeded()
+            }
+        }
+    }
+
+    /// 구독 상태 확인 후 필요시 동기화 비활성화
+    func checkSubscriptionAndDisableSyncIfNeeded() async {
+        let isSubscribed = SubscriptionManager.shared.isSubscribed
+
+        // iCloud 동기화가 켜져있는데 구독이 없으면 자동으로 끄기
+        if isCloudSyncEnabled && !isSubscribed {
+            print("⚠️ 구독이 해지되어 iCloud 동기화를 자동으로 비활성화합니다")
+            isCloudSyncEnabled = false
         }
     }
     

@@ -23,16 +23,16 @@ struct MainTabView: View {
            // 🔹 커스텀 탭바
            HStack {
                Spacer()
-               
-               // 🔹 Envelopes 탭
-               TabButton(icon: "list.bullet", title: "Envelopes", isSelected: selectedTab == .envelopes) {
+
+               // 🔹 홈 탭
+               TabButton(icon: "house.fill", title: "홈", isSelected: selectedTab == .envelopes) {
                    selectedTab = .envelopes
                }
 
                Spacer()
 
-               // 🔹 More 탭
-               TabButton(icon: "ellipsis", title: "More", isSelected: selectedTab == .more) {
+               // 🔹 설정 탭
+               TabButton(icon: "gearshape.fill", title: "설정", isSelected: selectedTab == .more) {
                    selectedTab = .more
                }
 
