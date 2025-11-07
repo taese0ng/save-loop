@@ -17,7 +17,7 @@ enum SubscriptionProduct: String, CaseIterable {
     var description: String {
         switch self {
         case .monthly: return "매월 자동 갱신"
-        case .yearly: return "매년 자동 갱신 (2개월 무료)"
+        case .yearly: return "매년 자동 갱신"
         case .lifetime: return "한 번 구매로 영구 사용"
         }
     }
