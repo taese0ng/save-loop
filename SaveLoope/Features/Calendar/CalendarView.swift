@@ -204,40 +204,47 @@ struct MonthSummaryView: View {
     }
 
     var body: some View {
-        HStack(spacing: 16) {
-            // 총 수입
-            VStack(alignment: .leading, spacing: 4) {
-                Text("총 수입")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                Text("+\(formatAmount(totalIncome))원")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.blue)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
+        HStack(spacing: 20) {
+            // 왼쪽: 총 수입 + 총 지출 (2행)
+            VStack(alignment: .leading, spacing: 8) {
+                // 총 수입
+                HStack(spacing: 8) {
+                    Text("총 수입")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .frame(width: 50, alignment: .leading)
+                    Text("+\(formatAmount(totalIncome))원")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.blue)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                }
+
+                // 총 지출
+                HStack(spacing: 8) {
+                    Text("총 지출")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .frame(width: 50, alignment: .leading)
+                    Text("-\(formatAmount(totalExpense))원")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.red)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            // 총 지출
-            VStack(alignment: .leading, spacing: 4) {
-                Text("총 지출")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                Text("-\(formatAmount(totalExpense))원")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.red)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            Divider()
+                .frame(height: 40)
 
-            // 총액
+            // 오른쪽: 총액
             VStack(alignment: .leading, spacing: 4) {
                 Text("총액")
                     .font(.caption)
                     .foregroundColor(.gray)
                 Text("\(balance >= 0 ? "+" : "")\(formatAmount(balance))원")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.system(size: 18, weight: .bold))
                     .foregroundColor(balance >= 0 ? .blue : .red)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
