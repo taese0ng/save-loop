@@ -27,14 +27,7 @@ struct AddExpenseView: View {
             calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
         }
     }
-   
-   private let dateFormatter: DateFormatter = {
-       let formatter: DateFormatter = DateFormatter()
-       formatter.dateFormat = "yyyy.MM.dd"
-       formatter.locale = Locale(identifier: "ko_KR")
-       return formatter
-   }()
-   
+
    private let numberFormatter: NumberFormatter = {
        let formatter: NumberFormatter = NumberFormatter()
        formatter.numberStyle = .decimal
@@ -139,73 +132,33 @@ struct AddExpenseView: View {
                        required: true,
                        prefix: "원"
                    )
-                   
-                   Text("지출 날짜")
-                       .font(.system(size: 16))
-                   Button(action: {
-                       showingDatePicker = true
-                   }) {
-                       HStack {
-                           Text(dateFormatter.string(from: date))
-                               .foregroundColor(.black)
-                           Spacer()
-                           Image(systemName: "calendar")
-                               .foregroundColor(.gray)
-                       }
-                       .frame(maxWidth: .infinity, alignment: .leading)
-                       .padding(.horizontal, 8)
-                       .padding(.vertical, 8)
-                       .background(Color(.systemBackground))
-                       .cornerRadius(5)
-                       .overlay(
-                           RoundedRectangle(cornerRadius: 5)
-                               .stroke(Color(.systemGray4), lineWidth: 1)
-                       )
-                   }
-                   .buttonStyle(PlainButtonStyle())
-                   .sheet(isPresented: $showingDatePicker) {
-                       MonthCalendarView(selectedDate: dateSelection.selectedDate, date: $date)
-                           .presentationDetents([.height(400)])
-                           .presentationDragIndicator(.visible)
-                           .onChange(of: date) { oldValue, newValue in
-                               showingDatePicker = false
-                           }
-                   }
-                   
-                   Text("설명")
-                       .font(.system(size: 16))
-                   TextField("설명", text: $note)
-                       .padding(.horizontal, 8)
-                       .padding(.vertical, 8)
-                       .background(Color(.systemBackground))
-                       .cornerRadius(5)
-                       .overlay(
-                           RoundedRectangle(cornerRadius: 5)
-                               .stroke(Color(.systemGray4), lineWidth: 1)
-                       )
+
+                   DatePickerButton(
+                       label: "지출 날짜",
+                       date: $date,
+                       showingDatePicker: $showingDatePicker,
+                       selectedDate: dateSelection.selectedDate
+                   )
+
+                   NoteTextField(
+                       label: "설명",
+                       text: $note,
+                       placeholder: "설명"
+                   )
 
                    if let envelope = selectedEnvelope, envelope.isRecurring {
-                       Toggle("매달 반복해서 생성", isOn: $isRecurring)
-                           .padding(.vertical, 8)
-                           .tint(.blue)
+                       RecurringToggle(
+                           label: "매달 반복해서 생성",
+                           isOn: $isRecurring
+                       )
                    }
-                   
+
                    Spacer()
-                   
-                   HStack{
-                       Spacer()
-                       Button(action: handleAddExpense) {
-                           Text("지출 등록")
-                               .font(.system(size:20, weight: .light))
-                               .fontWeight(.bold)
-                               .foregroundColor(.white)
-                       }
-                       .padding(.vertical, 12)
-                       .padding(.horizontal, 32)
-                       .background(Color.blue)
-                       .cornerRadius(8)
-                       Spacer()
-                   }
+
+                   SubmitButton(
+                       title: "지출 등록",
+                       action: handleAddExpense
+                   )
 
                }
                .padding()
