@@ -1,9 +1,17 @@
 import SwiftUI
 import SwiftData
 
+// Date를 Identifiable하게 만들기 위한 wrapper
+struct IdentifiableDate: Identifiable {
+    let id = UUID()
+    let date: Date
+}
+
 struct CalendarView: View {
     @EnvironmentObject private var dateSelection: DateSelectionState
     @Query private var allTransactions: [TransactionRecord]
+
+    @State private var selectedDateInfo: IdentifiableDate?
 
     private var calendar: Calendar {
         Calendar.current
@@ -147,6 +155,11 @@ struct CalendarView: View {
                                         income: getTransactionTotal(for: day).income,
                                         expense: getTransactionTotal(for: day).expense
                                     )
+                                    .onTapGesture {
+                                        if let date = calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: day)) {
+                                            selectedDateInfo = IdentifiableDate(date: date)
+                                        }
+                                    }
                                 } else {
                                     Rectangle()
                                         .fill(Color.white)
@@ -187,157 +200,13 @@ struct CalendarView: View {
             }
         }
         .background(Color.white)
-    }
-}
-
-// 월별 요약 섹션
-struct MonthSummaryView: View {
-    let totalIncome: Double
-    let totalExpense: Double
-    let balance: Double
-
-    private func formatAmount(_ amount: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 0
-        return formatter.string(from: NSNumber(value: amount)) ?? "0"
-    }
-
-    var body: some View {
-        HStack(spacing: 20) {
-            // 왼쪽: 총 수입 + 총 지출 (2행)
-            VStack(alignment: .leading, spacing: 8) {
-                // 총 수입
-                HStack(spacing: 8) {
-                    Text("총 수입")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                        .frame(width: 50, alignment: .leading)
-                    Text("+\(formatAmount(totalIncome))원")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.blue)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.5)
+        .sheet(item: $selectedDateInfo) { dateInfo in
+            DayTransactionSheet(
+                date: dateInfo.date,
+                transactions: allTransactions.filter { transaction in
+                    calendar.isDate(transaction.date, inSameDayAs: dateInfo.date)
                 }
-
-                // 총 지출
-                HStack(spacing: 8) {
-                    Text("총 지출")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                        .frame(width: 50, alignment: .leading)
-                    Text("-\(formatAmount(totalExpense))원")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.red)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.5)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            Divider()
-                .frame(height: 40)
-
-            // 오른쪽: 총액
-            VStack(alignment: .leading, spacing: 4) {
-                Text("총액")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                Text("\(balance >= 0 ? "+" : "")\(formatAmount(balance))원")
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(balance >= 0 ? .blue : .red)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.gray.opacity(0.1))
-        )
-    }
-}
-
-// 개별 날짜 셀
-struct CalendarDayCell: View {
-    let day: Int
-    let year: Int
-    let month: Int
-    let income: Double
-    let expense: Double
-
-    private var isToday: Bool {
-        let calendar = Calendar.current
-        let today = Date()
-        return calendar.component(.year, from: today) == year &&
-               calendar.component(.month, from: today) == month &&
-               calendar.component(.day, from: today) == day
-    }
-
-    private var weekday: Int {
-        let calendar = Calendar.current
-        if let date = calendar.date(from: DateComponents(year: year, month: month, day: day)) {
-            return calendar.component(.weekday, from: date)
-        }
-        return 0
-    }
-
-    private var dayColor: Color {
-        if weekday == 1 { // 일요일
-            return .red
-        } else if weekday == 7 { // 토요일
-            return .blue
-        } else {
-            return .primary
-        }
-    }
-
-    var body: some View {
-        VStack(spacing: 4) {
-            Text("\(day)")
-                .font(.system(size: 17, weight: isToday ? .bold : .regular))
-                .foregroundColor(isToday ? .white : dayColor)
-                .frame(width: 30, height: 30)
-                .background(isToday ? Color.blue : Color.clear)
-                .clipShape(Circle())
-                .padding(.top, 6)
-
-            VStack(spacing: 2) {
-                if income > 0 {
-                    Text("+\(formatAmount(income))")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.blue)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.6)
-                }
-
-                if expense > 0 {
-                    Text("-\(formatAmount(expense))")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.red)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.6)
-                }
-            }
-            .padding(.horizontal, 2)
-
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
-    }
-
-    private func formatAmount(_ amount: Double) -> String {
-        if amount >= 10000 {
-            let man = Int(amount / 10000)
-            return "\(man)만"
-        } else if amount >= 1000 {
-            let thousand = Int(amount / 1000)
-            return "\(thousand)천"
-        } else {
-            return "\(Int(amount))"
+            )
         }
     }
 }
