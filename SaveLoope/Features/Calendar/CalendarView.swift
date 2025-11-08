@@ -135,7 +135,6 @@ struct CalendarView: View {
                         .frame(maxWidth: .infinity)
                 }
             }
-            .padding(.horizontal, 8)
             .padding(.vertical, 12)
 
             // 스크롤 가능한 달력 그리드
@@ -196,7 +195,6 @@ struct CalendarView: View {
                         }
                     }
                 )
-                .padding(.horizontal, 8)
             }
         }
         .background(Color.white)

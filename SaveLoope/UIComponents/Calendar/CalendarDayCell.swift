@@ -46,18 +46,18 @@ struct CalendarDayCell: View {
             VStack(spacing: 2) {
                 if income > 0 {
                     Text("+\(formatAmount(income))")
-                        .font(.system(size: 11, weight: .medium))
+                        .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.blue)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.6)
+                        .minimumScaleFactor(0.5)
                 }
 
                 if expense > 0 {
                     Text("-\(formatAmount(expense))")
-                        .font(.system(size: 11, weight: .medium))
+                        .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.red)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.6)
+                        .minimumScaleFactor(0.5)
                 }
             }
             .padding(.horizontal, 2)
@@ -69,14 +69,10 @@ struct CalendarDayCell: View {
     }
 
     private func formatAmount(_ amount: Double) -> String {
-        if amount >= 10000 {
-            let man = Int(amount / 10000)
-            return "\(man)만"
-        } else if amount >= 1000 {
-            let thousand = Int(amount / 1000)
-            return "\(thousand)천"
-        } else {
-            return "\(Int(amount))"
-        }
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = ","
+        formatter.usesGroupingSeparator = true
+        return formatter.string(from: NSNumber(value: Int(amount))) ?? "\(Int(amount))"
     }
 }
