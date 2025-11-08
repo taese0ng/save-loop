@@ -36,25 +36,43 @@ public struct MonthDatePicker: View {
             // Year Selection
             HStack {
                 Button(action: { selectedYear -= 1 }) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(.gray)
+                    ZStack {
+                        Circle()
+                            .fill(Color.gray.opacity(0.1))
+                            .frame(width: 40, height: 40)
+
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.black)
+                    }
+                    .contentShape(Circle())
                 }
+                .buttonStyle(PlainButtonStyle())
+                .fixedSize()
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 Text("\(String(selectedYear))년")
                     .font(.system(size: 20, weight: .bold))
                     .frame(width: 100)
-                
-                Button(action: { 
+
+                Button(action: {
                     if selectedYear < currentYear {
                         selectedYear += 1
                     }
                 }) {
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(selectedYear < currentYear ? .gray : .gray.opacity(0.3))
+                    ZStack {
+                        Circle()
+                            .fill(Color.gray.opacity(0.1))
+                            .frame(width: 40, height: 40)
+
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(selectedYear < currentYear ? .black : .gray)
+                    }
+                    .contentShape(Circle())
                 }
+                .buttonStyle(PlainButtonStyle())
+                .fixedSize()
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .disabled(selectedYear >= currentYear)
             }

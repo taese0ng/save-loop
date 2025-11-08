@@ -87,10 +87,19 @@ struct HeaderView: View {
     var body: some View {
         HStack {
             Button(action: moveToPreviousMonth) {
-                Image(systemName: "chevron.left")
-                    .font(.title2)
-                    .foregroundColor(.primary)
+                ZStack {
+                    Circle()
+                        .fill(Color.gray.opacity(0.1))
+                        .frame(width: 40, height: 40)
+
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.black)
+                }
+                .contentShape(Circle())
             }
+            .buttonStyle(PlainButtonStyle())
+            .fixedSize()
 
             Spacer()
 
@@ -120,10 +129,19 @@ struct HeaderView: View {
             Spacer()
 
             Button(action: moveToNextMonth) {
-                Image(systemName: "chevron.right")
-                    .font(.title2)
-                    .foregroundColor(isCurrentMonth ? .gray : .primary)
+                ZStack {
+                    Circle()
+                        .fill(Color.gray.opacity(0.1))
+                        .frame(width: 40, height: 40)
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(isCurrentMonth ? .gray : .black)
+                }
+                .contentShape(Circle())
             }
+            .buttonStyle(PlainButtonStyle())
+            .fixedSize()
             .disabled(isCurrentMonth)
         }
         .padding(.horizontal)

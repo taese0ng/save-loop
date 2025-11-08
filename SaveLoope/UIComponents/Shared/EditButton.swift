@@ -1,16 +1,16 @@
 import SwiftUI
 
-struct BackButton: View {
-    let onDismiss: () -> Void
+struct EditButton: View {
+    let action: () -> Void
     
     var body: some View {
-        Button(action: onDismiss) {
+        Button(action: action) {
             ZStack {
                 Circle()
                     .fill(Color.gray.opacity(0.1))
                     .frame(width: 40, height: 40)
                 
-                Image(systemName: "chevron.left")
+                Image(systemName: "square.and.pencil")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(.black)
             }
@@ -20,3 +20,4 @@ struct BackButton: View {
         .fixedSize()
     }
 }
+

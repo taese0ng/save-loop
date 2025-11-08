@@ -93,12 +93,9 @@ struct DetailEnvelopeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: BackButton(onDismiss: handleDismiss),
-                trailing: Button(action: {
+                trailing: EditButton(action: {
                     showingEditSheet = true
-                }) {
-                    Image(systemName: "square.and.pencil")
-                        .foregroundColor(.black)
-                }
+                })
             )
             .sheet(item: $selectedTransaction) { transaction in
                 EditTransactionView(transaction: transaction, targetEnvelope: envelope)
