@@ -23,8 +23,14 @@ struct AddBalanceView: View {
     private var filteredEnvelopes: [Envelope] {
         let calendar: Calendar = Calendar.current
         return envelopes.filter { envelope in
-            calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: dateSelection.selectedDate) &&
-            calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
+            // 지속형 봉투는 항상 포함
+            if envelope.type == .persistent {
+                return true
+            }
+
+            // 일반/반복 봉투는 선택된 월과 일치하는 것만
+            return calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: dateSelection.selectedDate) &&
+                   calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
         }
     }
 

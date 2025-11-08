@@ -1,6 +1,12 @@
 import SwiftData
 import Foundation
 
+enum EnvelopeType: String, Codable {
+    case normal = "normal"           // 일반 봉투 (현재 월만)
+    case recurring = "recurring"     // 반복 봉투 (매달 초기화)
+    case persistent = "persistent"   // 지속형 봉투 (계속 유지)
+}
+
 @Model
 final class Envelope: Hashable {
     var id: UUID
@@ -12,8 +18,9 @@ final class Envelope: Hashable {
     var createdAt: Date
     var isRecurring: Bool
     var parentId: UUID?
-    
-    init(name: String, budget: Int, income: Int = 0, spent: Int = 0, goal: Int = 0, isRecurring: Bool = false, parentId: UUID? = nil) {
+    var envelopeType: String = EnvelopeType.normal.rawValue
+
+    init(name: String, budget: Int, income: Int = 0, spent: Int = 0, goal: Int = 0, isRecurring: Bool = false, parentId: UUID? = nil, envelopeType: EnvelopeType = .normal) {
         self.id = UUID()
         self.name = name
         self.budget = budget
@@ -23,6 +30,17 @@ final class Envelope: Hashable {
         self.createdAt = Date()
         self.isRecurring = isRecurring
         self.parentId = parentId
+        self.envelopeType = envelopeType.rawValue
+    }
+
+    var type: EnvelopeType {
+        get {
+            return EnvelopeType(rawValue: envelopeType) ?? .normal
+        }
+        set {
+            envelopeType = newValue.rawValue
+            isRecurring = (newValue == .recurring)
+        }
     }
     
     var remaining: Int {

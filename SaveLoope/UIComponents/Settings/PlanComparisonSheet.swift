@@ -40,6 +40,7 @@ struct PlanComparisonSheet: View {
 
             VStack(alignment: .leading, spacing: 12) {
                 PlanFeatureRow(icon: "envelope.fill", text: "봉투 3개까지", isIncluded: true, warningStyle: .standard)
+                PlanFeatureRow(icon: "arrow.clockwise", text: "지속형 봉투", isIncluded: false)
                 PlanFeatureRow(icon: "list.bullet", text: "봉투당 거래 30개까지", isIncluded: true, warningStyle: .standard)
                 PlanFeatureRow(icon: "calendar", text: "최근 3개월 데이터 접근", isIncluded: true, warningStyle: .standard)
                 PlanFeatureRow(icon: "icloud.fill", text: "iCloud 동기화", isIncluded: false)
@@ -66,6 +67,7 @@ struct PlanComparisonSheet: View {
 
             VStack(alignment: .leading, spacing: 12) {
                 PlanFeatureRow(icon: "envelope.fill", text: "무제한 봉투", isIncluded: true, isPremium: true)
+                PlanFeatureRow(icon: "arrow.clockwise", text: "지속형 봉투", isIncluded: true, isPremium: true)
                 PlanFeatureRow(icon: "list.bullet", text: "무제한 거래 기록", isIncluded: true, isPremium: true)
                 PlanFeatureRow(icon: "calendar", text: "무제한 데이터 접근", isIncluded: true, isPremium: true)
                 PlanFeatureRow(icon: "icloud.fill", text: "iCloud 동기화", isIncluded: true, isPremium: true)

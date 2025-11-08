@@ -79,8 +79,14 @@ struct HomeView: View {
 
         return allEnvelopes
             .filter { envelope in
-                calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: selectedDate) &&
-                calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: selectedDate)
+                // 지속형 봉투는 항상 표시
+                if envelope.type == .persistent {
+                    return true
+                }
+
+                // 일반/반복 봉투는 선택된 월과 일치하는 것만 표시
+                return calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: selectedDate) &&
+                       calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: selectedDate)
             }
     }
 
@@ -89,12 +95,20 @@ struct HomeView: View {
     }
     
     func moveAddEnvelopePage() {
-        // 현재 월의 봉투 개수 확인
-        let currentMonthEnvelopesCount = filteredEnvelopes.count
+        let calendar = Calendar.current
+        let now = Date()
+        let currentYear = calendar.component(.year, from: now)
+        let currentMonth = calendar.component(.month, from: now)
+
+        // 현재 월에 생성된 봉투만 카운트 (지속형 봉투는 최초 생성 월에만 카운트)
+        let currentMonthCreatedCount = allEnvelopes.filter { envelope in
+            calendar.component(.year, from: envelope.createdAt) == currentYear &&
+            calendar.component(.month, from: envelope.createdAt) == currentMonth
+        }.count
 
         // 프리미엄 기능 체크
         let canCreate = PremiumFeatureManager.shared.canCreateMoreEnvelopes(
-            currentCount: currentMonthEnvelopesCount,
+            currentCount: currentMonthCreatedCount,
             isSubscribed: subscriptionManager.isSubscribed
         )
 

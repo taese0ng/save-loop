@@ -26,7 +26,12 @@ class HomeViewModel: ObservableObject {
             let allEnvelopes = try context.fetch(envelopeDescriptor)
             
             // 반복 생성이 설정된 모든 봉투 찾기 (parentId가 자기 자신인 것들)
-            let originalRecurringEnvelopes = allEnvelopes.filter { $0.isRecurring && $0.parentId == $0.id }
+            // 지속형 봉투는 제외
+            let originalRecurringEnvelopes = allEnvelopes.filter {
+                $0.isRecurring &&
+                $0.parentId == $0.id &&
+                $0.type == .recurring
+            }
             
             // 현재 월의 봉투들
             let currentEnvelopes = allEnvelopes.filter { 

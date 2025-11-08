@@ -12,8 +12,17 @@ struct EnvelopeCardView: View {
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.black)
-                
-                if envelope.parentId != nil {
+
+                // 지속형 봉투 아이콘
+                if envelope.type == .persistent {
+                    Image(systemName: "infinity")
+                        .foregroundColor(.purple)
+                        .font(.caption)
+                        .fontWeight(.bold)
+                }
+
+                // 반복 봉투 아이콘
+                if envelope.type == .recurring {
                     Image(systemName: "arrow.triangle.2.circlepath")
                         .foregroundColor(.blue)
                         .font(.caption)
@@ -74,8 +83,9 @@ extension Int {
 struct EnvelopeCardView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            EnvelopeCardView(envelope: Envelope(name: "생활비", budget: 100000, spent: 10000))
-            EnvelopeCardView(envelope: Envelope(name: "반복생성", budget: 100000, spent: 10000, isRecurring: true))
+            EnvelopeCardView(envelope: Envelope(name: "일반 봉투", budget: 100000, spent: 10000))
+            EnvelopeCardView(envelope: Envelope(name: "반복 봉투", budget: 100000, spent: 10000, isRecurring: true, envelopeType: .recurring))
+            EnvelopeCardView(envelope: Envelope(name: "지속 봉투", budget: 100000, spent: 10000, envelopeType: .persistent))
         }
         .previewLayout(.sizeThatFits)
         .padding()
