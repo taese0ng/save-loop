@@ -7,11 +7,37 @@ struct IdentifiableDate: Identifiable {
     let date: Date
 }
 
+// NavigationRoute enum for CalendarView
+enum CalendarNavigationRoute: Hashable {
+    case addBalance
+    case addExpense
+    
+    static func == (lhs: CalendarNavigationRoute, rhs: CalendarNavigationRoute) -> Bool {
+        switch (lhs, rhs) {
+        case (.addBalance, .addBalance),
+             (.addExpense, .addExpense):
+            return true
+        default:
+            return false
+        }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case .addBalance:
+            hasher.combine("addBalance")
+        case .addExpense:
+            hasher.combine("addExpense")
+        }
+    }
+}
+
 struct CalendarView: View {
     @EnvironmentObject private var dateSelection: DateSelectionState
     @Query private var allTransactions: [TransactionRecord]
 
     @State private var selectedDateInfo: IdentifiableDate?
+    @State private var navigationPath: CalendarNavigationRoute?
 
     private var calendar: Calendar {
         Calendar.current
@@ -111,100 +137,126 @@ struct CalendarView: View {
         return days
     }
 
+    func moveAddBalancePage() {
+        navigationPath = .addBalance
+    }
+    
+    func moveAddExpensePage() {
+        navigationPath = .addExpense
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
-            // 헤더 (홈과 동일한 컴포넌트 재활용)
-            HeaderView(currentDate: $dateSelection.selectedDate)
+        NavigationStack {
+            VStack(spacing: 0) {
+                // 헤더 (홈과 동일한 컴포넌트 재활용)
+                HeaderView(currentDate: $dateSelection.selectedDate)
 
-            // 월별 요약 섹션
-            MonthSummaryView(
-                totalIncome: monthlyTotals.income,
-                totalExpense: monthlyTotals.expense,
-                balance: monthlyTotals.balance
-            )
-            .padding(.horizontal)
-            .padding(.vertical, 16)
+                // 월별 요약 섹션
+                MonthSummaryView(
+                    totalIncome: monthlyTotals.income,
+                    totalExpense: monthlyTotals.expense,
+                    balance: monthlyTotals.balance
+                )
+                .padding(.horizontal)
+                .padding(.vertical, 16)
 
-            // 요일 헤더
-            HStack(spacing: 0) {
-                ForEach(["일", "월", "화", "수", "목", "금", "토"], id: \.self) { day in
-                    Text(day)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundColor(day == "일" ? .red : day == "토" ? .blue : .gray)
-                        .frame(maxWidth: .infinity)
+                // 요일 헤더
+                HStack(spacing: 0) {
+                    ForEach(["일", "월", "화", "수", "목", "금", "토"], id: \.self) { day in
+                        Text(day)
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(day == "일" ? .red : day == "토" ? .blue : .gray)
+                            .frame(maxWidth: .infinity)
+                    }
                 }
-            }
-            .padding(.vertical, 12)
+                .padding(.vertical, 12)
 
-            // 스크롤 가능한 달력 그리드
-            ScrollView {
-                VStack(spacing: 0) {
-                    ForEach(0..<6, id: \.self) { week in
-                        HStack(spacing: 0) {
-                            ForEach(0..<7, id: \.self) { weekday in
-                                let index = week * 7 + weekday
-                                let day = calendarDays[index]
+                // 스크롤 가능한 달력 그리드
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(0..<6, id: \.self) { week in
+                            HStack(spacing: 0) {
+                                ForEach(0..<7, id: \.self) { weekday in
+                                    let index = week * 7 + weekday
+                                    let day = calendarDays[index]
 
-                                if let day = day {
-                                    CalendarDayCell(
-                                        day: day,
-                                        year: selectedYear,
-                                        month: selectedMonth,
-                                        income: getTransactionTotal(for: day).income,
-                                        expense: getTransactionTotal(for: day).expense
-                                    )
-                                    .onTapGesture {
-                                        if let date = calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: day)) {
-                                            selectedDateInfo = IdentifiableDate(date: date)
+                                    if let day = day {
+                                        CalendarDayCell(
+                                            day: day,
+                                            year: selectedYear,
+                                            month: selectedMonth,
+                                            income: getTransactionTotal(for: day).income,
+                                            expense: getTransactionTotal(for: day).expense
+                                        )
+                                        .onTapGesture {
+                                            if let date = calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: day)) {
+                                                selectedDateInfo = IdentifiableDate(date: date)
+                                            }
                                         }
+                                    } else {
+                                        Rectangle()
+                                            .fill(Color.white)
+                                            .frame(height: 80)
                                     }
-                                } else {
-                                    Rectangle()
-                                        .fill(Color.white)
-                                        .frame(height: 80)
                                 }
                             }
+                            .frame(height: 80)
                         }
-                        .frame(height: 80)
                     }
+                    .overlay(
+                        // 세로 그리드 선
+                        HStack(spacing: 0) {
+                            ForEach(0..<8, id: \.self) { i in
+                                if i > 0 {
+                                    Spacer()
+                                }
+                                Rectangle()
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(width: 0.5)
+                            }
+                        }
+                    )
+                    .overlay(
+                        // 가로 그리드 선
+                        VStack(spacing: 0) {
+                            ForEach(0..<7, id: \.self) { i in
+                                if i > 0 {
+                                    Spacer()
+                                }
+                                Rectangle()
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(height: 0.5)
+                            }
+                        }
+                    )
                 }
-                .overlay(
-                    // 세로 그리드 선
-                    HStack(spacing: 0) {
-                        ForEach(0..<8, id: \.self) { i in
-                            if i > 0 {
-                                Spacer()
-                            }
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.2))
-                                .frame(width: 0.5)
-                        }
-                    }
-                )
-                .overlay(
-                    // 가로 그리드 선
-                    VStack(spacing: 0) {
-                        ForEach(0..<7, id: \.self) { i in
-                            if i > 0 {
-                                Spacer()
-                            }
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.2))
-                                .frame(height: 0.5)
-                        }
+                
+                // 잔액추가/지출 버튼
+                BalanceTabs(onAddBalance: moveAddBalancePage, onAddExpense: moveAddExpensePage)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.white)
+            .navigationDestination(item: $navigationPath) { route in
+                switch route {
+                case .addBalance:
+                    AddBalanceView()
+                        .toolbar(.hidden, for: .navigationBar)
+                        .environmentObject(dateSelection)
+                case .addExpense:
+                    AddExpenseView()
+                        .toolbar(.hidden, for: .navigationBar)
+                        .environmentObject(dateSelection)
+                }
+            }
+            .sheet(item: $selectedDateInfo) { dateInfo in
+                DayTransactionSheet(
+                    date: dateInfo.date,
+                    transactions: allTransactions.filter { transaction in
+                        calendar.isDate(transaction.date, inSameDayAs: dateInfo.date)
                     }
                 )
             }
-        }
-        .background(Color.white)
-        .sheet(item: $selectedDateInfo) { dateInfo in
-            DayTransactionSheet(
-                date: dateInfo.date,
-                transactions: allTransactions.filter { transaction in
-                    calendar.isDate(transaction.date, inSameDayAs: dateInfo.date)
-                }
-            )
         }
     }
 }

@@ -50,3 +50,4 @@ struct BalanceTabs: View {
 #Preview {
     BalanceTabs(onAddBalance: {}, onAddExpense: {})
 }
+
