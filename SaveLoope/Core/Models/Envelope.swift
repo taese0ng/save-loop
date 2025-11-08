@@ -19,6 +19,7 @@ final class Envelope: Hashable {
     var isRecurring: Bool
     var parentId: UUID?
     var envelopeType: String = EnvelopeType.normal.rawValue
+    var sortOrder: Int = 0
 
     init(name: String, budget: Int, income: Int = 0, spent: Int = 0, goal: Int = 0, isRecurring: Bool = false, parentId: UUID? = nil, envelopeType: EnvelopeType = .normal) {
         self.id = UUID()

@@ -101,7 +101,11 @@ struct AddEnvelopeView: View {
             if selectedEnvelopeType == .recurring {
                 newEnvelope.parentId = newEnvelope.id
             }
-            
+
+            // 마지막 순서로 설정 (최대 sortOrder + 1)
+            let maxSortOrder = allEnvelopes.map { $0.sortOrder }.max() ?? 0
+            newEnvelope.sortOrder = maxSortOrder + 1
+
             modelContext.insert(newEnvelope)
             
             // 명시적으로 저장 (아이클라우드 동기화 포함)

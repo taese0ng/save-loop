@@ -56,8 +56,11 @@ class HomeViewModel: ObservableObject {
                         spent: 0,
                         goal: originalEnvelope.goal,
                         isRecurring: true,
-                        parentId: originalEnvelope.id
+                        parentId: originalEnvelope.id,
+                        envelopeType: .recurring
                     )
+                    // 원본 봉투의 sortOrder 상속
+                    newEnvelope.sortOrder = originalEnvelope.sortOrder
                     context.insert(newEnvelope)
                 }
             }

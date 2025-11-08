@@ -4,7 +4,7 @@ import SwiftData
 struct EditTransactionView: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
     @Environment(\.modelContext) private var modelContext: ModelContext
-    @Query(sort: \Envelope.createdAt) private var envelopes: [Envelope]
+    @Query private var envelopes: [Envelope]
     
     let transaction: TransactionRecord
     let targetEnvelope: Envelope
@@ -24,9 +24,42 @@ struct EditTransactionView: View {
     private var filteredEnvelopes: [Envelope] {
         let calendar: Calendar = Calendar.current
         return envelopes.filter { envelope in
-            calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: dateSelection.selectedDate) &&
-            calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
+            // 지속형 봉투는 항상 포함
+            if envelope.type == .persistent {
+                return true
+            }
+
+            // 일반/반복 봉투는 선택된 월과 일치하는 것만
+            return calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: dateSelection.selectedDate) &&
+                   calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
         }
+        .sorted { env1, env2 in
+            // sortOrder가 0이면 Int.max로 취급 (맨 뒤로)
+            let order1 = env1.sortOrder == 0 ? Int.max : env1.sortOrder
+            let order2 = env2.sortOrder == 0 ? Int.max : env2.sortOrder
+
+            if order1 != order2 {
+                return order1 < order2
+            }
+
+            // sortOrder가 같으면 날짜 기준 정렬
+            let date1 = getSortDate(for: env1)
+            let date2 = getSortDate(for: env2)
+            return date1 < date2
+        }
+    }
+
+    // 정렬용 날짜 반환: 반복 봉투는 원본(parent)의 createdAt 사용
+    private func getSortDate(for envelope: Envelope) -> Date {
+        // 반복 봉투이고 parentId가 있는 경우
+        if envelope.type == .recurring, let parentId = envelope.parentId {
+            // 원본 봉투 찾기
+            if let parent = envelopes.first(where: { $0.id == parentId && $0.parentId == $0.id }) {
+                return parent.createdAt
+            }
+        }
+        // 그 외의 경우 자신의 createdAt 사용
+        return envelope.createdAt
     }
 
     private let numberFormatter: NumberFormatter = {
@@ -141,7 +174,7 @@ struct EditTransactionView: View {
                             title: "봉투 선택",
                             items: filteredEnvelopes,
                             selectedItem: selectedEnvelope,
-                            isRecurring: { $0.isRecurring },
+                            envelopeType: { $0.type },
                             itemTitle: { $0.name },
                             onSelection: { envelope in
                                 selectedEnvelope = envelope

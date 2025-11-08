@@ -4,7 +4,7 @@ struct RadioButtonGroup<T: Identifiable>: View {
     let title: String
     let items: [T]
     let selectedItem: T?
-    let isRecurring: (T) -> Bool
+    let envelopeType: (T) -> EnvelopeType
     let itemTitle: (T) -> String
     let onSelection: (T) -> Void
     
@@ -17,7 +17,7 @@ struct RadioButtonGroup<T: Identifiable>: View {
                 ForEach(items) { item in
                     RadioButton(
                         title: itemTitle(item),
-                        isRecurring: isRecurring(item),
+                        envelopeType: envelopeType(item),
                         isSelected: selectedItem?.id == item.id
                     ) {
                         onSelection(item)
@@ -30,20 +30,32 @@ struct RadioButtonGroup<T: Identifiable>: View {
 
 struct RadioButton: View {
     let title: String
-    let isRecurring: Bool
+    let envelopeType: EnvelopeType
     let isSelected: Bool
     let action: () -> Void
+    
+    // 봉투 타입에 따른 색상
+    private var buttonColor: Color {
+        switch envelopeType {
+        case .persistent:
+            return .purple
+        case .recurring:
+            return .blue
+        case .normal:
+            return .gray
+        }
+    }
     
     var body: some View {
         Button(action: action) {
             HStack {
                 HStack{
                     Circle()
-                        .stroke(Color.blue, lineWidth: 2)
+                        .stroke(buttonColor, lineWidth: 2)
                         .frame(width: 20, height: 20)
                         .overlay(
                             Circle()
-                                .fill(isSelected ? Color.blue : Color.clear)
+                                .fill(isSelected ? buttonColor : Color.clear)
                                 .frame(width: 12, height: 12)
                         )
                     Text(title)
@@ -52,7 +64,16 @@ struct RadioButton: View {
                 
                 Spacer()
                 
-                if isRecurring {
+                // 지속형 봉투 아이콘
+                if envelopeType == .persistent {
+                    Image(systemName: "infinity")
+                        .foregroundColor(.purple)
+                        .font(.caption)
+                        .fontWeight(.bold)
+                }
+                
+                // 반복 봉투 아이콘
+                if envelopeType == .recurring {
                     Image(systemName: "arrow.triangle.2.circlepath")
                         .foregroundColor(.blue)
                         .font(.caption)
@@ -66,20 +87,20 @@ struct RadioButton: View {
     struct PreviewItem: Identifiable {
         let id = UUID()
         let name: String
-        let isRecurring: Bool
+        let envelopeType: EnvelopeType
     }
     
     let items = [
-        PreviewItem(name: "식비", isRecurring: true),
-        PreviewItem(name: "교통비", isRecurring: false),
-        PreviewItem(name: "문화생활", isRecurring: true)
+        PreviewItem(name: "일반 봉투", envelopeType: .normal),
+        PreviewItem(name: "반복 봉투", envelopeType: .recurring),
+        PreviewItem(name: "지속 봉투", envelopeType: .persistent)
     ]
     
     return RadioButtonGroup(
         title: "지출 봉투",
         items: items,
         selectedItem: items[0],
-        isRecurring: { $0.isRecurring },
+        envelopeType: { $0.envelopeType },
         itemTitle: { $0.name },
         onSelection: { _ in }
     )

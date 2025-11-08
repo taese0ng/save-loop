@@ -39,12 +39,13 @@ enum NavigationRoute: Hashable {
 struct HomeView: View {
     @ObservedObject private var viewModel = HomeViewModel()
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
-    @Query(sort: \Envelope.createdAt) private var allEnvelopes: [Envelope]
+    @Query private var allEnvelopes: [Envelope]
     @Environment(\.modelContext) private var modelContext: ModelContext
 
     @State private var navigationPath: NavigationRoute?
     @State private var showingLimitAlert = false
     @State private var showingSubscription = false
+    @State private var editMode: EditMode = .inactive
     @EnvironmentObject private var dateSelection: DateSelectionState
     
     private var isCurrentMonth: Bool {
@@ -88,6 +89,62 @@ struct HomeView: View {
                 return calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: selectedDate) &&
                        calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: selectedDate)
             }
+            .sorted { env1, env2 in
+                // sortOrder가 0이면 Int.max로 취급 (맨 뒤로)
+                let order1 = env1.sortOrder == 0 ? Int.max : env1.sortOrder
+                let order2 = env2.sortOrder == 0 ? Int.max : env2.sortOrder
+
+                if order1 != order2 {
+                    return order1 < order2
+                }
+
+                // sortOrder가 같으면 날짜 기준 정렬
+                let date1 = getSortDate(for: env1)
+                let date2 = getSortDate(for: env2)
+                return date1 < date2
+            }
+    }
+
+    // 정렬용 날짜 반환: 반복 봉투는 원본(parent)의 createdAt 사용
+    private func getSortDate(for envelope: Envelope) -> Date {
+        // 반복 봉투이고 parentId가 있는 경우
+        if envelope.type == .recurring, let parentId = envelope.parentId {
+            // 원본 봉투 찾기
+            if let parent = allEnvelopes.first(where: { $0.id == parentId && $0.parentId == $0.id }) {
+                return parent.createdAt
+            }
+        }
+        // 그 외의 경우 자신의 createdAt 사용
+        return envelope.createdAt
+    }
+
+    // 봉투 순서 변경
+    private func moveEnvelope(from source: IndexSet, to destination: Int) {
+        var envelopes = filteredEnvelopes
+        envelopes.move(fromOffsets: source, toOffset: destination)
+
+        // sortOrder 재설정 (1부터 시작)
+        for (index, envelope) in envelopes.enumerated() {
+            envelope.sortOrder = index + 1
+            
+            // 반복 봉투인 경우 원본 봉투(parentId == id인 봉투)의 sortOrder도 동기화
+            if envelope.type == .recurring, let parentId = envelope.parentId {
+                if let parentEnvelope = allEnvelopes.first(where: { $0.id == parentId && $0.parentId == $0.id }) {
+                    parentEnvelope.sortOrder = index + 1
+                    // 원본 봉투의 반복 속성 명시적으로 보존
+                    parentEnvelope.isRecurring = true
+                    parentEnvelope.type = .recurring
+                }
+            }
+        }
+
+        // 저장
+        do {
+            try modelContext.save()
+            print("✅ 봉투 순서 변경 저장 완료")
+        } catch {
+            print("❌ 봉투 순서 저장 실패: \(error.localizedDescription)")
+        }
     }
 
     func moveAddBalancePage() {
@@ -147,7 +204,9 @@ struct HomeView: View {
                         hasNotAddButton: !isCurrentMonth,
                         envelopes: filteredEnvelopes,
                         onAddEnvelope: isCurrentMonth ? moveAddEnvelopePage : {},
-                        onEnvelopeTap: moveDetailEnvelopePage
+                        onEnvelopeTap: moveDetailEnvelopePage,
+                        onMove: isCurrentMonth ? moveEnvelope : nil,
+                        editMode: $editMode
                     )
                     .padding(.top, 35)
                     BalanceTabs(onAddBalance: moveAddBalancePage, onAddExpense: moveAddExpensePage)
