@@ -22,7 +22,11 @@ struct EditTransactionView: View {
     @EnvironmentObject private var dateSelection: DateSelectionState
 
     private var filteredEnvelopes: [Envelope] {
-        let calendar: Calendar = Calendar.current
+        let calendar = Calendar.current
+        let selectedDate = dateSelection.selectedDate
+        let selectedYear = calendar.component(.year, from: selectedDate)
+        let selectedMonth = calendar.component(.month, from: selectedDate)
+        
         return envelopes.filter { envelope in
             // 지속형 봉투는 항상 포함
             if envelope.type == .persistent {
@@ -30,8 +34,8 @@ struct EditTransactionView: View {
             }
 
             // 일반/반복 봉투는 선택된 월과 일치하는 것만
-            return calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: dateSelection.selectedDate) &&
-                   calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: dateSelection.selectedDate)
+            return calendar.component(.year, from: envelope.createdAt) == selectedYear &&
+                   calendar.component(.month, from: envelope.createdAt) == selectedMonth
         }
         .sorted { env1, env2 in
             // sortOrder가 0이면 Int.max로 취급 (맨 뒤로)
@@ -259,13 +263,17 @@ struct EditTransactionView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Envelope.self, TransactionRecord.self, configurations: config)
-    
-    let envelope = Envelope(name: "테스트", budget: 100000, isRecurring: false)
-    let transaction = TransactionRecord(amount: 10000, date: Date(), type: .expense, envelope: envelope, note: "테스트", isRecurring: false)
-    
-    return EditTransactionView(transaction: transaction, targetEnvelope: envelope)
-        .modelContainer(container)
-        .environmentObject(DateSelectionState())
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Envelope.self, TransactionRecord.self, configurations: config)
+        
+        let envelope = Envelope(name: "테스트", budget: 100000, isRecurring: false)
+        let transaction = TransactionRecord(amount: 10000, date: Date(), type: .expense, envelope: envelope, note: "테스트", isRecurring: false)
+        
+        return EditTransactionView(transaction: transaction, targetEnvelope: envelope)
+            .modelContainer(container)
+            .environmentObject(DateSelectionState())
+    } catch {
+        return Text("Preview 설정 실패: \(error.localizedDescription)")
+    }
 }

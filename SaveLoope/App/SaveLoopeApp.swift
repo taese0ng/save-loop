@@ -29,7 +29,11 @@ struct SaveLoopeApp: App {
         } catch {
             print("❌ ModelContainer 생성 실패: \(error.localizedDescription)")
             // Fallback: 로컬 전용 컨테이너 생성
-            return try! CloudSyncManager.createModelContainer(enableCloudSync: false)
+            do {
+                return try CloudSyncManager.createModelContainer(enableCloudSync: false)
+            } catch {
+                fatalError("ModelContainer 생성에 실패했습니다: \(error.localizedDescription)")
+            }
         }
     }()
     

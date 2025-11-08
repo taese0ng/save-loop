@@ -44,6 +44,10 @@ class CloudSyncManager: ObservableObject {
                 await self?.checkSubscriptionAndDisableSyncIfNeeded()
             }
         }
+        // RunLoop에 명시적으로 추가하여 백그라운드에서도 동작하도록 보장
+        if let timer = subscriptionCheckTimer {
+            RunLoop.main.add(timer, forMode: .common)
+        }
     }
 
     /// 구독 상태 확인 후 필요시 동기화 비활성화

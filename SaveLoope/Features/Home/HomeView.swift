@@ -70,13 +70,17 @@ struct HomeView: View {
     }
 
     private var filteredEnvelopes: [Envelope] {
-        let calendar: Calendar = Calendar.current
+        let calendar = Calendar.current
         let selectedDate = dateSelection.selectedDate
 
         // 무료 사용자이고 3개월 이전 데이터를 조회하려는 경우 빈 배열 반환
         if !subscriptionManager.isSubscribed && !isWithinThreeMonths(selectedDate) {
             return []
         }
+
+        // 선택된 날짜의 년/월 컴포넌트를 한 번만 계산
+        let selectedYear = calendar.component(.year, from: selectedDate)
+        let selectedMonth = calendar.component(.month, from: selectedDate)
 
         return allEnvelopes
             .filter { envelope in
@@ -86,8 +90,8 @@ struct HomeView: View {
                 }
 
                 // 일반/반복 봉투는 선택된 월과 일치하는 것만 표시
-                return calendar.component(.year, from: envelope.createdAt) == calendar.component(.year, from: selectedDate) &&
-                       calendar.component(.month, from: envelope.createdAt) == calendar.component(.month, from: selectedDate)
+                return calendar.component(.year, from: envelope.createdAt) == selectedYear &&
+                       calendar.component(.month, from: envelope.createdAt) == selectedMonth
             }
             .sorted { env1, env2 in
                 // sortOrder가 0이면 Int.max로 취급 (맨 뒤로)

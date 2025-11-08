@@ -11,14 +11,10 @@ class HomeViewModel: ObservableObject {
     
     /// 반복 생성이 필요한 봉투들을 확인하고 생성
     func checkAndCreateRecurringEnvelopes(using context: ModelContext) {
-        let calendar: Calendar = Calendar.current
-        let currentDate: Date = Date()
-        let currentYear: Int = calendar.component(.year, from: currentDate)
-        let currentMonth: Int = calendar.component(.month, from: currentDate)
-
-        let previousMonthDate: Date = calendar.date(byAdding: .month, value: -1, to: currentDate)!
-        let previousYear: Int = calendar.component(.year, from: previousMonthDate)
-        let previousMonth: Int = calendar.component(.month, from: previousMonthDate)
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let currentYear = calendar.component(.year, from: currentDate)
+        let currentMonth = calendar.component(.month, from: currentDate)
         
         // 모든 봉투를 가져옴
         let envelopeDescriptor = FetchDescriptor<Envelope>()
@@ -82,10 +78,10 @@ class HomeViewModel: ObservableObject {
     
     /// 반복 생성이 필요한 거래 내역들을 확인하고 생성
     func checkAndCreateRecurringTransactions(using context: ModelContext) {
-        let calendar: Calendar = Calendar.current
-        let currentDate: Date = Date()
-        let currentYear: Int = calendar.component(.year, from: currentDate)
-        let currentMonth: Int = calendar.component(.month, from: currentDate)
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let currentYear = calendar.component(.year, from: currentDate)
+        let currentMonth = calendar.component(.month, from: currentDate)
         
         // 모든 Envelope와 TransactionRecord를 가져옴
         let envelopeDescriptor = FetchDescriptor<Envelope>()

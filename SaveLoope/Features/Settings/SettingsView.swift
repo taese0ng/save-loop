@@ -118,6 +118,11 @@ struct SettingsView: View {
             // 뷰가 나타날 때 iCloud 상태 다시 확인
             await cloudSyncManager.checkCloudAccountStatus()
         }
+        .onDisappear {
+            // 뷰가 사라질 때 타이머 정리
+            tapTimer?.invalidate()
+            tapTimer = nil
+        }
     }
     
     // MARK: - 개발자 모드 탭 처리

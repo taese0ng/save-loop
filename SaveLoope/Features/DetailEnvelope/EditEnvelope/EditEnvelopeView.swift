@@ -78,10 +78,10 @@ struct EditEnvelopeView: View {
         }
 
         // 중복 이름 체크 (자기 자신 제외)
-        let calendar: Calendar = Calendar.current
-        let currentDate: Date = Date()
-        let currentYear: Int = calendar.component(.year, from: currentDate)
-        let currentMonth: Int = calendar.component(.month, from: currentDate)
+        let calendar = Calendar.current
+        let currentDate = Date()
+        let currentYear = calendar.component(.year, from: currentDate)
+        let currentMonth = calendar.component(.month, from: currentDate)
 
         let descriptor = FetchDescriptor<Envelope>()
         do {
@@ -322,11 +322,15 @@ struct EditEnvelopeView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Envelope.self, TransactionRecord.self, configurations: config)
-    
-    let envelope = Envelope(name: "테스트", budget: 100000, isRecurring: false)
-    
-    EditEnvelopeView(shouldDismiss: .constant(false), envelope: envelope)
-        .modelContainer(container)
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Envelope.self, TransactionRecord.self, configurations: config)
+        
+        let envelope = Envelope(name: "테스트", budget: 100000, isRecurring: false)
+        
+        return EditEnvelopeView(shouldDismiss: .constant(false), envelope: envelope)
+            .modelContainer(container)
+    } catch {
+        return Text("Preview 설정 실패: \(error.localizedDescription)")
+    }
 }
