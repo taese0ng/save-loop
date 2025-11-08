@@ -278,8 +278,8 @@ struct EditEnvelopeView: View {
                     return
                 }
 
-                // 반복 봉투 → 다른 타입 변경 시 경고
-                if oldValue != newValue && originalEnvelopeType != newValue {
+                // 반복 봉투 → 다른 타입 변경 시 경고 (pendingEnvelopeType이 nil일 때만 체크)
+                if pendingEnvelopeType == nil && oldValue != newValue && originalEnvelopeType != newValue {
                     if originalEnvelopeType == .recurring && newValue != .recurring {
                         pendingEnvelopeType = newValue
                         showingTypeChangeWarning = true
@@ -295,6 +295,8 @@ struct EditEnvelopeView: View {
                 }
                 Button("변경", role: .destructive) {
                     if let pending = pendingEnvelopeType {
+                        // originalEnvelopeType을 업데이트하여 다시 체크되지 않도록 함
+                        originalEnvelopeType = pending
                         selectedEnvelopeType = pending
                         pendingEnvelopeType = nil
                     }
