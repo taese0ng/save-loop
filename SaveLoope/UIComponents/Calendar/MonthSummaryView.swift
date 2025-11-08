@@ -62,6 +62,7 @@ struct MonthSummaryView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .frame(height: 80)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.gray.opacity(0.1))

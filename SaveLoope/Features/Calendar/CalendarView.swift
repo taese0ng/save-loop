@@ -173,63 +173,67 @@ struct CalendarView: View {
                 .padding(.vertical, 12)
 
                 // 스크롤 가능한 달력 그리드
-                ScrollView {
-                    VStack(spacing: 0) {
-                        ForEach(0..<6, id: \.self) { week in
-                            HStack(spacing: 0) {
-                                ForEach(0..<7, id: \.self) { weekday in
-                                    let index = week * 7 + weekday
-                                    let day = calendarDays[index]
+                GeometryReader { geometry in
+                    let availableHeight = geometry.size.height
+                    let weekHeight = availableHeight / 6
+                    
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            ForEach(0..<6, id: \.self) { week in
+                                HStack(spacing: 0) {
+                                    ForEach(0..<7, id: \.self) { weekday in
+                                        let index = week * 7 + weekday
+                                        let day = calendarDays[index]
 
-                                    if let day = day {
-                                        CalendarDayCell(
-                                            day: day,
-                                            year: selectedYear,
-                                            month: selectedMonth,
-                                            income: getTransactionTotal(for: day).income,
-                                            expense: getTransactionTotal(for: day).expense
-                                        )
-                                        .onTapGesture {
-                                            if let date = calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: day)) {
-                                                selectedDateInfo = IdentifiableDate(date: date)
+                                        if let day = day {
+                                            CalendarDayCell(
+                                                day: day,
+                                                year: selectedYear,
+                                                month: selectedMonth,
+                                                income: getTransactionTotal(for: day).income,
+                                                expense: getTransactionTotal(for: day).expense
+                                            )
+                                            .onTapGesture {
+                                                if let date = calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: day)) {
+                                                    selectedDateInfo = IdentifiableDate(date: date)
+                                                }
                                             }
+                                        } else {
+                                            Rectangle()
+                                                .fill(Color.white)
                                         }
-                                    } else {
-                                        Rectangle()
-                                            .fill(Color.white)
-                                            .frame(height: 80)
                                     }
                                 }
+                                .frame(height: weekHeight)
                             }
-                            .frame(height: 80)
                         }
+                        .overlay(
+                            // 세로 그리드 선
+                            HStack(spacing: 0) {
+                                ForEach(0..<8, id: \.self) { i in
+                                    if i > 0 {
+                                        Spacer()
+                                    }
+                                    Rectangle()
+                                        .fill(Color.gray.opacity(0.2))
+                                        .frame(width: 0.5)
+                                }
+                            }
+                        )
+                        .overlay(
+                            // 가로 그리드 선
+                            VStack(spacing: 0) {
+                                ForEach(0..<7, id: \.self) { i in
+                                    if i > 0 {
+                                        Spacer()
+                                    }
+                                    Rectangle()
+                                        .fill(Color.gray.opacity(0.2))
+                                        .frame(height: 0.5)
+                                }
+                            }
+                        )
                     }
-                    .overlay(
-                        // 세로 그리드 선
-                        HStack(spacing: 0) {
-                            ForEach(0..<8, id: \.self) { i in
-                                if i > 0 {
-                                    Spacer()
-                                }
-                                Rectangle()
-                                    .fill(Color.gray.opacity(0.2))
-                                    .frame(width: 0.5)
-                            }
-                        }
-                    )
-                    .overlay(
-                        // 가로 그리드 선
-                        VStack(spacing: 0) {
-                            ForEach(0..<7, id: \.self) { i in
-                                if i > 0 {
-                                    Spacer()
-                                }
-                                Rectangle()
-                                    .fill(Color.gray.opacity(0.2))
-                                    .frame(height: 0.5)
-                            }
-                        }
-                    )
                 }
                 
                 // 잔액추가/지출 버튼
