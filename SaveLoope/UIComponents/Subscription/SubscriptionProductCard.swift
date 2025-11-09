@@ -21,8 +21,6 @@ struct SubscriptionProductCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            featuredBadge
-
             HStack(spacing: 16) {
                 if let productType {
                     Image(systemName: productType.icon)
@@ -37,8 +35,23 @@ struct SubscriptionProductCard: View {
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(product.displayName)
-                        .font(.headline)
+                    HStack {
+                        Text(product.displayName)
+                            .font(.headline)
+                        
+                        Spacer()
+                        
+                        if isPopular || isRecommended {
+                            Text(isRecommended ? "추천" : "인기")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 4)
+                                .background(badgeGradient)
+                                .cornerRadius(12)
+                        }
+                    }
 
                     if let productType {
                         Text(productType.description)
@@ -46,8 +59,6 @@ struct SubscriptionProductCard: View {
                             .foregroundColor(.secondary)
                     }
                 }
-
-                Spacer()
             }
 
             Divider()
@@ -70,22 +81,6 @@ struct SubscriptionProductCard: View {
         )
     }
 
-    @ViewBuilder
-    private var featuredBadge: some View {
-        if isPopular || isRecommended {
-            HStack {
-                Spacer()
-                Text(isRecommended ? "추천" : "인기")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 4)
-                    .background(badgeGradient)
-                    .cornerRadius(12)
-            }
-        }
-    }
 
     private var badgeGradient: LinearGradient {
         if isRecommended {
