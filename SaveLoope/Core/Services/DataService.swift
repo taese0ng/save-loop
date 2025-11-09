@@ -2,7 +2,7 @@ import SwiftData
 
 struct DataService {
     /// 새로운 Envelope 생성 및 저장
-    static func addEnvelope(name: String, budget: Int, context: ModelContext) {
+    static func addEnvelope(name: String, budget: Double, context: ModelContext) {
         guard !name.isEmpty else { return }
         let newEnvelope = Envelope(name: name, budget: budget)
         context.insert(newEnvelope)

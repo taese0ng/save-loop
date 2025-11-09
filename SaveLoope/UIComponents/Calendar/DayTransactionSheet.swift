@@ -24,11 +24,11 @@ struct DayTransactionSheet: View {
             }
     }
 
-    private var totalIncome: Int {
+    private var totalIncome: Double {
         transactions.filter { $0.type == .income }.reduce(0) { $0 + $1.amount }
     }
 
-    private var totalExpense: Int {
+    private var totalExpense: Double {
         transactions.filter { $0.type == .expense }.reduce(0) { $0 + $1.amount }
     }
 

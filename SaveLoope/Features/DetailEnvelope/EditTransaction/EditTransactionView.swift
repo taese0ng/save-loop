@@ -11,7 +11,7 @@ struct EditTransactionView: View {
     
     @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var selectedEnvelope: Envelope?
-    @State private var amount: Int?
+    @State private var amount: Double?
     @State private var date: Date = Date()
     @State private var showingDatePicker: Bool = false
     @State private var showingAlert: Bool = false
@@ -88,7 +88,7 @@ struct EditTransactionView: View {
         }
         
         // 금액 검증
-        guard let amountInt = amount, amountInt > 0 else {
+        guard let amountValue = amount, amountValue > 0 else {
             alertMessage = "올바른 금액을 입력해주세요"
             showingAlert = true
             return
@@ -105,13 +105,13 @@ struct EditTransactionView: View {
         
         // 새로운 봉투에 새 금액과 타입 적용
         if transactionType == .expense {
-            envelope.spent += amountInt
+            envelope.spent += amountValue
         } else {
-            envelope.income += amountInt
+            envelope.income += amountValue
         }
         
         // 트랜잭션 정보 업데이트
-        transaction.amount = amountInt
+        transaction.amount = amountValue
         transaction.date = date
         transaction.envelope = envelope
         transaction.note = note
@@ -269,8 +269,8 @@ struct EditTransactionView: View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: Envelope.self, TransactionRecord.self, configurations: config)
         
-        let envelope = Envelope(name: "테스트", budget: 100000, isRecurring: false)
-        let transaction = TransactionRecord(amount: 10000, date: Date(), type: .expense, envelope: envelope, note: "테스트", isRecurring: false)
+        let envelope = Envelope(name: "테스트", budget: 100000.0, isRecurring: false)
+        let transaction = TransactionRecord(amount: 10000.0, date: Date(), type: .expense, envelope: envelope, note: "테스트", isRecurring: false)
         
         return EditTransactionView(transaction: transaction, targetEnvelope: envelope)
             .modelContainer(container)

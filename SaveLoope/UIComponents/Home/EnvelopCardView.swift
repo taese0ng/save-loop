@@ -35,7 +35,7 @@ struct EnvelopeCardView: View {
                 Text("잔액:")
                     .font(.subheadline)
                     .foregroundColor(.black)
-                Text(Int(envelope.remaining).formattedCurrency)
+                Text(envelope.remaining.formattedCurrency)
                     .font(.subheadline)
                     .fontWeight(.bold)
                     .foregroundColor(.black)
@@ -84,9 +84,9 @@ extension Int {
 struct EnvelopeCardView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            EnvelopeCardView(envelope: Envelope(name: "일반 봉투", budget: 100000, spent: 10000))
-            EnvelopeCardView(envelope: Envelope(name: "반복 봉투", budget: 100000, spent: 10000, isRecurring: true, envelopeType: .recurring))
-            EnvelopeCardView(envelope: Envelope(name: "지속 봉투", budget: 100000, spent: 10000, envelopeType: .persistent))
+            EnvelopeCardView(envelope: Envelope(name: "일반 봉투", budget: 100000.0, spent: 10000.0))
+            EnvelopeCardView(envelope: Envelope(name: "반복 봉투", budget: 100000.0, spent: 10000.0, isRecurring: true, envelopeType: .recurring))
+            EnvelopeCardView(envelope: Envelope(name: "지속 봉투", budget: 100000.0, spent: 10000.0, envelopeType: .persistent))
         }
         .previewLayout(.sizeThatFits)
         .padding()

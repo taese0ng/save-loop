@@ -83,9 +83,9 @@ struct CalendarView: View {
 
         for transaction in monthTransactions {
             if transaction.type == .income {
-                income += Double(transaction.amount)
+                income += transaction.amount
             } else {
-                expense += Double(transaction.amount)
+                expense += transaction.amount
             }
         }
 
@@ -107,9 +107,9 @@ struct CalendarView: View {
 
         for transaction in dayTransactions {
             if transaction.type == .income {
-                income += Double(transaction.amount)
+                income += transaction.amount
             } else {
-                expense += Double(transaction.amount)
+                expense += transaction.amount
             }
         }
 

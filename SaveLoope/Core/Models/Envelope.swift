@@ -11,17 +11,17 @@ enum EnvelopeType: String, Codable {
 final class Envelope: Hashable {
     var id: UUID
     var name: String
-    var budget: Int
-    var income: Int
-    var spent: Int
-    var goal: Int
+    var budget: Double
+    var income: Double
+    var spent: Double
+    var goal: Double
     var createdAt: Date
     var isRecurring: Bool
     var parentId: UUID?
     var envelopeType: String = EnvelopeType.normal.rawValue
     var sortOrder: Int = 0
 
-    init(name: String, budget: Int, income: Int = 0, spent: Int = 0, goal: Int = 0, isRecurring: Bool = false, parentId: UUID? = nil, envelopeType: EnvelopeType = .normal) {
+    init(name: String, budget: Double, income: Double = 0, spent: Double = 0, goal: Double = 0, isRecurring: Bool = false, parentId: UUID? = nil, envelopeType: EnvelopeType = .normal) {
         self.id = UUID()
         self.name = name
         self.budget = budget
@@ -44,13 +44,13 @@ final class Envelope: Hashable {
         }
     }
     
-    var remaining: Int {
+    var remaining: Double {
         budget + income - spent
     }
     
     var progress: Double {
         if budget > 0 {
-            let progress: Double = Double(remaining) / Double(budget)   
+            let progress: Double = remaining / budget
             return progress > 1 ? 1.0 : progress
         } else {
             return 0.0

@@ -7,8 +7,8 @@ struct AddEnvelopeView: View {
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var envelopeName: String = ""
-    @State private var initialAmount: Int? = nil
-    @State private var goalAmount: Int? = nil
+    @State private var initialAmount: Double? = nil
+    @State private var goalAmount: Double? = nil
     @State private var selectedEnvelopeType: EnvelopeType = .normal
     @State private var showingAlert: Bool = false
     @State private var alertMessage: String = ""
@@ -37,7 +37,7 @@ struct AddEnvelopeView: View {
             return
         }
 
-        guard let amount: Int = initialAmount, amount > 0 else {
+        guard let amount: Double = initialAmount, amount > 0 else {
             alertMessage = "올바른 시작 잔액을 입력해주세요"
             showingAlert = true
             return

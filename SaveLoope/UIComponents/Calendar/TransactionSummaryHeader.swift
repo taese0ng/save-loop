@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct TransactionSummaryHeader: View {
-    let totalIncome: Int
-    let totalExpense: Int
+    let totalIncome: Double
+    let totalExpense: Double
     @ObservedObject private var currencyManager = CurrencyManager.shared
 
 

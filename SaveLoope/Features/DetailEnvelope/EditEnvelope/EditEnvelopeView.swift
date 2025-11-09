@@ -11,8 +11,8 @@ struct EditEnvelopeView: View {
     @Bindable var envelope: Envelope
 
     @State private var envelopeName: String = ""
-    @State private var initialAmount: Int? = nil
-    @State private var goalAmount: Int? = nil
+    @State private var initialAmount: Double? = nil
+    @State private var goalAmount: Double? = nil
     @State private var selectedEnvelopeType: EnvelopeType = .normal
     @State private var originalEnvelopeType: EnvelopeType = .normal
     @State private var showingAlert: Bool = false
@@ -51,7 +51,7 @@ struct EditEnvelopeView: View {
             return
         }
 
-        guard let amount: Int = initialAmount, amount > 0 else {
+        guard let amount: Double = initialAmount, amount > 0 else {
             alertMessage = "올바른 시작 잔액을 입력해주세요"
             showingAlert = true
             return
@@ -330,7 +330,7 @@ struct EditEnvelopeView: View {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: Envelope.self, TransactionRecord.self, configurations: config)
         
-        let envelope = Envelope(name: "테스트", budget: 100000, isRecurring: false)
+        let envelope = Envelope(name: "테스트", budget: 100000.0, isRecurring: false)
         
         return EditEnvelopeView(shouldDismiss: .constant(false), envelope: envelope)
             .modelContainer(container)

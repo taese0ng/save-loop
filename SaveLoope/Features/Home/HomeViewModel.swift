@@ -5,7 +5,7 @@ import Foundation
 @MainActor
 class HomeViewModel: ObservableObject {
     /// 전체 남은 예산 합계 계산
-    func totalRemaining(from envelopes: [Envelope]) -> Int {
+    func totalRemaining(from envelopes: [Envelope]) -> Double {
         envelopes.reduce(0) { $0 + $1.remaining }
     }
     
@@ -188,7 +188,7 @@ class HomeViewModel: ObservableObject {
     
     /// 샘플 Envelope 하나 추가 (테스트 용도)
     func addSampleEnvelope(using context: ModelContext) {
-        let sample = Envelope(name: "새 봉투", budget: 100000)
+        let sample = Envelope(name: "새 봉투", budget: 100000.0)
         context.insert(sample)
     }
 }

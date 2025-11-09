@@ -10,7 +10,7 @@ struct AddBalanceView: View {
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var selectedEnvelope: Envelope?
-    @State private var amount: Int?
+    @State private var amount: Double?
     @State private var date: Date = Date()
     @State private var showingDatePicker: Bool = false
     @State private var showingAlert: Bool = false
@@ -89,7 +89,7 @@ struct AddBalanceView: View {
         }
 
         // 금액 검증
-        guard let amountInt: Int = amount, amountInt > 0 else {
+        guard let amountValue = amount, amountValue > 0 else {
             alertTitle = "알림"
             alertMessage = "올바른 금액을 입력해주세요"
             showingAlert = true
@@ -113,23 +113,23 @@ struct AddBalanceView: View {
         
         // TransactionRecord 생성 및 저장
         let newRecord = TransactionRecord(
-            amount: amountInt, 
-            date: date, 
-            type: .income, 
-            envelope: envelope, 
-            note: note, 
+            amount: amountValue,
+            date: date,
+            type: .income,
+            envelope: envelope,
+            note: note,
             isRecurring: isRecurring
         )
-       
+
         // 반복 거래인 경우 parentId를 자기 자신으로 설정
         if isRecurring {
             newRecord.parentId = newRecord.id
         }
 
         modelContext.insert(newRecord)
-        
+
         // 수입 추가 시 income 증가
-        envelope.income += amountInt
+        envelope.income += amountValue
         
         // 명시적으로 저장 (아이클라우드 동기화 포함)
         do {
@@ -140,7 +140,7 @@ struct AddBalanceView: View {
         } catch {
             print("❌ 잔액 추가 저장 실패: \(error.localizedDescription)")
             // 롤백: 변경사항 되돌리기
-            envelope.income -= amountInt
+            envelope.income -= amountValue
             alertMessage = "잔액 추가 중 오류가 발생했습니다"
             showingAlert = true
         }
