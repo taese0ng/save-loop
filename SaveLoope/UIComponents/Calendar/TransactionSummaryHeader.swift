@@ -3,12 +3,8 @@ import SwiftUI
 struct TransactionSummaryHeader: View {
     let totalIncome: Int
     let totalExpense: Int
+    @ObservedObject private var currencyManager = CurrencyManager.shared
 
-    private func formatAmount(_ amount: Int) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter.string(from: NSNumber(value: amount)) ?? "0"
-    }
 
     var body: some View {
         HStack(spacing: 30) {
@@ -20,7 +16,7 @@ struct TransactionSummaryHeader: View {
                     Text("수입")
                         .font(.caption)
                         .foregroundColor(.gray)
-                    Text("+\(formatAmount(totalIncome))원")
+                    Text("+\(totalIncome.formattedCurrency)")
                         .font(.system(size: 17, weight: .bold))
                         .foregroundColor(.blue)
                         .lineLimit(1)
@@ -36,7 +32,7 @@ struct TransactionSummaryHeader: View {
                     Text("지출")
                         .font(.caption)
                         .foregroundColor(.gray)
-                    Text("-\(formatAmount(totalExpense))원")
+                    Text("-\(totalExpense.formattedCurrency)")
                         .font(.system(size: 17, weight: .bold))
                         .foregroundColor(.red)
                         .lineLimit(1)

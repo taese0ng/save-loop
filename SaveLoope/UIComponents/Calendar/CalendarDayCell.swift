@@ -6,6 +6,7 @@ struct CalendarDayCell: View {
     let month: Int
     let income: Double
     let expense: Double
+    @ObservedObject private var currencyManager = CurrencyManager.shared
 
     private var isToday: Bool {
         let calendar = Calendar.current
@@ -45,7 +46,7 @@ struct CalendarDayCell: View {
 
             VStack(spacing: 2) {
                 if income > 0 {
-                    Text("+\(formatAmount(income))")
+                    Text("+\(income.formattedCurrency)")
                         .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.blue)
                         .lineLimit(1)
@@ -53,7 +54,7 @@ struct CalendarDayCell: View {
                 }
 
                 if expense > 0 {
-                    Text("-\(formatAmount(expense))")
+                    Text("-\(expense.formattedCurrency)")
                         .font(.system(size: 9, weight: .medium))
                         .foregroundColor(.red)
                         .lineLimit(1)
@@ -68,11 +69,4 @@ struct CalendarDayCell: View {
         .background(Color.white)
     }
 
-    private func formatAmount(_ amount: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.groupingSeparator = ","
-        formatter.usesGroupingSeparator = true
-        return formatter.string(from: NSNumber(value: Int(amount))) ?? "\(Int(amount))"
-    }
 }

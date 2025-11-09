@@ -34,6 +34,7 @@ enum CalendarNavigationRoute: Hashable {
 
 struct CalendarView: View {
     @EnvironmentObject private var dateSelection: DateSelectionState
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     @Query private var allTransactions: [TransactionRecord]
 
     @State private var selectedDateInfo: IdentifiableDate?

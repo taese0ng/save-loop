@@ -4,13 +4,8 @@ struct MonthSummaryView: View {
     let totalIncome: Double
     let totalExpense: Double
     let balance: Double
+    @ObservedObject private var currencyManager = CurrencyManager.shared
 
-    private func formatAmount(_ amount: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 0
-        return formatter.string(from: NSNumber(value: amount)) ?? "0"
-    }
 
     var body: some View {
         HStack(spacing: 20) {
@@ -22,7 +17,7 @@ struct MonthSummaryView: View {
                         .font(.caption)
                         .foregroundColor(.gray)
                         .frame(width: 50, alignment: .leading)
-                    Text("+\(formatAmount(totalIncome))원")
+                    Text("+\(totalIncome.formattedCurrency)")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.blue)
                         .lineLimit(1)
@@ -35,7 +30,7 @@ struct MonthSummaryView: View {
                         .font(.caption)
                         .foregroundColor(.gray)
                         .frame(width: 50, alignment: .leading)
-                    Text("-\(formatAmount(totalExpense))원")
+                    Text("-\(totalExpense.formattedCurrency)")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.red)
                         .lineLimit(1)
@@ -52,7 +47,7 @@ struct MonthSummaryView: View {
                 Text("총액")
                     .font(.caption)
                     .foregroundColor(.gray)
-                Text("\(balance >= 0 ? "+" : "")\(formatAmount(balance))원")
+                Text("\(balance >= 0 ? "+" : "")\(balance.formattedCurrency)")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(balance >= 0 ? .blue : .red)
                     .lineLimit(1)

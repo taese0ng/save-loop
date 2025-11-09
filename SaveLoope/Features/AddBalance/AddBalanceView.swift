@@ -8,6 +8,7 @@ struct AddBalanceView: View {
     @Query(sort: \TransactionRecord.date) private var allTransactions: [TransactionRecord]
 
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var selectedEnvelope: Envelope?
     @State private var amount: Int?
     @State private var date: Date = Date()
@@ -169,7 +170,7 @@ struct AddBalanceView: View {
                         value: $amount,
                         placeholder: "0",
                         required: true,
-                        prefix: "원"
+                        prefix: CurrencyManager.shared.currentSymbol
                     )
 
                     DatePickerButton(

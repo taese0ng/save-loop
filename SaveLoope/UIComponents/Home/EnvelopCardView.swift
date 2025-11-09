@@ -2,6 +2,7 @@ import SwiftUI
 
 struct EnvelopeCardView: View {
     @Bindable var envelope: Envelope
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var animatedProgress: Double = 0.0
 
     var body: some View {
@@ -34,7 +35,7 @@ struct EnvelopeCardView: View {
                 Text("잔액:")
                     .font(.subheadline)
                     .foregroundColor(.black)
-                Text("\(Int(envelope.remaining).formattedWithSeparator)원")
+                Text(Int(envelope.remaining).formattedCurrency)
                     .font(.subheadline)
                     .fontWeight(.bold)
                     .foregroundColor(.black)

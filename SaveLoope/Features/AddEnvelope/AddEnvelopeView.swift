@@ -5,6 +5,7 @@ struct AddEnvelopeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss: DismissAction
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var envelopeName: String = ""
     @State private var initialAmount: Int? = nil
     @State private var goalAmount: Int? = nil
@@ -130,8 +131,8 @@ struct AddEnvelopeView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     VStack(spacing: 16) {
                         LabeledTextField(label: "봉투 이름", text: $envelopeName, required: true)
-                        LabeledNumberField(label: "시작 잔액", value: $initialAmount, placeholder: "0", required: true, prefix: "원")
-                        LabeledNumberField(label: "목표 잔액", value: $goalAmount, placeholder: "0", prefix: "원")
+                        LabeledNumberField(label: "시작 잔액", value: $initialAmount, placeholder: "0", required: true, prefix: CurrencyManager.shared.currentSymbol)
+                        LabeledNumberField(label: "목표 잔액", value: $goalAmount, placeholder: "0", prefix: CurrencyManager.shared.currentSymbol)
 
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {

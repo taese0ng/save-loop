@@ -7,6 +7,7 @@ struct DetailEnvelopeView: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
     @Environment(\.modelContext) private var modelContext: ModelContext
     @Bindable var envelope: Envelope
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     @Query private var transactions: [TransactionRecord]
     @State private var selectedTransaction: TransactionRecord? = nil
     @State private var showingEditSheet: Bool = false
@@ -43,18 +44,18 @@ struct DetailEnvelopeView: View {
                     // 봉투 정보 섹션
                     VStack(spacing: 16) {
                         // 시작 잔액
-                        InfoRow(title: "시작 잔액", value: "\(envelope.budget.formattedWithSeparator)원")
+                        InfoRow(title: "시작 잔액", value: envelope.budget.formattedCurrency)
                         
                         // 목표 잔액
                         if envelope.goal > 0 {
-                            InfoRow(title: "목표 잔액", value: "\(envelope.goal.formattedWithSeparator)원")
+                            InfoRow(title: "목표 잔액", value: envelope.goal.formattedCurrency)
                         }
                         
                         // 현재 잔액
-                        InfoRow(title: "현재 잔액", value: "\(envelope.remaining.formattedWithSeparator)원")
+                        InfoRow(title: "현재 잔액", value: envelope.remaining.formattedCurrency)
                         
                         // 지출 금액
-                        InfoRow(title: "지출 금액", value: "\(envelope.spent.formattedWithSeparator)원")
+                        InfoRow(title: "지출 금액", value: envelope.spent.formattedCurrency)
                     }
                     .padding()
                     .background(Color.white)

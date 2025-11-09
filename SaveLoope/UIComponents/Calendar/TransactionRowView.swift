@@ -4,12 +4,8 @@ import SwiftData
 struct TransactionRowView: View {
     let transaction: TransactionRecord
     let showDivider: Bool
+    @ObservedObject private var currencyManager = CurrencyManager.shared
 
-    private func formatAmount(_ amount: Int) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter.string(from: NSNumber(value: amount)) ?? "0"
-    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -32,7 +28,7 @@ struct TransactionRowView: View {
 
                 Spacer()
 
-                Text("\(transaction.type == .income ? "+" : "-")\(formatAmount(transaction.amount))원")
+                Text("\(transaction.type == .income ? "+" : "-")\(transaction.amount.formattedCurrency)")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(transaction.type == .income ? .blue : .red)
             }

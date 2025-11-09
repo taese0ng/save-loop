@@ -3,6 +3,7 @@ import SwiftData
 
 struct TransactionRow: View {
     let transaction: TransactionRecord
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var showingActionSheet: Bool = false
     var onClickMenu: (() -> Void)? = nil
     
@@ -37,7 +38,7 @@ struct TransactionRow: View {
             
             Spacer()
             
-            Text("\(transaction.type == .income ? "+" : "-")\(transaction.amount.formattedWithSeparator)원")
+            Text("\(transaction.type == .income ? "+" : "-")\(transaction.amount.formattedCurrency)")
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .foregroundColor(transaction.type == .income ? .blue : .red)

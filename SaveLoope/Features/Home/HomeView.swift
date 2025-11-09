@@ -39,6 +39,7 @@ enum NavigationRoute: Hashable {
 struct HomeView: View {
     @ObservedObject private var viewModel = HomeViewModel()
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     @Query private var allEnvelopes: [Envelope]
     @Environment(\.modelContext) private var modelContext: ModelContext
 

@@ -31,6 +31,8 @@ struct SettingsView: View {
             )
 
             List {
+                CurrencySettingsSection()
+                
                 MembershipSection(
                     subscriptionManager: subscriptionManager,
                     onTap: { showingSubscriptionView = true }

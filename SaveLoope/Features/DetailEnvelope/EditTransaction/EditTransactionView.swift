@@ -9,6 +9,7 @@ struct EditTransactionView: View {
     let transaction: TransactionRecord
     let targetEnvelope: Envelope
     
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var selectedEnvelope: Envelope?
     @State private var amount: Int?
     @State private var date: Date = Date()
@@ -198,7 +199,7 @@ struct EditTransactionView: View {
                             value: $amount,
                             placeholder: "0",
                             required: true,
-                            prefix: "원"
+                            prefix: CurrencyManager.shared.currentSymbol
                         )
 
                         DatePickerButton(
