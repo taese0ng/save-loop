@@ -113,6 +113,7 @@ struct DetailEnvelopeView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 

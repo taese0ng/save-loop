@@ -188,6 +188,7 @@ struct AddEnvelopeView: View {
             .toolbarBackground(.white, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
         }
+        .navigationViewStyle(.stack)
     }
 }
 

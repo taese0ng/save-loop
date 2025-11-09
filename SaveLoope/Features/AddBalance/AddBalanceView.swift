@@ -227,6 +227,7 @@ struct AddBalanceView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 

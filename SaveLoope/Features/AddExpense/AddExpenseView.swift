@@ -225,6 +225,7 @@ struct AddExpenseView: View {
                }
            }
        }
+       .navigationViewStyle(.stack)
    }
 }
 

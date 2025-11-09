@@ -320,6 +320,7 @@ struct EditEnvelopeView: View {
                 originalEnvelopeType = envelope.type
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 

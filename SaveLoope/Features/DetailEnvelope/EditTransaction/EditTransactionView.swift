@@ -259,6 +259,7 @@ struct EditTransactionView: View {
                 isRecurring = transaction.isRecurring
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 
