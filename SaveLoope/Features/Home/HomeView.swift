@@ -37,7 +37,7 @@ enum NavigationRoute: Hashable {
 }
 
 struct HomeView: View {
-    @ObservedObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel = HomeViewModel()
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @ObservedObject private var currencyManager = CurrencyManager.shared
     @Query private var allEnvelopes: [Envelope]
@@ -63,15 +63,19 @@ struct HomeView: View {
             return false
         }
 
-        // 해당 월의 첫날로 정규화
-        let normalizedDate = calendar.date(from: calendar.dateComponents([.year, .month], from: date)) ?? date
-        let normalizedThreeMonthsAgo = calendar.date(from: calendar.dateComponents([.year, .month], from: threeMonthsAgo)) ?? threeMonthsAgo
+        // 해당 월의 첫날로 정규화 (한 번만 계산)
+        let dateComponents = calendar.dateComponents([.year, .month], from: date)
+        let threeMonthsAgoComponents = calendar.dateComponents([.year, .month], from: threeMonthsAgo)
+        
+        guard let normalizedDate = calendar.date(from: dateComponents),
+              let normalizedThreeMonthsAgo = calendar.date(from: threeMonthsAgoComponents) else {
+            return false
+        }
 
         return normalizedDate >= normalizedThreeMonthsAgo
     }
 
     private var filteredEnvelopes: [Envelope] {
-        let calendar = Calendar.current
         let selectedDate = dateSelection.selectedDate
 
         // 무료 사용자이고 3개월 이전 데이터를 조회하려는 경우 빈 배열 반환
@@ -79,48 +83,7 @@ struct HomeView: View {
             return []
         }
 
-        // 선택된 날짜의 년/월 컴포넌트를 한 번만 계산
-        let selectedYear = calendar.component(.year, from: selectedDate)
-        let selectedMonth = calendar.component(.month, from: selectedDate)
-
-        return allEnvelopes
-            .filter { envelope in
-                // 지속형 봉투는 항상 표시
-                if envelope.type == .persistent {
-                    return true
-                }
-
-                // 일반/반복 봉투는 선택된 월과 일치하는 것만 표시
-                return calendar.component(.year, from: envelope.createdAt) == selectedYear &&
-                       calendar.component(.month, from: envelope.createdAt) == selectedMonth
-            }
-            .sorted { env1, env2 in
-                // sortOrder가 0이면 Int.max로 취급 (맨 뒤로)
-                let order1 = env1.sortOrder == 0 ? Int.max : env1.sortOrder
-                let order2 = env2.sortOrder == 0 ? Int.max : env2.sortOrder
-
-                if order1 != order2 {
-                    return order1 < order2
-                }
-
-                // sortOrder가 같으면 날짜 기준 정렬
-                let date1 = getSortDate(for: env1)
-                let date2 = getSortDate(for: env2)
-                return date1 < date2
-            }
-    }
-
-    // 정렬용 날짜 반환: 반복 봉투는 원본(parent)의 createdAt 사용
-    private func getSortDate(for envelope: Envelope) -> Date {
-        // 반복 봉투이고 parentId가 있는 경우
-        if envelope.type == .recurring, let parentId = envelope.parentId {
-            // 원본 봉투 찾기
-            if let parent = allEnvelopes.first(where: { $0.id == parentId && $0.parentId == $0.id }) {
-                return parent.createdAt
-            }
-        }
-        // 그 외의 경우 자신의 createdAt 사용
-        return envelope.createdAt
+        return EnvelopeUtils.filterAndSortEnvelopes(allEnvelopes, selectedDate: selectedDate)
     }
 
     // 봉투 순서 변경
@@ -159,13 +122,16 @@ struct HomeView: View {
     func moveAddEnvelopePage() {
         let calendar = Calendar.current
         let now = Date()
-        let currentYear = calendar.component(.year, from: now)
-        let currentMonth = calendar.component(.month, from: now)
+        let dateComponents = calendar.dateComponents([.year, .month], from: now)
+        guard let currentYear = dateComponents.year,
+              let currentMonth = dateComponents.month else {
+            return
+        }
 
         // 현재 월에 생성된 봉투만 카운트 (지속형 봉투는 최초 생성 월에만 카운트)
         let currentMonthCreatedCount = allEnvelopes.filter { envelope in
-            calendar.component(.year, from: envelope.createdAt) == currentYear &&
-            calendar.component(.month, from: envelope.createdAt) == currentMonth
+            let envelopeComponents = calendar.dateComponents([.year, .month], from: envelope.createdAt)
+            return envelopeComponents.year == currentYear && envelopeComponents.month == currentMonth
         }.count
 
         // 프리미엄 기능 체크

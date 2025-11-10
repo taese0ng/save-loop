@@ -47,13 +47,18 @@ struct CalendarView: View {
     private var currentMonthDate: Date {
         dateSelection.selectedDate
     }
+    
+    // 선택된 날짜의 년/월 컴포넌트 (한 번만 계산)
+    private var selectedDateComponents: DateComponents {
+        calendar.dateComponents([.year, .month], from: dateSelection.selectedDate)
+    }
 
     private var selectedYear: Int {
-        calendar.component(.year, from: dateSelection.selectedDate)
+        selectedDateComponents.year ?? calendar.component(.year, from: dateSelection.selectedDate)
     }
 
     private var selectedMonth: Int {
-        calendar.component(.month, from: dateSelection.selectedDate)
+        selectedDateComponents.month ?? calendar.component(.month, from: dateSelection.selectedDate)
     }
 
     // 현재 월의 첫 번째 날
@@ -71,13 +76,15 @@ struct CalendarView: View {
         calendar.range(of: .day, in: .month, for: currentMonthDate)?.count ?? 30
     }
 
-    // 현재 월의 전체 거래내역 합산
+    // 현재 월의 전체 거래내역 합산 (한 번만 필터링)
     private var monthlyTotals: (income: Double, expense: Double, balance: Double) {
+        // 선택된 월의 거래만 한 번 필터링
         let monthTransactions = allTransactions.filter { transaction in
-            calendar.component(.year, from: transaction.date) == selectedYear &&
-            calendar.component(.month, from: transaction.date) == selectedMonth
+            let transactionComponents = calendar.dateComponents([.year, .month], from: transaction.date)
+            return transactionComponents.year == selectedYear && transactionComponents.month == selectedMonth
         }
 
+        // 한 번의 순회로 수입과 지출 계산
         var income: Double = 0
         var expense: Double = 0
 
@@ -92,13 +99,19 @@ struct CalendarView: View {
         return (income, expense, income - expense)
     }
 
-    // 날짜별 거래내역 합산 계산
+    // 날짜별 거래내역 합산 계산 (최적화: 월 필터링 후 일자만 확인)
     private func getTransactionTotal(for day: Int) -> (income: Double, expense: Double) {
         guard let date = calendar.date(from: DateComponents(year: selectedYear, month: selectedMonth, day: day)) else {
             return (0, 0)
         }
 
-        let dayTransactions = allTransactions.filter { transaction in
+        // 월 필터링된 거래 중에서 해당 일자만 확인 (더 효율적)
+        let monthTransactions = allTransactions.filter { transaction in
+            let transactionComponents = calendar.dateComponents([.year, .month], from: transaction.date)
+            return transactionComponents.year == selectedYear && transactionComponents.month == selectedMonth
+        }
+        
+        let dayTransactions = monthTransactions.filter { transaction in
             calendar.isDate(transaction.date, inSameDayAs: date)
         }
 

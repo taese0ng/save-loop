@@ -13,8 +13,12 @@ class HomeViewModel: ObservableObject {
     func checkAndCreateRecurringEnvelopes(using context: ModelContext) {
         let calendar = Calendar.current
         let currentDate = Date()
-        let currentYear = calendar.component(.year, from: currentDate)
-        let currentMonth = calendar.component(.month, from: currentDate)
+        let dateComponents = calendar.dateComponents([.year, .month], from: currentDate)
+        guard let currentYear = dateComponents.year,
+              let currentMonth = dateComponents.month else {
+            print("❌ 날짜 컴포넌트 추출 실패")
+            return
+        }
         
         // 모든 봉투를 가져옴
         let envelopeDescriptor = FetchDescriptor<Envelope>()
@@ -30,17 +34,15 @@ class HomeViewModel: ObservableObject {
             }
             
             // 현재 월의 봉투들
-            let currentEnvelopes = allEnvelopes.filter { 
-                calendar.component(.month, from: $0.createdAt) == currentMonth && 
-                calendar.component(.year, from: $0.createdAt) == currentYear 
+            let currentEnvelopes = allEnvelopes.filter { envelope in
+                let envelopeComponents = calendar.dateComponents([.year, .month], from: envelope.createdAt)
+                return envelopeComponents.year == currentYear && envelopeComponents.month == currentMonth
             }
             
             for originalEnvelope in originalRecurringEnvelopes {
                 // 이미 현재 월에 생성된 봉투가 있는지 확인
                 let existingEnvelope = currentEnvelopes.first { existing in
-                    (existing.parentId == originalEnvelope.id || existing.id == originalEnvelope.id) &&
-                    calendar.component(.year, from: existing.createdAt) == currentYear &&
-                    calendar.component(.month, from: existing.createdAt) == currentMonth
+                    existing.parentId == originalEnvelope.id || existing.id == originalEnvelope.id
                 }
                 
                 // 현재 월에 해당하는 봉투가 없으면 생성
@@ -80,8 +82,12 @@ class HomeViewModel: ObservableObject {
     func checkAndCreateRecurringTransactions(using context: ModelContext) {
         let calendar = Calendar.current
         let currentDate = Date()
-        let currentYear = calendar.component(.year, from: currentDate)
-        let currentMonth = calendar.component(.month, from: currentDate)
+        let dateComponents = calendar.dateComponents([.year, .month], from: currentDate)
+        guard let currentYear = dateComponents.year,
+              let currentMonth = dateComponents.month else {
+            print("❌ 날짜 컴포넌트 추출 실패")
+            return
+        }
         
         // 모든 Envelope와 TransactionRecord를 가져옴
         let envelopeDescriptor = FetchDescriptor<Envelope>()
@@ -98,22 +104,20 @@ class HomeViewModel: ObservableObject {
             
             // 현재 달에 이미 생성된 거래 내역 필터링
             let currentTransactions = allTransactions.filter { transaction in
-                calendar.component(.month, from: transaction.date) == currentMonth && 
-                calendar.component(.year, from: transaction.date) == currentYear
+                let transactionComponents = calendar.dateComponents([.year, .month], from: transaction.date)
+                return transactionComponents.year == currentYear && transactionComponents.month == currentMonth
             }
             
             // 현재 달의 봉투 필터링
             let currentEnvelopes = allEnvelopes.filter { envelope in
-                calendar.component(.month, from: envelope.createdAt) == currentMonth && 
-                calendar.component(.year, from: envelope.createdAt) == currentYear
+                let envelopeComponents = calendar.dateComponents([.year, .month], from: envelope.createdAt)
+                return envelopeComponents.year == currentYear && envelopeComponents.month == currentMonth
             }
             
             for originalTransaction in originalRecurringTransactions {
                 // 이미 현재 월에 생성된 거래 내역이 있는지 확인
                 let existingTransaction = currentTransactions.first { existing in
-                    (existing.parentId == originalTransaction.id || existing.id == originalTransaction.id) &&
-                    calendar.component(.year, from: existing.date) == currentYear &&
-                    calendar.component(.month, from: existing.date) == currentMonth
+                    existing.parentId == originalTransaction.id || existing.id == originalTransaction.id
                 }
                 
                 // 현재 월에 해당하는 거래 내역이 없으면 생성

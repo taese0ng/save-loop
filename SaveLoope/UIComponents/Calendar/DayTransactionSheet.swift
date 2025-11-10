@@ -7,9 +7,12 @@ struct DayTransactionSheet: View {
 
     private var formattedDate: String {
         let calendar = Calendar.current
-        let year = calendar.component(.year, from: date)
-        let month = calendar.component(.month, from: date)
-        let day = calendar.component(.day, from: date)
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+        guard let year = components.year,
+              let month = components.month,
+              let day = components.day else {
+            return ""
+        }
         return "\(year)년 \(month)월 \(day)일"
     }
 
@@ -24,12 +27,28 @@ struct DayTransactionSheet: View {
             }
     }
 
+    // 한 번만 계산하여 재사용
+    private var transactionTotals: (income: Double, expense: Double) {
+        var income: Double = 0
+        var expense: Double = 0
+        
+        for transaction in transactions {
+            if transaction.type == .income {
+                income += transaction.amount
+            } else {
+                expense += transaction.amount
+            }
+        }
+        
+        return (income, expense)
+    }
+    
     private var totalIncome: Double {
-        transactions.filter { $0.type == .income }.reduce(0) { $0 + $1.amount }
+        transactionTotals.income
     }
 
     private var totalExpense: Double {
-        transactions.filter { $0.type == .expense }.reduce(0) { $0 + $1.amount }
+        transactionTotals.expense
     }
 
     var body: some View {

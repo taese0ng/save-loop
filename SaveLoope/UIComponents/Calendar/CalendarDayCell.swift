@@ -11,17 +11,18 @@ struct CalendarDayCell: View {
     private var isToday: Bool {
         let calendar = Calendar.current
         let today = Date()
-        return calendar.component(.year, from: today) == year &&
-               calendar.component(.month, from: today) == month &&
-               calendar.component(.day, from: today) == day
+        let todayComponents = calendar.dateComponents([.year, .month, .day], from: today)
+        return todayComponents.year == year &&
+               todayComponents.month == month &&
+               todayComponents.day == day
     }
 
     private var weekday: Int {
         let calendar = Calendar.current
-        if let date = calendar.date(from: DateComponents(year: year, month: month, day: day)) {
-            return calendar.component(.weekday, from: date)
+        guard let date = calendar.date(from: DateComponents(year: year, month: month, day: day)) else {
+            return 0
         }
-        return 0
+        return calendar.component(.weekday, from: date)
     }
 
     private var dayColor: Color {
@@ -37,11 +38,12 @@ struct CalendarDayCell: View {
     var body: some View {
         VStack(spacing: 4) {
             Text("\(day)")
-                .font(.system(size: 17, weight: isToday ? .bold : .regular))
+                .font(.system(size: 15, weight: isToday ? .bold : .regular))
                 .foregroundColor(isToday ? .white : dayColor)
-                .frame(width: 30, height: 30)
+                .frame(height: 20)
+                .padding(.horizontal, 12)
                 .background(isToday ? Color.blue : Color.clear)
-                .clipShape(Circle())
+                .clipShape(Capsule())
                 .padding(.top, 6)
 
             VStack(spacing: 2) {
@@ -63,7 +65,7 @@ struct CalendarDayCell: View {
             }
             .padding(.horizontal, 2)
 
-            Spacer()
+            Spacer(minLength: 4)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.white)

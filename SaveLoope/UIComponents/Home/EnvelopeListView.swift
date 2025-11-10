@@ -88,18 +88,9 @@ struct EnvelopeListView: View {
 #Preview {
     EnvelopeListView(
         envelopes: [
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
-            Envelope(name: "생활비", budget: 1000000, spent: 400000),
+            Envelope(name: "생활비", budget: 1000000.0, spent: 400000.0),
+            Envelope(name: "교통비", budget: 200000.0, spent: 50000.0),
+            Envelope(name: "식비", budget: 500000.0, spent: 300000.0),
         ],
         onAddEnvelope: { print("add") },
         onEnvelopeTap: { _ in print("tap") },

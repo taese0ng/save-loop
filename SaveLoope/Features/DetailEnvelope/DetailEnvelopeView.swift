@@ -20,13 +20,6 @@ struct DetailEnvelopeView: View {
         return formatter
     }()
     
-    private let numberFormatter: NumberFormatter = {
-        let formatter: NumberFormatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.groupingSeparator = ","
-        formatter.groupingSize = 3
-        return formatter
-    }()
     
     var filteredTransactions: [TransactionRecord] {
         transactions.filter { $0.envelope == envelope }
