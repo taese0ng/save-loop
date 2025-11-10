@@ -5,7 +5,8 @@ import SwiftData
 struct SaveLoopeApp: App {
     @StateObject private var dateSelection = DateSelectionState()
     @StateObject private var cloudSyncManager = CloudSyncManager.shared
-    
+    @State private var showLaunchView = true
+
     // ModelContainer를 앱 시작 시점에 한 번만 생성
     private static let sharedModelContainer: ModelContainer = {
         do {
@@ -35,9 +36,20 @@ struct SaveLoopeApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainTabView()
-                .environmentObject(dateSelection)
-                .environmentObject(cloudSyncManager)
+            if showLaunchView {
+                LaunchView()
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            withAnimation {
+                                showLaunchView = false
+                            }
+                        }
+                    }
+            } else {
+                MainTabView()
+                    .environmentObject(dateSelection)
+                    .environmentObject(cloudSyncManager)
+            }
         }
         .modelContainer(Self.sharedModelContainer)
     }

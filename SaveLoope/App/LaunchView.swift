@@ -10,8 +10,8 @@ import SwiftUI
 struct LaunchView: View {
     var body: some View {
         ZStack {
-            // 배경색 설정 (#F5F4F0)
-            Color(red: 245/255, green: 244/255, blue: 240/255)
+            // 배경색 설정 (라이트/다크 모드 자동 대응)
+            Color("LaunchBackground")
                 .ignoresSafeArea()
 
             // 중앙보다 위에 이미지 배치
