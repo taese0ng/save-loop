@@ -4,7 +4,6 @@ import SwiftData
 struct EditEnvelopeView: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
     @Environment(\.modelContext) private var modelContext: ModelContext
-    @Environment(\.presentationMode) var presentationMode
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
     @ObservedObject private var currencyManager = CurrencyManager.shared
     @Binding var shouldDismiss: Bool
@@ -166,7 +165,7 @@ struct EditEnvelopeView: View {
             
             // 네비게이션 스택을 초기화하여 홈 화면으로 돌아가기
             shouldDismiss = true
-            presentationMode.wrappedValue.dismiss()
+            dismiss()
         } catch {
             print("❌ 봉투 삭제 실패: \(error.localizedDescription)")
             alertMessage = "봉투 삭제 중 오류가 발생했습니다"

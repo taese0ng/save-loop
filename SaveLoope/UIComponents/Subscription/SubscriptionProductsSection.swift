@@ -28,7 +28,7 @@ struct SubscriptionProductsSection: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 16) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 50))
                 .foregroundColor(.orange)
@@ -36,16 +36,28 @@ struct SubscriptionProductsSection: View {
             Text("제품을 불러올 수 없습니다")
                 .font(.headline)
 
-            Text(errorMessage ?? "네트워크 연결을 확인해주세요")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
+            if let errorMessage = errorMessage {
+                ScrollView {
+                    Text(errorMessage)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
+                .frame(maxHeight: 200)
+            } else {
+                Text("네트워크 연결을 확인해주세요")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+            }
 
             Button("다시 시도", action: onRetry)
-                .buttonStyle(.bordered)
+                .buttonStyle(.borderedProminent)
                 .padding(.top, 8)
         }
         .padding(.vertical, 40)
+        .padding(.horizontal)
     }
 }
 

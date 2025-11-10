@@ -72,15 +72,6 @@ struct EnvelopeCardView: View {
     }
 }
 
-// 숫자 포맷팅 (천 단위 구분)
-extension Int {
-    var formattedWithSeparator: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter.string(from: NSNumber(value: self)) ?? "\(self)"
-    }
-}
-
 struct EnvelopeCardView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

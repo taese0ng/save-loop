@@ -1,7 +1,5 @@
 import SwiftUI
 import SwiftData
-import Foundation
-
 
 struct DetailEnvelopeView: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
@@ -12,14 +10,6 @@ struct DetailEnvelopeView: View {
     @State private var selectedTransaction: TransactionRecord? = nil
     @State private var showingEditSheet: Bool = false
     @State private var shouldDismiss: Bool = false
-    
-    private let dateFormatter: DateFormatter = {
-        let formatter: DateFormatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
-        formatter.locale = Locale(identifier: "ko_KR")
-        return formatter
-    }()
-    
     
     var filteredTransactions: [TransactionRecord] {
         transactions.filter { $0.envelope == envelope }

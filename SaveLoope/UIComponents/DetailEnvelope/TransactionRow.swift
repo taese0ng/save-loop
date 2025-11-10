@@ -4,7 +4,6 @@ import SwiftData
 struct TransactionRow: View {
     let transaction: TransactionRecord
     @ObservedObject private var currencyManager = CurrencyManager.shared
-    @State private var showingActionSheet: Bool = false
     var onClickMenu: (() -> Void)? = nil
     
     private let dateFormatter: DateFormatter = {

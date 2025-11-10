@@ -189,10 +189,4 @@ class HomeViewModel: ObservableObject {
             print("거래 내역 데이터를 처리하는데 실패했습니다: \(error)")
         }
     }
-    
-    /// 샘플 Envelope 하나 추가 (테스트 용도)
-    func addSampleEnvelope(using context: ModelContext) {
-        let sample = Envelope(name: "새 봉투", budget: 100000.0)
-        context.insert(sample)
-    }
 }

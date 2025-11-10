@@ -3,15 +3,6 @@ import SwiftData
 
 /// 봉투 관련 유틸리티 함수들
 enum EnvelopeUtils {
-    /// 공통 NumberFormatter (천 단위 구분자 포함)
-    static let numberFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.groupingSeparator = ","
-        formatter.groupingSize = 3
-        return formatter
-    }()
-    
     /// 정렬용 날짜 반환: 반복 봉투는 원본(parent)의 createdAt 사용
     static func getSortDate(for envelope: Envelope, in envelopes: [Envelope]) -> Date {
         // 반복 봉투이고 parentId가 있는 경우

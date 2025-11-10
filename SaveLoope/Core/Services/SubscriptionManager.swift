@@ -57,17 +57,22 @@ class SubscriptionManager: ObservableObject {
             }
 
             if products.isEmpty {
-                errorMessage = "사용 가능한 제품이 없습니다. StoreKit Configuration을 확인해주세요."
-                print("⚠️ 제품이 로드되지 않았습니다. StoreKit Configuration을 확인하세요.")
+                let expectedCount = productIdentifiers.count
+                let loadedCount = loadedProducts.count
+                errorMessage = "사용 가능한 제품이 없습니다.\n\n예상 제품: \(expectedCount)개\n로드된 제품: \(loadedCount)개\n\nXcode에서 StoreKit Configuration 파일을 확인해주세요:\nProduct > Scheme > Edit Scheme > Options > StoreKit Configuration"
+                print("⚠️ 제품이 로드되지 않았습니다.")
+                print("⚠️ 예상 제품 개수: \(expectedCount), 실제 로드된 개수: \(loadedCount)")
                 print("💡 Xcode에서: Product > Scheme > Edit Scheme > Options > StoreKit Configuration 파일을 직접 선택하세요")
             } else {
                 errorMessage = nil
                 print("✅ \(products.count)개의 구독 제품 로드 완료")
             }
         } catch {
-            errorMessage = "제품 정보를 불러올 수 없습니다. 네트워크 연결을 확인해주세요."
+            let errorDescription = error.localizedDescription
+            errorMessage = "제품 정보를 불러올 수 없습니다.\n\n오류: \(errorDescription)\n\n네트워크 연결을 확인하거나, Xcode에서 StoreKit Configuration 파일이 설정되어 있는지 확인해주세요."
             print("❌ 제품 로드 실패: \(error)")
-            print("❌ 에러 상세: \(error.localizedDescription)")
+            print("❌ 에러 상세: \(errorDescription)")
+            print("❌ 에러 타입: \(type(of: error))")
         }
 
         isLoading = false

@@ -112,10 +112,8 @@ struct SubscriptionView: View {
                 Text(alertMessage)
             }
             .task {
-                // 뷰가 나타날 때 제품 다시 로드
-                if subscriptionManager.products.isEmpty {
-                    await subscriptionManager.loadProducts()
-                }
+                // 뷰가 나타날 때 항상 제품 다시 로드 (StoreKit Configuration 변경 시 대응)
+                await subscriptionManager.loadProducts()
                 // 구독 상태 업데이트 (구독 취소 감지)
                 await subscriptionManager.updateSubscriptionStatus()
             }

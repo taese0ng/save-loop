@@ -1,14 +1,10 @@
 import SwiftUI
 import SwiftData
-import StoreKit
 
 @main
 struct SaveLoopeApp: App {
     @StateObject private var dateSelection = DateSelectionState()
     @StateObject private var cloudSyncManager = CloudSyncManager.shared
-
-    // SubscriptionManager 초기화 (싱글톤)
-    private let subscriptionManager = SubscriptionManager.shared
     
     // ModelContainer를 앱 시작 시점에 한 번만 생성
     private static let sharedModelContainer: ModelContainer = {
