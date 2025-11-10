@@ -90,10 +90,10 @@ struct HeaderView: View {
                 ZStack {
                     Circle()
                         .fill(Color("Separator"))
-                        .frame(width: 40, height: 40)
+                        .frame(width: 38, height: 38)
 
                     Image(systemName: "chevron.left")
-                        .font(.system(size: 16, weight: .medium))
+                        .font(.system(size: 17, weight: .medium))
                         .foregroundColor(Color("PrimaryText"))
                 }
                 .contentShape(Circle())
@@ -132,10 +132,10 @@ struct HeaderView: View {
                 ZStack {
                     Circle()
                         .fill(Color("Separator"))
-                        .frame(width: 40, height: 40)
+                        .frame(width: 38, height: 38)
 
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 16, weight: .medium))
+                        .font(.system(size: 17, weight: .medium))
                         .foregroundColor(isCurrentMonth ? Color("SecondaryText") : Color("PrimaryText"))
                 }
                 .contentShape(Circle())
