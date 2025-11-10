@@ -60,8 +60,8 @@ public struct LabeledNumberField: View {
                 Text(label)
                     .font(.subheadline)
                     .fontWeight(.medium)
-                    .foregroundColor(.black)
-                
+                    .foregroundColor(Color("PrimaryText"))
+
                 if required {
                     Text("*")
                         .foregroundColor(.red)
@@ -73,7 +73,14 @@ public struct LabeledNumberField: View {
                 TextField(placeholder, text: $displayText)
                     .keyboardType(.decimalPad)
                     .textContentType(.none)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 8)
+                    .background(Color(.systemBackground))
+                    .cornerRadius(5)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color(.systemGray4), lineWidth: 1)
+                    )
                     .onChange(of: displayText) { oldValue, newValue in
                         guard !isProcessing else { return }
 
@@ -179,7 +186,7 @@ public struct LabeledNumberField: View {
                 
                 if let prefix = prefix {
                     Text(prefix)
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color("SecondaryText"))
                 }
             }
             .padding(.vertical, 4)

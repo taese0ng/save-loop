@@ -2,11 +2,9 @@ import SwiftUI
 
 struct PlanComparisonSheet: View {
     @ObservedObject var subscriptionManager: SubscriptionManager
-    var showsCloseButton: Bool = true
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationStack {
+        StandardSheetContainer(title: "플랜 비교") {
             ScrollView {
                 VStack(spacing: 24) {
                     freePlanSection
@@ -15,18 +13,7 @@ struct PlanComparisonSheet: View {
                 }
                 .padding()
             }
-            .navigationTitle("플랜 비교")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                if showsCloseButton {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: { dismiss() }) {
-                            Image(systemName: "xmark")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                }
-            }
+            .scrollContentBackground(.hidden)
         }
     }
 
@@ -47,8 +34,12 @@ struct PlanComparisonSheet: View {
             }
         }
         .padding()
-        .background(Color(.systemGray6))
+        .background(Color("CardBackground"))
         .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(Color("Separator"), lineWidth: 1)
+        )
     }
 
     private var premiumPlanSection: some View {
@@ -75,7 +66,7 @@ struct PlanComparisonSheet: View {
             }
         }
         .padding()
-        .background(Color(.systemGray6))
+        .background(Color("CardBackground"))
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)

@@ -8,7 +8,6 @@ struct AddBalanceView: View {
     @Query(sort: \TransactionRecord.date) private var allTransactions: [TransactionRecord]
 
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
-    @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var selectedEnvelope: Envelope?
     @State private var amount: Double?
     @State private var date: Date = Date()
@@ -99,9 +98,8 @@ struct AddBalanceView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView{
+            ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    
                     RadioButtonGroup(
                         title: "잔액추가 봉투",
                         items: filteredEnvelopes,
@@ -150,16 +148,15 @@ struct AddBalanceView: View {
                         title: "잔액 추가",
                         action: handleAddBalance
                     )
-                    
                 }
                 .padding()
             }
-            .background(Color.white)
-            .toolbarBackground(.white, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
+            .background(Color("Background"))
             .navigationTitle("잔액추가")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
+            .toolbarBackground(Color("Background"), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .alert(alertTitle, isPresented: $showingAlert) {
                 Button("확인", role: .cancel) { }
                 if showingSubscription {

@@ -9,6 +9,7 @@ struct NoteTextField: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(label)
                 .font(.system(size: 16))
+                .foregroundColor(Color("PrimaryText"))
 
             TextField(placeholder, text: $text)
                 .padding(.horizontal, 8)

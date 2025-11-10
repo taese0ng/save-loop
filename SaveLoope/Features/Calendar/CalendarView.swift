@@ -180,7 +180,7 @@ struct CalendarView: View {
                         Text(day)
                             .font(.caption)
                             .fontWeight(.semibold)
-                            .foregroundColor(day == "일" ? .red : day == "토" ? .blue : .gray)
+                            .foregroundColor(day == "일" ? .red : day == "토" ? .blue : Color("SecondaryText"))
                             .frame(maxWidth: .infinity)
                     }
                 }
@@ -214,7 +214,7 @@ struct CalendarView: View {
                                             }
                                         } else {
                                             Rectangle()
-                                                .fill(Color.white)
+                                                .fill(Color("Background"))
                                         }
                                     }
                                 }
@@ -229,7 +229,7 @@ struct CalendarView: View {
                                         Spacer()
                                     }
                                     Rectangle()
-                                        .fill(Color.gray.opacity(0.2))
+                                        .fill(Color("Separator"))
                                         .frame(width: 0.5)
                                 }
                             }
@@ -242,7 +242,7 @@ struct CalendarView: View {
                                         Spacer()
                                     }
                                     Rectangle()
-                                        .fill(Color.gray.opacity(0.2))
+                                        .fill(Color("Separator"))
                                         .frame(height: 0.5)
                                 }
                             }
@@ -254,7 +254,7 @@ struct CalendarView: View {
                 BalanceTabs(onAddBalance: moveAddBalancePage, onAddExpense: moveAddExpensePage)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.white)
+            .background(Color("Background"))
             .navigationDestination(item: $navigationPath) { route in
                 switch route {
                 case .addBalance:

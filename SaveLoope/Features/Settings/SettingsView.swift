@@ -36,119 +36,9 @@ struct SettingsView: View {
                 onDeveloperModeTap: handleDeveloperModeTap
             )
 
-            List {
-                CurrencySettingsSection(
-                    currentCurrencyName: currentCurrencyName,
-                    onTap: {
-                        // 데이터 준비
-                        if currencies.isEmpty {
-                            currencies = CurrencyManager.shared.getCurrenciesWithDeviceFirst()
-                            selectedCurrencyCode = CurrencyManager.shared.selectedCurrency.code
-                        }
-                        showingCurrencySettings = true
-                    }
-                )
-                
-                MembershipSection(
-                    subscriptionManager: subscriptionManager,
-                    onTap: { showingSubscriptionView = true }
-                )
-
-                PlanComparisonSection(
-                    onTap: { showingPlanComparison = true }
-                )
-
-                CloudSyncSection(
-                    subscriptionManager: subscriptionManager,
-                    cloudSyncManager: cloudSyncManager,
-                    showingSubscriptionView: $showingSubscriptionView,
-                    showingCloudUnavailableAlert: $showingCloudUnavailableAlert,
-                    showingSyncChangeAlert: $showingSyncChangeAlert
-                )
-
-                // 개발자 전용 섹션
-                if isDeveloperModeEnabled {
-                    DeveloperSection(
-                        showingResetAlert: $showingResetAlert,
-                        isDeveloperModeEnabled: $isDeveloperModeEnabled,
-                        showingDeveloperModeAlert: $showingDeveloperModeAlert
-                    )
-                }
-            }
-            .scrollContentBackground(.hidden)
-            .background(Color.white)
-            .sheet(isPresented: $showingSubscriptionView) {
-                SubscriptionView(showsCloseButton: false)
-                    .presentationDetents([.large])
-                    .presentationDragIndicator(.visible)
-            }
-            .sheet(isPresented: $showingPlanComparison) {
-                PlanComparisonSheet(subscriptionManager: subscriptionManager, showsCloseButton: false)
-                    .presentationDetents([.large])
-                    .presentationDragIndicator(.visible)
-            }
-            .sheet(isPresented: $showingCurrencySettings) {
-                CurrencySettingsView(
-                    currencies: currencies,
-                    selectedCurrencyCode: selectedCurrencyCode,
-                    onCurrencyChanged: { newCode in
-                        selectedCurrencyCode = newCode
-                    }
-                )
-                .presentationDetents([.large])
-                .presentationDragIndicator(.hidden)
-            }
-            .onChange(of: showingCurrencySettings) { oldValue, newValue in
-                // sheet가 닫힐 때 통화 이름 업데이트
-                if oldValue && !newValue {
-                    currentCurrencyName = CurrencyManager.shared.selectedCurrency.displayName
-                }
-            }
-            .alert("데이터 초기화", isPresented: $showingResetAlert) {
-                Button("취소", role: .cancel) { }
-                Button("초기화", role: .destructive) {
-                    viewModel.resetAllData(context: modelContext)
-                }
-            } message: {
-                Text("모든 봉투와 거래 기록이 삭제됩니다. 이 작업은 되돌릴 수 없습니다.")
-            }
-            .alert("앱 재시작 필요", isPresented: $showingSyncChangeAlert) {
-                Button("확인", role: .cancel) { }
-            } message: {
-                Text(cloudSyncManager.isCloudSyncEnabled 
-                    ? "iCloud 동기화가 활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요." 
-                    : "iCloud 동기화가 비활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요.")
-            }
-            .alert("iCloud 사용 불가", isPresented: $showingCloudUnavailableAlert) {
-                Button("확인", role: .cancel) { }
-                Button("설정으로 이동") {
-                    if let url = URL(string: "App-Prefs:root=CASTLE") {
-                        UIApplication.shared.open(url)
-                    }
-                }
-            } message: {
-                Text(cloudSyncManager.cloudAccountError ?? "iCloud에 로그인되어 있지 않습니다. 설정 앱에서 iCloud에 로그인해주세요.")
-            }
-            .alert("개발자 모드", isPresented: $showingDeveloperModeAlert) {
-                Button("확인", role: .cancel) { }
-            } message: {
-                Text(isDeveloperModeEnabled 
-                    ? "개발자 모드가 활성화되었습니다. 🛠️" 
-                    : "개발자 모드가 비활성화되었습니다.")
-            }
-            .alert("개발자 모드 잠금 해제", isPresented: $showingPasswordPrompt) {
-                SecureField("비밀번호", text: $passwordInput)
-                Button("취소", role: .cancel) {
-                    passwordInput = ""
-                }
-                Button("확인") {
-                    handlePasswordInput()
-                }
-            } message: {
-                Text("개발자 전용 기능에 접근하려면 비밀번호를 입력하세요.")
-            }
+            settingsList
         }
-        .background(Color.white)
+        .background(Color("Background"))
         .task {
             // 뷰가 나타날 때 iCloud 상태 다시 확인
             await cloudSyncManager.checkCloudAccountStatus()
@@ -163,6 +53,120 @@ struct SettingsView: View {
             // 뷰가 사라질 때 타이머 정리
             tapTimer?.invalidate()
             tapTimer = nil
+        }
+    }
+    
+    private var settingsList: some View {
+        List {
+            CurrencySettingsSection(
+                currentCurrencyName: currentCurrencyName,
+                onTap: {
+                    // 데이터 준비
+                    if currencies.isEmpty {
+                        currencies = CurrencyManager.shared.getCurrenciesWithDeviceFirst()
+                        selectedCurrencyCode = CurrencyManager.shared.selectedCurrency.code
+                    }
+                    showingCurrencySettings = true
+                }
+            )
+            
+            MembershipSection(
+                subscriptionManager: subscriptionManager,
+                onTap: { showingSubscriptionView = true }
+            )
+
+            PlanComparisonSection(
+                onTap: { showingPlanComparison = true }
+            )
+
+            CloudSyncSection(
+                subscriptionManager: subscriptionManager,
+                cloudSyncManager: cloudSyncManager,
+                showingSubscriptionView: $showingSubscriptionView,
+                showingCloudUnavailableAlert: $showingCloudUnavailableAlert,
+                showingSyncChangeAlert: $showingSyncChangeAlert
+            )
+
+            // 개발자 전용 섹션
+            if isDeveloperModeEnabled {
+                DeveloperSection(
+                    showingResetAlert: $showingResetAlert,
+                    isDeveloperModeEnabled: $isDeveloperModeEnabled,
+                    showingDeveloperModeAlert: $showingDeveloperModeAlert
+                )
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(Color("Background"))
+        .sheet(isPresented: $showingSubscriptionView) {
+            SubscriptionView(showsCloseButton: false)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.hidden)
+        }
+        .sheet(isPresented: $showingPlanComparison) {
+            PlanComparisonSheet(subscriptionManager: subscriptionManager)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.hidden)
+        }
+        .sheet(isPresented: $showingCurrencySettings) {
+            CurrencySettingsView(
+                currencies: currencies,
+                selectedCurrencyCode: selectedCurrencyCode,
+                onCurrencyChanged: { newCode in
+                    selectedCurrencyCode = newCode
+                }
+            )
+            .presentationDetents([.large])
+            .presentationDragIndicator(.hidden)
+        }
+        .onChange(of: showingCurrencySettings) { oldValue, newValue in
+            // sheet가 닫힐 때 통화 이름 업데이트
+            if oldValue && !newValue {
+                currentCurrencyName = CurrencyManager.shared.selectedCurrency.displayName
+            }
+        }
+        .alert("데이터 초기화", isPresented: $showingResetAlert) {
+            Button("취소", role: .cancel) { }
+            Button("초기화", role: .destructive) {
+                viewModel.resetAllData(context: modelContext)
+            }
+        } message: {
+            Text("모든 봉투와 거래 기록이 삭제됩니다. 이 작업은 되돌릴 수 없습니다.")
+        }
+        .alert("앱 재시작 필요", isPresented: $showingSyncChangeAlert) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text(cloudSyncManager.isCloudSyncEnabled 
+                ? "iCloud 동기화가 활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요." 
+                : "iCloud 동기화가 비활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요.")
+        }
+        .alert("iCloud 사용 불가", isPresented: $showingCloudUnavailableAlert) {
+            Button("확인", role: .cancel) { }
+            Button("설정으로 이동") {
+                if let url = URL(string: "App-Prefs:root=CASTLE") {
+                    UIApplication.shared.open(url)
+                }
+            }
+        } message: {
+            Text(cloudSyncManager.cloudAccountError ?? "iCloud에 로그인되어 있지 않습니다. 설정 앱에서 iCloud에 로그인해주세요.")
+        }
+        .alert("개발자 모드", isPresented: $showingDeveloperModeAlert) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text(isDeveloperModeEnabled 
+                ? "개발자 모드가 활성화되었습니다. 🛠️" 
+                : "개발자 모드가 비활성화되었습니다.")
+        }
+        .alert("개발자 모드 잠금 해제", isPresented: $showingPasswordPrompt) {
+            SecureField("비밀번호", text: $passwordInput)
+            Button("취소", role: .cancel) {
+                passwordInput = ""
+            }
+            Button("확인") {
+                handlePasswordInput()
+            }
+        } message: {
+            Text("개발자 전용 기능에 접근하려면 비밀번호를 입력하세요.")
         }
     }
     

@@ -8,6 +8,7 @@ struct TransactionTypePicker: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(label)
                 .font(.system(size: 16))
+                .foregroundColor(Color("PrimaryText"))
 
             Picker(label, selection: $selectedType) {
                 Text("수입").tag(TransactionType.income)

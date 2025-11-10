@@ -20,7 +20,7 @@ struct SettingsHeader: View {
         .padding(.horizontal, 20)
         .padding(.top, 20)
         .padding(.bottom, 10)
-        .background(Color.white)
+        .background(Color("Background"))
         .contentShape(Rectangle())
         .onTapGesture {
             // 개발자 모드가 비활성화 상태일 때만 탭 카운트

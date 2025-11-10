@@ -12,8 +12,8 @@ struct LabeledTextField: View {
                 Text(label)
                     .font(.subheadline)
                     .fontWeight(.medium)
-                    .foregroundColor(.black)
-                
+                    .foregroundColor(Color("PrimaryText"))
+
                 if required {
                     Text("*")
                         .foregroundColor(.red)
@@ -21,9 +21,16 @@ struct LabeledTextField: View {
                 }
             }
 
-            
+
             TextField(placeholder, text: $text)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal, 8)
+                .padding(.vertical, 8)
+                .background(Color(.systemBackground))
+                .cornerRadius(5)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color(.systemGray4), lineWidth: 1)
+                )
                 .padding(.vertical, 4)
         }
     }

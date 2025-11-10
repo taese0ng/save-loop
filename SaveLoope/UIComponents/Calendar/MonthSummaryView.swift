@@ -15,7 +15,7 @@ struct MonthSummaryView: View {
                 HStack(spacing: 8) {
                     Text("총 수입")
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color("SecondaryText"))
                         .frame(width: 50, alignment: .leading)
                     Text("+\(totalIncome.formattedCurrency)")
                         .font(.system(size: 16, weight: .semibold))
@@ -28,7 +28,7 @@ struct MonthSummaryView: View {
                 HStack(spacing: 8) {
                     Text("총 지출")
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color("SecondaryText"))
                         .frame(width: 50, alignment: .leading)
                     Text("-\(totalExpense.formattedCurrency)")
                         .font(.system(size: 16, weight: .semibold))
@@ -46,7 +46,7 @@ struct MonthSummaryView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("총액")
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color("SecondaryText"))
                 Text("\(balance >= 0 ? "+" : "")\(balance.formattedCurrency)")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(balance >= 0 ? .blue : .red)
@@ -60,7 +60,7 @@ struct MonthSummaryView: View {
         .frame(height: 80)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.gray.opacity(0.1))
+                .fill(Color("Separator"))
         )
     }
 }

@@ -174,8 +174,8 @@ struct EditEnvelopeView: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack(alignment: .leading, spacing: 16) {
+        StandardSheetContainer(title: "봉투 수정") {
+            ScrollView {
                 VStack(spacing: 16) {
                     LabeledTextField(label: "봉투 이름", text: $envelopeName, required: true)
                     LabeledNumberField(label: "시작 잔액", value: $initialAmount, placeholder: "0", required: true, prefix: CurrencyManager.shared.currentSymbol)
@@ -201,126 +201,99 @@ struct EditEnvelopeView: View {
                         // 선택된 타입에 대한 설명
                         Text(envelopeTypeDescription)
                             .font(.caption)
-                            .foregroundColor(originalEnvelopeType == .persistent ? .orange : .gray)
+                            .foregroundColor(originalEnvelopeType == .persistent ? .orange : Color("SecondaryText"))
                             .padding(.top, 4)
                     }
                     .padding(.vertical, 8)
                 }
                 .padding(.horizontal)
-                
-                Spacer()
-                
-                HStack(spacing: 20) {
-                    Button(action: {
-                        showingDeleteAlert = true
-                    }) {
-                        Text("삭제")
-                            .font(.system(size: 20, weight: .light))
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .padding(.vertical, 12)
-                    .background(Color(red: 0.95, green: 0.3, blue: 0.3))
-                    .cornerRadius(8)
-                    
-                    Button(action: handleEditEnvelope) {
-                        Text("수정 완료")
-                            .font(.system(size: 20, weight: .light))
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .padding(.vertical, 12)
-                    .background(Color(red: 0.3, green: 0.5, blue: 0.95))
-                    .cornerRadius(8)
-                }
-                .padding(.horizontal)
+                .padding(.vertical, 20)
             }
-            .alert("알림", isPresented: $showingAlert) {
-                Button("확인", role: .cancel) { }
-                if alertMessage.contains("프리미엄") {
-                    Button("프리미엄 보기") {
-                        showingSubscription = true
-                    }
+            .scrollContentBackground(.hidden)
+        } footer: {
+            ActionButtons(
+                deleteTitle: "삭제",
+                confirmTitle: "수정 완료",
+                onDelete: { showingDeleteAlert = true },
+                onConfirm: handleEditEnvelope
+            )
+        }
+        .alert("알림", isPresented: $showingAlert) {
+            Button("확인", role: .cancel) { }
+            if alertMessage.contains("프리미엄") {
+                Button("프리미엄 보기") {
+                    showingSubscription = true
                 }
-            } message: {
-                Text(alertMessage)
             }
-            .sheet(isPresented: $showingSubscription) {
-                SubscriptionView()
+        } message: {
+            Text(alertMessage)
+        }
+        .sheet(isPresented: $showingSubscription) {
+            SubscriptionView()
+        }
+        .alert("봉투 삭제", isPresented: $showingDeleteAlert) {
+            Button("취소", role: .cancel) { }
+            Button("삭제", role: .destructive) {
+                handleDeleteEnvelope()
             }
-            .alert("봉투 삭제", isPresented: $showingDeleteAlert) {
-                Button("취소", role: .cancel) { }
-                Button("삭제", role: .destructive) {
-                    handleDeleteEnvelope()
-                }
-            } message: {
-                Text("봉투와 관련된 모든 거래 내역이 삭제됩니다. 정말 삭제하시겠습니까?")
+        } message: {
+            Text("봉투와 관련된 모든 거래 내역이 삭제됩니다. 정말 삭제하시겠습니까?")
+        }
+        .onChange(of: selectedEnvelopeType) { oldValue, newValue in
+            // 지속형 봉투는 타입 변경 완전 차단 (UI에서 비활성화되어 있지만 방어 코드)
+            if originalEnvelopeType == .persistent && newValue != .persistent {
+                selectedEnvelopeType = .persistent
+                return
             }
-            .padding()
-            .background(Color.white)
-            .navigationTitle("봉투 수정")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(.white, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .onChange(of: selectedEnvelopeType) { oldValue, newValue in
-                // 지속형 봉투는 타입 변경 완전 차단 (UI에서 비활성화되어 있지만 방어 코드)
-                if originalEnvelopeType == .persistent && newValue != .persistent {
-                    selectedEnvelopeType = .persistent
-                    return
-                }
 
-                // 지속형으로 변경 시도 차단
-                if originalEnvelopeType != .persistent && newValue == .persistent {
-                    showingPersistentChangeWarning = true
+            // 지속형으로 변경 시도 차단
+            if originalEnvelopeType != .persistent && newValue == .persistent {
+                showingPersistentChangeWarning = true
+                selectedEnvelopeType = oldValue
+                return
+            }
+
+            // 반복 봉투 → 다른 타입 변경 시 경고 (pendingEnvelopeType이 nil일 때만 체크)
+            if pendingEnvelopeType == nil && oldValue != newValue && originalEnvelopeType != newValue {
+                if originalEnvelopeType == .recurring && newValue != .recurring {
+                    pendingEnvelopeType = newValue
+                    showingTypeChangeWarning = true
+                    // 일단 원래 값으로 되돌림 (사용자가 확인하기 전까지)
                     selectedEnvelopeType = oldValue
-                    return
                 }
-
-                // 반복 봉투 → 다른 타입 변경 시 경고 (pendingEnvelopeType이 nil일 때만 체크)
-                if pendingEnvelopeType == nil && oldValue != newValue && originalEnvelopeType != newValue {
-                    if originalEnvelopeType == .recurring && newValue != .recurring {
-                        pendingEnvelopeType = newValue
-                        showingTypeChangeWarning = true
-                        // 일단 원래 값으로 되돌림 (사용자가 확인하기 전까지)
-                        selectedEnvelopeType = oldValue
-                    }
-                }
-            }
-            .alert("봉투 타입 변경", isPresented: $showingTypeChangeWarning) {
-                Button("취소", role: .cancel) {
-                    selectedEnvelopeType = originalEnvelopeType
-                    pendingEnvelopeType = nil
-                }
-                Button("변경", role: .destructive) {
-                    if let pending = pendingEnvelopeType {
-                        // originalEnvelopeType을 업데이트하여 다시 체크되지 않도록 함
-                        originalEnvelopeType = pending
-                        selectedEnvelopeType = pending
-                        pendingEnvelopeType = nil
-                    }
-                }
-            } message: {
-                return Text("반복 봉투를 다른 타입으로 변경하면 다음 달부터 자동 생성되지 않습니다.")
-            }
-            .alert("지속형 봉투 변경 불가", isPresented: $showingPersistentChangeWarning) {
-                Button("확인", role: .cancel) {
-                    selectedEnvelopeType = originalEnvelopeType
-                }
-            } message: {
-                Text("지속형 봉투는 수정으로 변경할 수 없습니다.\n지속형 봉투가 필요하면 새로 생성해주세요.")
-            }
-            .onAppear {
-                // 초기값 설정
-                envelopeName = envelope.name
-                initialAmount = envelope.budget
-                goalAmount = envelope.goal
-                selectedEnvelopeType = envelope.type
-                originalEnvelopeType = envelope.type
             }
         }
-        .navigationViewStyle(.stack)
+        .alert("봉투 타입 변경", isPresented: $showingTypeChangeWarning) {
+            Button("취소", role: .cancel) {
+                selectedEnvelopeType = originalEnvelopeType
+                pendingEnvelopeType = nil
+            }
+            Button("변경", role: .destructive) {
+                if let pending = pendingEnvelopeType {
+                    // originalEnvelopeType을 업데이트하여 다시 체크되지 않도록 함
+                    originalEnvelopeType = pending
+                    selectedEnvelopeType = pending
+                    pendingEnvelopeType = nil
+                }
+            }
+        } message: {
+            return Text("반복 봉투를 다른 타입으로 변경하면 다음 달부터 자동 생성되지 않습니다.")
+        }
+        .alert("지속형 봉투 변경 불가", isPresented: $showingPersistentChangeWarning) {
+            Button("확인", role: .cancel) {
+                selectedEnvelopeType = originalEnvelopeType
+            }
+        } message: {
+            Text("지속형 봉투는 수정으로 변경할 수 없습니다.\n지속형 봉투가 필요하면 새로 생성해주세요.")
+        }
+        .onAppear {
+            // 초기값 설정
+            envelopeName = envelope.name
+            initialAmount = envelope.budget
+            goalAmount = envelope.goal
+            selectedEnvelopeType = envelope.type
+            originalEnvelopeType = envelope.type
+        }
     }
 }
 

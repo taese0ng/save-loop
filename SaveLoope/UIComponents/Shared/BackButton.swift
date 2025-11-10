@@ -7,12 +7,12 @@ struct BackButton: View {
         Button(action: onDismiss) {
             ZStack {
                 Circle()
-                    .fill(Color.gray.opacity(0.1))
+                    .fill(Color("Separator"))
                     .frame(width: 40, height: 40)
-                
+
                 Image(systemName: "chevron.left")
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryText"))
             }
             .contentShape(Circle())
         }

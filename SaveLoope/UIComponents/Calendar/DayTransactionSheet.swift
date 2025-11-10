@@ -52,33 +52,30 @@ struct DayTransactionSheet: View {
     }
 
     var body: some View {
-        NavigationView {
-            Group {
-                if transactions.isEmpty {
-                    EmptyTransactionView()
-                } else {
-                    VStack(spacing: 0) {
-                        TransactionSummaryHeader(totalIncome: totalIncome, totalExpense: totalExpense)
+        StandardSheetContainer(title: formattedDate) {
+            if transactions.isEmpty {
+                EmptyTransactionView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .padding(.top, 40)
+            } else {
+                VStack(spacing: 0) {
+                    TransactionSummaryHeader(totalIncome: totalIncome, totalExpense: totalExpense)
 
-                        ScrollView {
-                            LazyVStack(spacing: 12) {
-                                ForEach(groupedTransactions, id: \.envelope?.id) { group in
-                                    EnvelopeTransactionCard(
-                                        envelope: group.envelope,
-                                        transactions: group.transactions
-                                    )
-                                }
+                    ScrollView {
+                        LazyVStack(spacing: 12) {
+                            ForEach(groupedTransactions, id: \.envelope?.id) { group in
+                                EnvelopeTransactionCard(
+                                    envelope: group.envelope,
+                                    transactions: group.transactions
+                                )
                             }
-                            .padding(.vertical, 16)
                         }
+                        .padding(.vertical, 16)
                     }
+                    .scrollContentBackground(.hidden)
                 }
             }
-            .background(Color(UIColor.systemGroupedBackground))
-            .navigationTitle(formattedDate)
-            .navigationBarTitleDisplayMode(.inline)
         }
         .presentationDetents([.large])
-        .presentationDragIndicator(.visible)
     }
 }

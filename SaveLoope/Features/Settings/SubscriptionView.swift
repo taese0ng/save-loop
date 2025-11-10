@@ -20,7 +20,19 @@ struct SubscriptionView: View {
     }()
 
     var body: some View {
-        NavigationStack {
+        StandardSheetContainer(
+            title: "프리미엄 멤버십",
+            trailingAccessory: {
+                if showsCloseButton {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(Color("SecondaryText"))
+                            .padding(8)
+                    }
+                }
+            }
+        ) {
             ZStack {
                 ScrollView {
                     VStack(spacing: 24) {
@@ -83,8 +95,8 @@ struct SubscriptionView: View {
                     }
                     .padding()
                 }
+                .scrollContentBackground(.hidden)
 
-                // 로딩 인디케이터
                 if subscriptionManager.isLoading {
                     Color.black.opacity(0.3)
                         .ignoresSafeArea()
@@ -94,36 +106,21 @@ struct SubscriptionView: View {
                         .scaleEffect(1.5)
                 }
             }
-            .navigationTitle("프리미엄 멤버십")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                if showsCloseButton {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: { dismiss() }) {
-                            Image(systemName: "xmark")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                }
-            }
-            .alert(alertTitle, isPresented: $showingAlert) {
-                Button("확인", role: .cancel) { }
-            } message: {
-                Text(alertMessage)
-            }
-            .task {
-                // 뷰가 나타날 때 항상 제품 다시 로드 (StoreKit Configuration 변경 시 대응)
-                await subscriptionManager.loadProducts()
-                // 구독 상태 업데이트 (구독 취소 감지)
-                await subscriptionManager.updateSubscriptionStatus()
-            }
-            .manageSubscriptionsSheet(isPresented: $showingManageSubscriptions)
-            .onChange(of: showingManageSubscriptions) { oldValue, newValue in
-                // 구독 관리 화면이 닫힐 때 상태 업데이트
-                if oldValue && !newValue {
-                    Task {
-                        await subscriptionManager.updateSubscriptionStatus()
-                    }
+        }
+        .alert(alertTitle, isPresented: $showingAlert) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text(alertMessage)
+        }
+        .task {
+            await subscriptionManager.loadProducts()
+            await subscriptionManager.updateSubscriptionStatus()
+        }
+        .manageSubscriptionsSheet(isPresented: $showingManageSubscriptions)
+        .onChange(of: showingManageSubscriptions) { oldValue, newValue in
+            if oldValue && !newValue {
+                Task {
+                    await subscriptionManager.updateSubscriptionStatus()
                 }
             }
         }

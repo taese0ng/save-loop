@@ -167,7 +167,7 @@ struct HomeView: View {
                     } else {
                         Text("봉투가 존재하지 않습니다.")
                             .font(.title3)
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color("SecondaryText"))
                     }
                     Spacer()
                 } else {
@@ -184,7 +184,7 @@ struct HomeView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.white)
+            .background(Color("Background"))
             .navigationDestination(item: $navigationPath) { route in
                 switch route {
                     case .addEnvelope:

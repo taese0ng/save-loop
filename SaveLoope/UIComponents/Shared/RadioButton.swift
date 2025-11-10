@@ -12,6 +12,7 @@ struct RadioButtonGroup<T: Identifiable>: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.system(size: 16))
+                .foregroundColor(Color("PrimaryText"))
             
             VStack(alignment: .leading, spacing: 15) {
                 ForEach(items) { item in
@@ -59,7 +60,7 @@ struct RadioButton: View {
                                 .frame(width: 12, height: 12)
                         )
                     Text(title)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryText"))
                 }
                 
                 Spacer()

@@ -122,96 +122,89 @@ struct EditTransactionView: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        RadioButtonGroup(
-                            title: "봉투 선택",
-                            items: filteredEnvelopes,
-                            selectedItem: selectedEnvelope,
-                            envelopeType: { $0.type },
-                            itemTitle: { $0.name },
-                            onSelection: { envelope in
-                                selectedEnvelope = envelope
-                                if !envelope.isRecurring {
-                                    isRecurring = false
-                                }
+        StandardSheetContainer(title: "거래 수정") {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    RadioButtonGroup(
+                        title: "봉투 선택",
+                        items: filteredEnvelopes,
+                        selectedItem: selectedEnvelope,
+                        envelopeType: { $0.type },
+                        itemTitle: { $0.name },
+                        onSelection: { envelope in
+                            selectedEnvelope = envelope
+                            if !envelope.isRecurring {
+                                isRecurring = false
                             }
-                        )
-
-                        TransactionTypePicker(
-                            label: "유형",
-                            selectedType: $transactionType
-                        )
-
-                        LabeledNumberField(
-                            label: "금액",
-                            value: $amount,
-                            placeholder: "0",
-                            required: true,
-                            prefix: CurrencyManager.shared.currentSymbol
-                        )
-
-                        DatePickerButton(
-                            label: "날짜",
-                            date: $date,
-                            showingDatePicker: $showingDatePicker,
-                            selectedDate: dateSelection.selectedDate
-                        )
-
-                        NoteTextField(
-                            label: "설명",
-                            text: $note,
-                            placeholder: "설명"
-                        )
-
-                        if selectedEnvelope?.isRecurring == true {
-                            RecurringToggle(
-                                label: "매달 반복해서 생성",
-                                isOn: $isRecurring
-                            )
                         }
-                    }
-                    .padding()
-                }
-                .background(Color.white)
+                    )
 
-                ActionButtons(
-                    deleteTitle: "삭제",
-                    confirmTitle: "수정 완료",
-                    onDelete: { showingDeleteAlert = true },
-                    onConfirm: handleEditTransaction
-                )
-            }
-            .navigationTitle("거래 수정")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(.white, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .alert("알림", isPresented: $showingAlert) {
-                Button("확인", role: .cancel) { }
-            } message: {
-                Text(alertMessage)
-            }
-            .alert("거래 삭제", isPresented: $showingDeleteAlert) {
-                Button("취소", role: .cancel) { }
-                Button("삭제", role: .destructive) {
-                    handleDeleteTransaction()
+                    TransactionTypePicker(
+                        label: "유형",
+                        selectedType: $transactionType
+                    )
+
+                    LabeledNumberField(
+                        label: "금액",
+                        value: $amount,
+                        placeholder: "0",
+                        required: true,
+                        prefix: CurrencyManager.shared.currentSymbol
+                    )
+
+                    DatePickerButton(
+                        label: "날짜",
+                        date: $date,
+                        showingDatePicker: $showingDatePicker,
+                        selectedDate: dateSelection.selectedDate
+                    )
+
+                    NoteTextField(
+                        label: "설명",
+                        text: $note,
+                        placeholder: "설명"
+                    )
+
+                    if selectedEnvelope?.isRecurring == true {
+                        RecurringToggle(
+                            label: "매달 반복해서 생성",
+                            isOn: $isRecurring
+                        )
+                    }
                 }
-            } message: {
-                Text("정말로 이 거래를 삭제하시겠습니까?")
+                .padding()
             }
-            .onAppear {
-                // 초기값 설정
-                selectedEnvelope = transaction.envelope
-                amount = transaction.amount
-                date = transaction.date
-                note = transaction.note
-                transactionType = transaction.type
-                isRecurring = transaction.isRecurring
-            }
+            .scrollContentBackground(.hidden)
+        } footer: {
+            ActionButtons(
+                deleteTitle: "삭제",
+                confirmTitle: "수정 완료",
+                onDelete: { showingDeleteAlert = true },
+                onConfirm: handleEditTransaction
+            )
         }
-        .navigationViewStyle(.stack)
+        .alert("알림", isPresented: $showingAlert) {
+            Button("확인", role: .cancel) { }
+        } message: {
+            Text(alertMessage)
+        }
+        .alert("거래 삭제", isPresented: $showingDeleteAlert) {
+            Button("취소", role: .cancel) { }
+            Button("삭제", role: .destructive) {
+                handleDeleteTransaction()
+            }
+        } message: {
+            Text("정말로 이 거래를 삭제하시겠습니까?")
+        }
+        .onAppear {
+            // 초기값 설정
+            selectedEnvelope = transaction.envelope
+            amount = transaction.amount
+            date = transaction.date
+            note = transaction.note
+            transactionType = transaction.type
+            isRecurring = transaction.isRecurring
+        }
     }
 }
 

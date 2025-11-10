@@ -22,7 +22,7 @@ struct TransactionRowView: View {
                     } else {
                         Text(transaction.type == .income ? "수입" : "지출")
                             .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(.gray)
+                            .foregroundColor(Color("SecondaryText"))
                     }
                 }
 
@@ -34,7 +34,6 @@ struct TransactionRowView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            .background(Color.white)
 
             if showDivider {
                 Divider()

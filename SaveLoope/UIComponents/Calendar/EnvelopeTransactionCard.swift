@@ -18,9 +18,13 @@ struct EnvelopeTransactionCard: View {
                 }
             }
         }
-        .background(Color.white)
+        .background(Color("CardBackground"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
+        .shadow(color: Color("Separator"), radius: 8, x: 0, y: 2)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .strokeBorder(Color("Separator"), lineWidth: 1)
+        )
         .padding(.horizontal, 16)
     }
 }

@@ -89,12 +89,12 @@ struct HeaderView: View {
             Button(action: moveToPreviousMonth) {
                 ZStack {
                     Circle()
-                        .fill(Color.gray.opacity(0.1))
+                        .fill(Color("Separator"))
                         .frame(width: 40, height: 40)
 
                     Image(systemName: "chevron.left")
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryText"))
                 }
                 .contentShape(Circle())
             }
@@ -131,12 +131,12 @@ struct HeaderView: View {
             Button(action: moveToNextMonth) {
                 ZStack {
                     Circle()
-                        .fill(Color.gray.opacity(0.1))
+                        .fill(Color("Separator"))
                         .frame(width: 40, height: 40)
 
                     Image(systemName: "chevron.right")
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(isCurrentMonth ? .gray : .black)
+                        .foregroundColor(isCurrentMonth ? Color("SecondaryText") : Color("PrimaryText"))
                 }
                 .contentShape(Circle())
             }

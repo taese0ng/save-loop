@@ -8,7 +8,6 @@ struct AddExpenseView: View {
    @Query(sort: \TransactionRecord.date) private var allTransactions: [TransactionRecord]
 
    @ObservedObject private var subscriptionManager = SubscriptionManager.shared
-   @ObservedObject private var currencyManager = CurrencyManager.shared
    @State private var selectedEnvelope: Envelope?
    @State private var amount: Double?
    @State private var date: Date = Date()
@@ -96,89 +95,88 @@ struct AddExpenseView: View {
        }
    }
    
-   var body: some View {
-       NavigationView {
-           ScrollView {
-               VStack(alignment: .leading, spacing: 20) {
-                   RadioButtonGroup(
-                       title: "지출 봉투",
-                       items: filteredEnvelopes,
-                       selectedItem: selectedEnvelope,
-                       envelopeType: { $0.type },
-                       itemTitle: { $0.name },
-                       onSelection: { envelope in
-                           selectedEnvelope = envelope
-                           if !envelope.isRecurring {
-                               isRecurring = false
-                           }
-                       }
-                   )
-                   
-                   LabeledNumberField(
-                       label: "지출 금액",
-                       value: $amount,
-                       placeholder: "0",
-                       required: true,
-                       prefix: CurrencyManager.shared.currentSymbol
-                   )
+  var body: some View {
+      NavigationView {
+          ScrollView {
+              VStack(alignment: .leading, spacing: 20) {
+                  RadioButtonGroup(
+                      title: "지출 봉투",
+                      items: filteredEnvelopes,
+                      selectedItem: selectedEnvelope,
+                      envelopeType: { $0.type },
+                      itemTitle: { $0.name },
+                      onSelection: { envelope in
+                          selectedEnvelope = envelope
+                          if !envelope.isRecurring {
+                              isRecurring = false
+                          }
+                      }
+                  )
+                  
+                  LabeledNumberField(
+                      label: "지출 금액",
+                      value: $amount,
+                      placeholder: "0",
+                      required: true,
+                      prefix: CurrencyManager.shared.currentSymbol
+                  )
 
-                   DatePickerButton(
-                       label: "지출 날짜",
-                       date: $date,
-                       showingDatePicker: $showingDatePicker,
-                       selectedDate: dateSelection.selectedDate
-                   )
+                  DatePickerButton(
+                      label: "지출 날짜",
+                      date: $date,
+                      showingDatePicker: $showingDatePicker,
+                      selectedDate: dateSelection.selectedDate
+                  )
 
-                   NoteTextField(
-                       label: "설명",
-                       text: $note,
-                       placeholder: "설명"
-                   )
+                  NoteTextField(
+                      label: "설명",
+                      text: $note,
+                      placeholder: "설명"
+                  )
 
-                   if let envelope = selectedEnvelope, envelope.isRecurring {
-                       RecurringToggle(
-                           label: "매달 반복해서 생성",
-                           isOn: $isRecurring
-                       )
-                   }
+                  if let envelope = selectedEnvelope, envelope.isRecurring {
+                      RecurringToggle(
+                          label: "매달 반복해서 생성",
+                          isOn: $isRecurring
+                      )
+                  }
 
-                   Spacer()
+                  Spacer()
 
-                   SubmitButton(
-                       title: "지출 등록",
-                       action: handleAddExpense
-                   )
-
-               }
-               .padding()
-            }
-           .background(Color.white)
-           .navigationTitle("지출등록")
-           .navigationBarTitleDisplayMode(.inline)
-           .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
-           .toolbarBackground(.white, for: .navigationBar)
-           .toolbarBackground(.visible, for: .navigationBar)
-           .alert(alertTitle, isPresented: $showingAlert) {
-               Button("확인", role: .cancel) { }
-               if showingSubscription {
-                   Button("프리미엄 보기") {
-                       // sheet will open automatically
-                   }
-               }
-           } message: {
-               Text(alertMessage)
-           }
-           .sheet(isPresented: $showingSubscription) {
-               SubscriptionView()
-           }
-           .onAppear {
-               if !filteredEnvelopes.isEmpty {
-                   selectedEnvelope = filteredEnvelopes[0]
-               }
-           }
-       }
-       .navigationViewStyle(.stack)
-   }
+                  SubmitButton(
+                      title: "지출 등록",
+                      action: handleAddExpense
+                  )
+              }
+              .padding()
+          }
+          .background(Color("Background"))
+          .navigationTitle("지출등록")
+          .navigationBarTitleDisplayMode(.inline)
+          .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
+          .toolbarBackground(Color("Background"), for: .navigationBar)
+          .toolbarBackground(.visible, for: .navigationBar)
+          .alert(alertTitle, isPresented: $showingAlert) {
+              Button("확인", role: .cancel) { }
+              if showingSubscription {
+                  Button("프리미엄 보기") {
+                      // sheet will open automatically
+                  }
+              }
+          } message: {
+              Text(alertMessage)
+          }
+          .sheet(isPresented: $showingSubscription) {
+              SubscriptionView()
+          }
+          .onAppear {
+              if !filteredEnvelopes.isEmpty {
+                  selectedEnvelope = filteredEnvelopes[0]
+              }
+          }
+      }
+      .navigationViewStyle(.stack)
+  }
 }
 
 

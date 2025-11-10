@@ -19,7 +19,7 @@ struct TransactionRow: View {
                 HStack{
                     Text(dateFormatter.string(from: transaction.date))
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color("SecondaryText"))
                     
                     if transaction.parentId != nil {
                         Image(systemName: "arrow.triangle.2.circlepath")
@@ -31,7 +31,7 @@ struct TransactionRow: View {
                 if !transaction.note.isEmpty {
                     Text(transaction.note)
                         .font(.subheadline)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryText"))
                 }
             }
             
@@ -49,22 +49,22 @@ struct TransactionRow: View {
             }) {
                 VStack(spacing: 3) {
                     Circle()
-                        .fill(Color.gray)
+                        .fill(Color("SecondaryText"))
                         .frame(width: 4, height: 4)
                     Circle()
-                        .fill(Color.gray)
+                        .fill(Color("SecondaryText"))
                         .frame(width: 4, height: 4)
                     Circle()
-                        .fill(Color.gray)
+                        .fill(Color("SecondaryText"))
                         .frame(width: 4, height: 4)
                 }
                 .frame(width: 24, height: 24)
             }
         }
         .padding()
-        .background(Color.white)
+        .background(Color("CardBackground"))
         .cornerRadius(8)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .shadow(color: Color("Separator"), radius: 5, x: 0, y: 2)
     }
 }
 

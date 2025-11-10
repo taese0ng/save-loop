@@ -68,7 +68,7 @@ struct CalendarDayCell: View {
             Spacer(minLength: 4)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.white)
+        .background(Color("Background"))
     }
 
 }

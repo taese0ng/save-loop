@@ -17,24 +17,7 @@ struct CurrencySettingsView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            // 개선된 헤더
-            VStack(spacing: 8) {
-                // 드래그 인디케이터
-                RoundedRectangle(cornerRadius: 2.5)
-                    .fill(Color.secondary.opacity(0.3))
-                    .frame(width: 36, height: 5)
-                    .padding(.top, 8)
-
-                Text("통화 설정")
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-            }
-            .background(Color(UIColor.systemGroupedBackground))
-
-            // 통화 목록
+        StandardSheetContainer(title: "통화 설정") {
             ScrollView {
                 LazyVStack(spacing: 0) {
                     ForEach(currencies) { currency in
@@ -122,7 +105,7 @@ struct CurrencySettingsView: View {
                 .padding(.top, 12)
                 .padding(.bottom, 20)
             }
-            .background(Color(UIColor.systemGroupedBackground))
+            .scrollContentBackground(.hidden)
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: selectedCurrencyCode)
     }

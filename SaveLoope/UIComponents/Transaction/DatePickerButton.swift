@@ -17,16 +17,17 @@ struct DatePickerButton: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(label)
                 .font(.system(size: 16))
+                .foregroundColor(Color("PrimaryText"))
 
             Button(action: {
                 showingDatePicker = true
             }) {
                 HStack {
                     Text(dateFormatter.string(from: date))
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryText"))
                     Spacer()
                     Image(systemName: "calendar")
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color("SecondaryText"))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 8)

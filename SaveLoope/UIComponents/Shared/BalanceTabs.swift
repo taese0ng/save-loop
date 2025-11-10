@@ -23,13 +23,13 @@ struct BalanceTabs: View {
                     .padding()
                     .frame(height: 50)
                     .background(Color(UIColor.systemGray6)) // 배경색 적용
-                    .foregroundColor(.black) // 텍스트 색상
+                    .foregroundColor(Color("PrimaryText")) // 텍스트 색상
                     .font(.system(size: 16, weight: .medium)) // 폰트 크기 조정
                 }
-                
+
                 Divider()
                 .frame(height: 50)
-                
+
                 Button(action: handleExpendBalance) {
                     HStack {
                         Image(systemName: "minus.circle") // 아이콘
@@ -39,7 +39,7 @@ struct BalanceTabs: View {
                     .padding()
                     .frame(height: 50)
                     .background(Color(UIColor.systemGray6)) // 배경색 적용
-                    .foregroundColor(.black) // 텍스트 색상
+                    .foregroundColor(Color("PrimaryText")) // 텍스트 색상
                     .font(.system(size: 16, weight: .medium)) // 폰트 크기 조정
                 }
             }

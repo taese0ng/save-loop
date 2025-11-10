@@ -38,12 +38,12 @@ public struct MonthDatePicker: View {
                 Button(action: { selectedYear -= 1 }) {
                     ZStack {
                         Circle()
-                            .fill(Color.gray.opacity(0.1))
+                            .fill(Color("Separator"))
                             .frame(width: 40, height: 40)
 
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryText"))
                     }
                     .contentShape(Circle())
                 }
@@ -53,6 +53,7 @@ public struct MonthDatePicker: View {
 
                 Text("\(String(selectedYear))년")
                     .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(Color("PrimaryText"))
                     .frame(width: 100)
 
                 Button(action: {
@@ -62,12 +63,12 @@ public struct MonthDatePicker: View {
                 }) {
                     ZStack {
                         Circle()
-                            .fill(Color.gray.opacity(0.1))
+                            .fill(Color("Separator"))
                             .frame(width: 40, height: 40)
 
                         Image(systemName: "chevron.right")
                             .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(selectedYear < currentYear ? .black : .gray)
+                            .foregroundColor(selectedYear < currentYear ? Color("PrimaryText") : Color("SecondaryText"))
                     }
                     .contentShape(Circle())
                 }
@@ -130,8 +131,8 @@ struct MonthButton: View {
                 .font(.system(size: 16, weight: .medium))
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
-                .background(isSelected ? Color.gray.opacity(0.3) : Color.gray.opacity(0.1))
-                .foregroundColor(isSelected ? .black : (isEnabled ? .black : .gray))
+                .background(isSelected ? Color("PrimaryText").opacity(0.2) : Color("Separator"))
+                .foregroundColor(isSelected ? Color("PrimaryText") : (isEnabled ? Color("PrimaryText") : Color("SecondaryText")))
                 .cornerRadius(8)
         }
         .disabled(!isEnabled)

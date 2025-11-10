@@ -12,7 +12,7 @@ struct EnvelopeCardView: View {
                 Text(envelope.name)
                     .font(.title3)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryText"))
 
                 // 지속형 봉투 아이콘
                 if envelope.type == .persistent {
@@ -34,20 +34,20 @@ struct EnvelopeCardView: View {
             HStack {
                 Text("잔액:")
                     .font(.subheadline)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryText"))
                 Text(envelope.remaining.formattedCurrency)
                     .font(.subheadline)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryText"))
             }
 
             // 프로그레스 바
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(Color.gray.opacity(0.2))
+                        .fill(Color("Separator"))
                         .frame(height: 6)
-                    
+
                     Capsule()
                         .fill(Color.blue)
                         .frame(width: geometry.size.width * animatedProgress, height: 6)
@@ -59,9 +59,9 @@ struct EnvelopeCardView: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(Color.white)
+        .background(Color("CardBackground"))
         .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .shadow(color: Color("Separator"), radius: 5, x: 0, y: 2)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.gray.opacity(0.3), lineWidth: 1)

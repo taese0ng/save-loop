@@ -41,9 +41,9 @@ struct DetailEnvelopeView: View {
                         InfoRow(title: "지출 금액", value: envelope.spent.formattedCurrency)
                     }
                     .padding()
-                    .background(Color.white)
+                    .background(Color("CardBackground"))
                     .cornerRadius(12)
-                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                    .shadow(color: Color("Separator"), radius: 5, x: 0, y: 2)
                     
                     // 거래 내역 섹션
                     VStack(alignment: .leading, spacing: 12) {
@@ -54,7 +54,7 @@ struct DetailEnvelopeView: View {
                         
                         if filteredTransactions.isEmpty {
                             Text("거래 내역이 없습니다.")
-                                .foregroundColor(.gray)
+                                .foregroundColor(Color("SecondaryText"))
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .padding()
                         } else {
@@ -71,7 +71,7 @@ struct DetailEnvelopeView: View {
                 }
                 .padding()
             }
-            .toolbarBackground(.white, for: .navigationBar)
+            .toolbarBackground(Color("Background"), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationTitle(envelope.name)
             .navigationBarTitleDisplayMode(.inline)
@@ -84,12 +84,12 @@ struct DetailEnvelopeView: View {
             .sheet(item: $selectedTransaction) { transaction in
                 EditTransactionView(transaction: transaction, targetEnvelope: envelope)
                     .presentationDetents([.large])
-                    .presentationDragIndicator(.visible)
+                    .presentationDragIndicator(.hidden)
             }
             .sheet(isPresented: $showingEditSheet) {
                 EditEnvelopeView(shouldDismiss: $shouldDismiss, envelope: envelope)
                     .presentationDetents([.large])
-                    .presentationDragIndicator(.visible)
+                    .presentationDragIndicator(.hidden)
             }
             .onChange(of: shouldDismiss) { newValue in
                 if newValue {

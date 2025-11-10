@@ -126,42 +126,40 @@ struct AddEnvelopeView: View {
     }
 
     var body: some View {
-         NavigationView {
+        NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    VStack(spacing: 16) {
-                        LabeledTextField(label: "봉투 이름", text: $envelopeName, required: true)
-                        LabeledNumberField(label: "시작 잔액", value: $initialAmount, placeholder: "0", required: true, prefix: CurrencyManager.shared.currentSymbol)
-                        LabeledNumberField(label: "목표 잔액", value: $goalAmount, placeholder: "0", prefix: CurrencyManager.shared.currentSymbol)
+                    LabeledTextField(label: "봉투 이름", text: $envelopeName, required: true)
+                    LabeledNumberField(label: "시작 잔액", value: $initialAmount, placeholder: "0", required: true, prefix: CurrencyManager.shared.currentSymbol)
+                    LabeledNumberField(label: "목표 잔액", value: $goalAmount, placeholder: "0", prefix: CurrencyManager.shared.currentSymbol)
 
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("봉투 타입")
-                                    .font(.system(size: 16, weight: .medium))
-                                Text("*")
-                                    .foregroundColor(.red)
-                            }
-
-                            Picker("봉투 타입", selection: $selectedEnvelopeType) {
-                                Text("일반 봉투").tag(EnvelopeType.normal)
-                                Text("반복 봉투").tag(EnvelopeType.recurring)
-                                Text(subscriptionManager.isSubscribed ? "지속 봉투" : "지속 봉투 ⭐️").tag(EnvelopeType.persistent)
-                            }
-                            .pickerStyle(.segmented)
-
-                            // 선택된 타입에 대한 설명
-                            Text(envelopeTypeDescription)
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .padding(.top, 4)
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("봉투 타입")
+                                .font(.system(size: 16, weight: .medium))
+                            Text("*")
+                                .foregroundColor(.red)
                         }
-                        .padding(.vertical, 8)
+
+                        Picker("봉투 타입", selection: $selectedEnvelopeType) {
+                            Text("일반 봉투").tag(EnvelopeType.normal)
+                            Text("반복 봉투").tag(EnvelopeType.recurring)
+                            Text(subscriptionManager.isSubscribed ? "지속 봉투" : "지속 봉투 ⭐️").tag(EnvelopeType.persistent)
+                        }
+                        .pickerStyle(.segmented)
+
+                        // 선택된 타입에 대한 설명
+                        Text(envelopeTypeDescription)
+                            .font(.caption)
+                            .foregroundColor(Color("SecondaryText"))
+                            .padding(.top, 4)
                     }
+                    .padding(.vertical, 8)
 
                     Spacer()
                         .frame(height: 40)
 
-                    HStack{
+                    HStack {
                         Spacer()
                         AddEnvelopeButton(action: handleAddEnvelope)
                         Spacer()
@@ -169,6 +167,12 @@ struct AddEnvelopeView: View {
                 }
                 .padding()
             }
+            .background(Color("Background"))
+            .navigationTitle("봉투 추가")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
+            .toolbarBackground(Color("Background"), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .alert("알림", isPresented: $showingAlert) {
                 Button("확인", role: .cancel) { }
                 if alertMessage.contains("프리미엄") {
@@ -182,12 +186,6 @@ struct AddEnvelopeView: View {
             .sheet(isPresented: $showingSubscription) {
                 SubscriptionView()
             }
-            .background(Color.white)
-            .navigationTitle("봉투 추가")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))           
-            .toolbarBackground(.white, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
         }
         .navigationViewStyle(.stack)
     }
