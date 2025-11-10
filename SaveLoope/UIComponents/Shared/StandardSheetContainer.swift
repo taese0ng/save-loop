@@ -30,6 +30,7 @@ struct StandardSheetContainer<Content: View, Footer: View, Trailing: View>: View
 
             footer()
                 .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.bottom, 20)
         }
         .background(backgroundColor)
         .ignoresSafeArea()
