@@ -21,12 +21,14 @@ class CloudSyncManager: ObservableObject {
     @Published var cloudAccountError: String?
 
     private var subscriptionCheckTimer: Timer?
+    private var initializationTask: Task<Void, Never>?
 
     private init() {
         self.isCloudSyncEnabled = UserDefaults.standard.bool(forKey: "isCloudSyncEnabled")
-        Task {
-            await checkCloudAccountStatus()
-            await checkSubscriptionAndDisableSyncIfNeeded()
+        initializationTask = Task { [weak self] in
+            guard let self = self else { return }
+            await self.checkCloudAccountStatus()
+            await self.checkSubscriptionAndDisableSyncIfNeeded()
         }
 
         // 주기적으로 구독 상태 확인 (5분마다)
@@ -35,6 +37,7 @@ class CloudSyncManager: ObservableObject {
 
     deinit {
         subscriptionCheckTimer?.invalidate()
+        initializationTask?.cancel()
     }
 
     /// 구독 상태 모니터링 시작

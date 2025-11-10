@@ -14,18 +14,21 @@ class SubscriptionManager: ObservableObject {
     @Published var errorMessage: String?
 
     private var updateListenerTask: Task<Void, Error>?
+    private var initializationTask: Task<Void, Never>?
 
     private init() {
         updateListenerTask = listenForTransactions()
 
-        Task {
-            await loadProducts()
-            await updateSubscriptionStatus()
+        initializationTask = Task { [weak self] in
+            guard let self = self else { return }
+            await self.loadProducts()
+            await self.updateSubscriptionStatus()
         }
     }
 
     deinit {
         updateListenerTask?.cancel()
+        initializationTask?.cancel()
     }
 
     /// 제품 정보 로드
