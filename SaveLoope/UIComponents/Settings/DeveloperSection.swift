@@ -14,7 +14,7 @@ struct DeveloperSection: View {
                     Image(systemName: "trash")
                         .foregroundColor(.red)
                         .frame(width: 24)
-                    Text("데이터 초기화")
+                    Text("settings.developer.reset_data".localized) // 데이터 초기화
                         .foregroundColor(.red)
                 }
             }
@@ -28,14 +28,14 @@ struct DeveloperSection: View {
                     Image(systemName: "hammer.fill")
                         .foregroundColor(.orange)
                         .frame(width: 24)
-                    Text("개발자 모드 비활성화")
+                    Text("settings.developer.disable_mode".localized) // 개발자 모드 비활성화
                         .foregroundColor(.orange)
                 }
             }
         } header: {
-            Text("개발자 도구")
+            Text("settings.developer.section_header".localized) // 개발자 도구
         } footer: {
-            Text("⚠️ 개발자 전용 기능입니다. 데이터 초기화 시 모든 봉투(Envelope)와 거래 기록(Transaction Record)이 삭제됩니다.")
+            Text("settings.developer.footer".localized) // ⚠️ 개발자 전용 기능입니다. 데이터 초기화 시 모든 봉투(Envelope)와 거래 기록(Transaction Record)이 삭제됩니다.
                 .foregroundColor(.secondary)
         }
     }

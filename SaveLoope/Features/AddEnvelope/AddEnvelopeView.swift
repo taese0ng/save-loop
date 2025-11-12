@@ -17,11 +17,11 @@ struct AddEnvelopeView: View {
     var envelopeTypeDescription: String {
         switch selectedEnvelopeType {
         case .normal:
-            return "현재 월에만 적용되는 봉투입니다.\n다음 달에는 자동으로 사라집니다."
+            return "envelope.type.description.normal".localized
         case .recurring:
-            return "매월 초 동일한 조건으로 자동 생성됩니다.\n잔액과 거래내역은 매월 초기화됩니다."
+            return "envelope.type.description.recurring".localized
         case .persistent:
-            return "삭제하기 전까지 계속 유지됩니다.\n잔액과 거래내역이 초기화되지 않습니다.\n\n⚠️ 생성 후에는 타입 변경이 불가능합니다."
+            return "envelope.type.description.persistent".localized
         }
     }
 
@@ -32,20 +32,20 @@ struct AddEnvelopeView: View {
     func handleAddEnvelope() {
         // 입력값 검증
         if envelopeName.isEmpty {
-            alertMessage = "봉투 이름을 입력해주세요"
+            alertMessage = "envelope.name_required".localized
             showingAlert = true
             return
         }
 
         guard let amount: Double = initialAmount, amount > 0 else {
-            alertMessage = "올바른 시작 잔액을 입력해주세요"
+            alertMessage = "envelope.invalid_budget".localized
             showingAlert = true
             return
         }
 
         // 지속형 봉투는 프리미엄 전용
         if selectedEnvelopeType == .persistent && !subscriptionManager.isSubscribed {
-            alertMessage = "지속형 봉투는 프리미엄 기능입니다.\n프리미엄 플랜을 구독하시면 사용할 수 있습니다."
+            alertMessage = "envelope.persistent_premium_required".localized
             showingAlert = true
             return
         }
@@ -68,7 +68,7 @@ struct AddEnvelopeView: View {
                 }
 
                 if existingPersistent != nil {
-                    alertMessage = "이미 같은 이름의 지속형 봉투가 존재합니다"
+                    alertMessage = "envelope.name_exists".localized
                     showingAlert = true
                     return
                 }
@@ -82,7 +82,7 @@ struct AddEnvelopeView: View {
                 }
 
                 if existingEnvelope != nil {
-                    alertMessage = "이미 같은 이름의 봉투가 현재 월에 존재합니다"
+                    alertMessage = "envelope.name_exists_current_month".localized
                     showingAlert = true
                     return
                 }
@@ -116,11 +116,11 @@ struct AddEnvelopeView: View {
                 handleDismiss()
             } catch {
                 print("❌ 봉투 저장 실패: \(error.localizedDescription)")
-                alertMessage = "봉투 저장 중 오류가 발생했습니다"
+                alertMessage = "error.save_failed".localized
                 showingAlert = true
             }
         } catch {
-            alertMessage = "봉투 생성 중 오류가 발생했습니다"
+            alertMessage = "error.save_failed".localized
             showingAlert = true
         }
     }
@@ -129,22 +129,22 @@ struct AddEnvelopeView: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    LabeledTextField(label: "봉투 이름", text: $envelopeName, required: true)
-                    LabeledNumberField(label: "시작 잔액", value: $initialAmount, placeholder: "0", required: true, prefix: CurrencyManager.shared.currentSymbol)
-                    LabeledNumberField(label: "목표 잔액", value: $goalAmount, placeholder: "0", prefix: CurrencyManager.shared.currentSymbol)
+                    LabeledTextField(label: "envelope.name".localized, text: $envelopeName, required: true) // 봉투 이름
+                    LabeledNumberField(label: "envelope.initial_balance".localized, value: $initialAmount, placeholder: "0", required: true, prefix: CurrencyManager.shared.currentSymbol) // 시작 잔액
+                    LabeledNumberField(label: "envelope.goal".localized, value: $goalAmount, placeholder: "0", prefix: CurrencyManager.shared.currentSymbol) // 목표 잔액
 
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text("봉투 타입")
+                            Text("envelope.type") // 봉투 타입
                                 .font(.system(size: 16, weight: .medium))
                             Text("*")
                                 .foregroundColor(.red)
                         }
 
-                        Picker("봉투 타입", selection: $selectedEnvelopeType) {
-                            Text("일반 봉투").tag(EnvelopeType.normal)
-                            Text("반복 봉투").tag(EnvelopeType.recurring)
-                            Text(subscriptionManager.isSubscribed ? "지속 봉투" : "지속 봉투 ⭐️").tag(EnvelopeType.persistent)
+                        Picker("envelope.type".localized, selection: $selectedEnvelopeType) { // 봉투 타입
+                            Text("envelope.type.normal").tag(EnvelopeType.normal) // 일반 봉투
+                            Text("envelope.type.recurring").tag(EnvelopeType.recurring) // 반복 봉투
+                            Text(subscriptionManager.isSubscribed ? "envelope.type.persistent" : "envelope.type.persistent".localized + " ⭐️").tag(EnvelopeType.persistent) // 지속 봉투
                         }
                         .pickerStyle(.segmented)
 
@@ -168,15 +168,15 @@ struct AddEnvelopeView: View {
                 .padding()
             }
             .background(Color("Background"))
-            .navigationTitle("봉투 추가")
+            .navigationTitle("envelope.create") // 봉투 만들기
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
             .toolbarBackground(Color("Background"), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .alert("알림", isPresented: $showingAlert) {
-                Button("확인", role: .cancel) { }
-                if alertMessage.contains("프리미엄") {
-                    Button("프리미엄 보기") {
+            .alert("common.alert", isPresented: $showingAlert) { // 알림
+                Button("common.ok", role: .cancel) { } // 확인
+                if alertMessage.contains("envelope.persistent_premium_required".localized) {
+                    Button("subscription.view_premium") { // 프리미엄 보기
                         showingSubscription = true
                     }
                 }

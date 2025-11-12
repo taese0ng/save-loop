@@ -20,11 +20,12 @@ class CurrencyManager: ObservableObject {
            let savedCurrency = Currency.supportedCurrencies.first(where: { $0.code == savedCode }) {
             self.selectedCurrency = savedCurrency
         } else {
-            // 저장된 설정이 없으면 기기 로케일에서 가져오기
-            if let deviceCurrency = Currency.currencyFromDeviceLocale() {
+            // 저장된 설정이 없으면 앱 언어 설정에 따른 통화 가져오기
+            let languageCode = LocalizationManager.shared.currentLanguage
+            if let deviceCurrency = Currency.currencyFromAppLanguage(languageCode) {
                 self.selectedCurrency = deviceCurrency
             } else {
-                // 기기 로케일에서도 찾을 수 없으면 기본값 (원화)
+                // 언어에 맞는 통화를 찾을 수 없으면 기본값 (원화)
                 self.selectedCurrency = Currency.default
             }
         }
@@ -35,14 +36,16 @@ class CurrencyManager: ObservableObject {
         selectedCurrency = currency
     }
     
-    /// 지원되는 통화 목록 가져오기 (기기 통화를 최상단에 배치)
+    /// 지원되는 통화 목록 가져오기 (앱 언어에 맞는 통화를 최상단에 배치)
     func getCurrenciesWithDeviceFirst() -> [Currency] {
-        guard let deviceCurrency = Currency.currencyFromDeviceLocale() else {
+        // 앱 언어 설정에 따른 통화 가져오기
+        let languageCode = LocalizationManager.shared.currentLanguage
+        guard let deviceCurrency = Currency.currencyFromAppLanguage(languageCode) else {
             return Currency.supportedCurrencies
         }
         
         var currencies = Currency.supportedCurrencies
-        // 기기 통화를 제거하고 최상단에 추가
+        // 언어에 맞는 통화를 제거하고 최상단에 추가
         currencies.removeAll { $0.code == deviceCurrency.code }
         return [deviceCurrency] + currencies
     }
@@ -53,10 +56,14 @@ class CurrencyManager: ObservableObject {
         if let savedCode = UserDefaults.standard.string(forKey: currencyCodeKey),
            let savedCurrency = Currency.supportedCurrencies.first(where: { $0.code == savedCode }) {
             return savedCurrency.symbol
-        } else if let deviceCurrency = Currency.currencyFromDeviceLocale() {
-            return deviceCurrency.symbol
         } else {
-            return Currency.default.symbol
+            // 앱 언어 설정에 따른 통화 가져오기
+            let languageCode = LocalizationManager.shared.currentLanguage
+            if let deviceCurrency = Currency.currencyFromAppLanguage(languageCode) {
+                return deviceCurrency.symbol
+            } else {
+                return Currency.default.symbol
+            }
         }
     }
 }

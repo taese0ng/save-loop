@@ -20,7 +20,7 @@ struct TransactionRowView: View {
                             .font(.system(size: 15, weight: .medium))
                             .foregroundColor(.primary)
                     } else {
-                        Text(transaction.type == .income ? "수입" : "지출")
+                        Text(transaction.type == .income ? "transaction.type.income".localized : "transaction.type.expense".localized) // 수입 / 지출
                             .font(.system(size: 15, weight: .medium))
                             .foregroundColor(Color("SecondaryText"))
                     }

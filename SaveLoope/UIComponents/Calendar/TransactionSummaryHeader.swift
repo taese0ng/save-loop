@@ -13,7 +13,7 @@ struct TransactionSummaryHeader: View {
                     .foregroundColor(.blue)
                     .font(.title3)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("수입")
+                    Text("transaction.type.income".localized) // 수입
                         .font(.caption)
                         .foregroundColor(.gray)
                     Text("+\(totalIncome.formattedCurrency)")
@@ -29,7 +29,7 @@ struct TransactionSummaryHeader: View {
                     .foregroundColor(.red)
                     .font(.title3)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("지출")
+                    Text("transaction.type.expense".localized) // 지출
                         .font(.caption)
                         .foregroundColor(.gray)
                     Text("-\(totalExpense.formattedCurrency)")

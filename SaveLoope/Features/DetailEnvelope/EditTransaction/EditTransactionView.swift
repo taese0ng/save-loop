@@ -33,14 +33,14 @@ struct EditTransactionView: View {
     func handleEditTransaction() {
         // 입력값 검증
         guard let envelope = selectedEnvelope else {
-            alertMessage = "봉투를 선택해주세요"
+            alertMessage = "edit_transaction.select_envelope".localized // 봉투를 선택해주세요
             showingAlert = true
             return
         }
         
         // 금액 검증
         guard let amountValue = amount, amountValue > 0 else {
-            alertMessage = "올바른 금액을 입력해주세요"
+            alertMessage = "edit_transaction.invalid_amount".localized // 올바른 금액을 입력해주세요
             showingAlert = true
             return
         }
@@ -87,7 +87,7 @@ struct EditTransactionView: View {
             handleDismiss()
         } catch {
             print("❌ 거래 수정 저장 실패: \(error.localizedDescription)")
-            alertMessage = "거래 수정 중 오류가 발생했습니다"
+            alertMessage = "error.transaction_edit".localized // 거래 수정 중 오류가 발생했습니다
             showingAlert = true
         }
     }
@@ -122,11 +122,11 @@ struct EditTransactionView: View {
     }
     
     var body: some View {
-        StandardSheetContainer(title: "거래 수정") {
+        StandardSheetContainer(title: "edit_transaction.title".localized) { // 거래 수정
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     RadioButtonGroup(
-                        title: "봉투 선택",
+                        title: "edit_transaction.envelope".localized, // 봉투 선택
                         items: filteredEnvelopes,
                         selectedItem: selectedEnvelope,
                         envelopeType: { $0.type },
@@ -140,12 +140,12 @@ struct EditTransactionView: View {
                     )
 
                     TransactionTypePicker(
-                        label: "유형",
+                        label: "edit_transaction.type".localized, // 유형
                         selectedType: $transactionType
                     )
 
                     LabeledNumberField(
-                        label: "금액",
+                        label: "edit_transaction.amount".localized, // 금액
                         value: $amount,
                         placeholder: "0",
                         required: true,
@@ -153,21 +153,21 @@ struct EditTransactionView: View {
                     )
 
                     DatePickerButton(
-                        label: "날짜",
+                        label: "edit_transaction.date".localized, // 날짜
                         date: $date,
                         showingDatePicker: $showingDatePicker,
                         selectedDate: dateSelection.selectedDate
                     )
 
                     NoteTextField(
-                        label: "설명",
+                        label: "edit_transaction.note".localized, // 설명
                         text: $note,
-                        placeholder: "설명"
+                        placeholder: "transaction.note_placeholder".localized // 설명
                     )
 
                     if selectedEnvelope?.isRecurring == true {
                         RecurringToggle(
-                            label: "매달 반복해서 생성",
+                            label: "transaction.recurring_label".localized, // 매달 반복해서 생성
                             isOn: $isRecurring
                         )
                     }
@@ -177,24 +177,24 @@ struct EditTransactionView: View {
             .scrollContentBackground(.hidden)
         } footer: {
             ActionButtons(
-                deleteTitle: "삭제",
-                confirmTitle: "수정 완료",
+                deleteTitle: "common.delete".localized, // 삭제
+                confirmTitle: "edit_transaction.complete".localized, // 수정 완료
                 onDelete: { showingDeleteAlert = true },
                 onConfirm: handleEditTransaction
             )
         }
-        .alert("알림", isPresented: $showingAlert) {
-            Button("확인", role: .cancel) { }
+        .alert("common.alert".localized, isPresented: $showingAlert) { // 알림
+            Button("common.ok".localized, role: .cancel) { } // 확인
         } message: {
             Text(alertMessage)
         }
-        .alert("거래 삭제", isPresented: $showingDeleteAlert) {
-            Button("취소", role: .cancel) { }
-            Button("삭제", role: .destructive) {
+        .alert("edit_transaction.delete_confirm_title".localized, isPresented: $showingDeleteAlert) { // 거래 삭제
+            Button("common.cancel".localized, role: .cancel) { } // 취소
+            Button("common.delete".localized, role: .destructive) { // 삭제
                 handleDeleteTransaction()
             }
         } message: {
-            Text("정말로 이 거래를 삭제하시겠습니까?")
+            Text("edit_transaction.delete_confirm_message".localized) // 정말로 이 거래를 삭제하시겠습니까?
         }
         .onAppear {
             // 초기값 설정

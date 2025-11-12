@@ -32,7 +32,7 @@ struct EnvelopeCardView: View {
 
             // 잔액 표시
             HStack {
-                Text("잔액:")
+                Text("envelope.balance_label".localized) // 잔액:
                     .font(.subheadline)
                     .foregroundColor(Color("PrimaryText"))
                 Text(envelope.remaining.formattedCurrency)

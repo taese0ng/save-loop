@@ -12,10 +12,10 @@ struct PlanComparisonSection: View {
                         .frame(width: 24)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("플랜 비교")
+                        Text("settings.plan_comparison.title".localized) // 플랜 비교
                             .foregroundColor(.primary)
 
-                        Text("무료 vs 프리미엄 기능 비교")
+                        Text("settings.plan_comparison.subtitle".localized) // 무료 vs 프리미엄 기능 비교
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

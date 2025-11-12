@@ -13,11 +13,11 @@ struct SubscriptionHeaderView: View {
                     )
                 )
 
-            Text("프리미엄으로 업그레이드")
+            Text("subscription.header.title".localized) // 프리미엄으로 업그레이드
                 .font(.title2)
                 .fontWeight(.bold)
 
-            Text("무제한 봉투 생성과 고급 기능을 이용하세요")
+            Text("subscription.header.subtitle".localized) // 무제한 봉투 생성과 고급 기능을 이용하세요
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

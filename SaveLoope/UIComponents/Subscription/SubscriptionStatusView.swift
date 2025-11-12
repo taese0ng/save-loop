@@ -36,13 +36,13 @@ struct SubscriptionStatusView: View {
         HStack {
             Image(systemName: "checkmark.circle.fill")
                 .foregroundColor(.green)
-            Text("현재 구독 중")
+            Text("subscription.current".localized) // 현재 구독 중
                 .font(.headline)
             Spacer()
 
             if shouldShowManageButton {
                 Button(action: onManageTapped) {
-                    Text("구독 관리")
+                    Text("subscription.manage_button".localized) // 구독 관리
                         .font(.caption)
                         .fontWeight(.medium)
                         .foregroundColor(.blue)
@@ -55,21 +55,33 @@ struct SubscriptionStatusView: View {
         }
     }
 
+    private var productType: SubscriptionProduct? {
+        guard let product = subscribedProduct else { return nil }
+        return SubscriptionProduct.allCases.first { $0.rawValue == product.id }
+    }
+    
+    private func localizedProductName(for product: Product) -> String {
+        if let productType = SubscriptionProduct.allCases.first(where: { $0.rawValue == product.id }) {
+            return productType.displayName
+        }
+        return product.displayName
+    }
+
     @ViewBuilder
     private func productInfo(for product: Product) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(product.displayName)
+                    Text(localizedProductName(for: product)) // 다국어 지원된 이름 사용
                         .font(.body)
                         .fontWeight(.semibold)
 
                     if product.subscription != nil {
-                        Text("구독 활성화됨")
+                        Text("subscription.subscribed_active".localized) // 구독 활성화됨
                             .font(.caption)
                             .foregroundColor(.secondary)
                     } else {
-                        Text("평생 이용권 활성화됨")
+                        Text("subscription.lifetime_active".localized) // 평생 이용권 활성화됨
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -101,11 +113,11 @@ struct SubscriptionStatusView: View {
             Image(systemName: "clock.arrow.circlepath")
                 .foregroundColor(.orange)
             VStack(alignment: .leading, spacing: 2) {
-                Text("구독 변경 예정")
+                Text("subscription.change_pending".localized) // 구독 변경 예정
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(.orange)
-                Text("\(pendingProduct.displayName)으로 변경")
+                Text(String(format: "subscription.change_to".localized, localizedProductName(for: pendingProduct))) // %@으로 변경
                     .font(.caption2)
                     .foregroundColor(.secondary)
                 if let renewalDate {
@@ -123,7 +135,7 @@ struct SubscriptionStatusView: View {
             Image(systemName: "arrow.clockwise.circle")
                 .foregroundColor(.blue)
             VStack(alignment: .leading, spacing: 2) {
-                Text("다음 결제일")
+                Text("subscription.next_billing".localized) // 다음 결제일
                     .font(.caption)
                     .fontWeight(.medium)
                 Text(dateFormatter.string(from: renewalDate))
@@ -139,12 +151,12 @@ struct SubscriptionStatusView: View {
             Image(systemName: "exclamationmark.circle")
                 .foregroundColor(.orange)
             VStack(alignment: .leading, spacing: 2) {
-                Text("자동 갱신 해제됨")
+                Text("subscription.auto_renew_off".localized) // 자동 갱신 해제됨
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(.orange)
                 if let renewalDate {
-                    Text("\(dateFormatter.string(from: renewalDate))까지 이용 가능")
+                    Text(String(format: "subscription.available_until".localized, dateFormatter.string(from: renewalDate))) // %@까지 이용 가능
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }

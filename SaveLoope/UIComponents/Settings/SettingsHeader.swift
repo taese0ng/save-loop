@@ -6,7 +6,7 @@ struct SettingsHeader: View {
 
     var body: some View {
         HStack {
-            Text("설정")
+            Text("settings.title".localized) // 설정
                 .font(.largeTitle)
                 .fontWeight(.bold)
 

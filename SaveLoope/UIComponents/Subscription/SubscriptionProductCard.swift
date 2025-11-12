@@ -36,13 +36,13 @@ struct SubscriptionProductCard: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        Text(product.displayName)
+                        Text(productType?.displayName ?? product.displayName) // 다국어 지원된 이름 사용
                             .font(.headline)
                         
                         Spacer()
                         
                         if isPopular || isRecommended {
-                            Text(isRecommended ? "추천" : "인기")
+                            Text(isRecommended ? "subscription.product.recommended".localized : "subscription.product.popular".localized) // 추천 / 인기
                                 .font(.caption)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
@@ -116,7 +116,7 @@ struct SubscriptionProductCard: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
             } else {
-                Text("1회 결제")
+                Text("subscription.product.one_time".localized) // 1회 결제
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -126,12 +126,12 @@ struct SubscriptionProductCard: View {
     @ViewBuilder
     private var actionButton: some View {
         if isSubscribed {
-            statusLabel(systemName: "checkmark.circle.fill", text: "구독 중", color: .green)
+            statusLabel(systemName: "checkmark.circle.fill", text: "subscription.product.subscribed".localized, color: .green) // 구독 중
         } else if isPending {
-            statusLabel(systemName: "clock.fill", text: "구독 예정", color: .orange)
+            statusLabel(systemName: "clock.fill", text: "subscription.product.pending".localized, color: .orange) // 구독 예정
         } else {
             Button(action: onPurchase) {
-                Text("구독하기")
+                Text("subscription.product.subscribe".localized) // 구독하기
                     .fontWeight(.semibold)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
@@ -191,13 +191,13 @@ extension Product.SubscriptionPeriod.Unit {
     var localizedDescription: String {
         switch self {
         case .day:
-            return "일"
+            return "subscription.product.period.day".localized // 일
         case .week:
-            return "주"
+            return "subscription.product.period.week".localized // 주
         case .month:
-            return "월"
+            return "subscription.product.period.month".localized // 월
         case .year:
-            return "년"
+            return "subscription.product.period.year".localized // 년
         @unknown default:
             return ""
         }

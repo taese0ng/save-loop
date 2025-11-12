@@ -13,7 +13,7 @@ struct DayTransactionSheet: View {
               let day = components.day else {
             return ""
         }
-        return "\(year)년 \(month)월 \(day)일"
+        return String(format: "date.format.year_month_day".localized, year, month, day) // "%d년 %d월 %d일"
     }
 
     // 봉투별로 거래내역 그룹핑

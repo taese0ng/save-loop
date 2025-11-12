@@ -17,7 +17,7 @@ struct BalanceTabs: View {
                 Button(action: handleAddBalance) {
                     HStack {
                         Image(systemName: "plus.circle") // 아이콘
-                        Text("잔액추가")
+                        Text("add_balance.button".localized) // 잔액 추가
                     }
                     .frame(maxWidth: .infinity) // 너비를 균등하게 맞춤
                     .padding()
@@ -33,7 +33,7 @@ struct BalanceTabs: View {
                 Button(action: handleExpendBalance) {
                     HStack {
                         Image(systemName: "minus.circle") // 아이콘
-                        Text("지출")
+                        Text("add_expense.button".localized) // 지출 등록
                     }
                     .frame(maxWidth: .infinity) // 너비를 균등하게 맞춤
                     .padding()

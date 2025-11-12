@@ -33,7 +33,7 @@ struct SubscriptionProductsSection: View {
                 .font(.system(size: 50))
                 .foregroundColor(.orange)
 
-            Text("제품을 불러올 수 없습니다")
+            Text("subscription.products.empty_title".localized) // 제품을 불러올 수 없습니다
                 .font(.headline)
 
             if let errorMessage = errorMessage {
@@ -46,13 +46,13 @@ struct SubscriptionProductsSection: View {
                 }
                 .frame(maxHeight: 200)
             } else {
-                Text("네트워크 연결을 확인해주세요")
+                Text("subscription.products.empty_message".localized) // 네트워크 연결을 확인해주세요
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
             }
 
-            Button("다시 시도", action: onRetry)
+            Button("subscription.products.retry".localized, action: onRetry) // 다시 시도
                 .buttonStyle(.borderedProminent)
                 .padding(.top, 8)
         }

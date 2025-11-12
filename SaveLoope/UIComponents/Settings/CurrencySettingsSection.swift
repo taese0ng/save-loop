@@ -15,10 +15,10 @@ struct CurrencySettingsSection: View {
                         .frame(width: 24)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("통화 설정")
+                        Text("settings.currency_settings".localized) // 통화 설정
                             .foregroundColor(.primary)
 
-                        Text(currentCurrencyName.isEmpty ? "로딩 중..." : currentCurrencyName)
+                        Text(currentCurrencyName.isEmpty ? "common.loading".localized : currentCurrencyName) // 로딩 중...
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -31,7 +31,7 @@ struct CurrencySettingsSection: View {
                 }
             }
         } header: {
-            Text("일반")
+            Text("settings.currency.section_header".localized) // 일반
         }
     }
 }

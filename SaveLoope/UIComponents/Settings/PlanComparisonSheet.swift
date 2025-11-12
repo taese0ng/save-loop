@@ -4,7 +4,7 @@ struct PlanComparisonSheet: View {
     @ObservedObject var subscriptionManager: SubscriptionManager
 
     var body: some View {
-        StandardSheetContainer(title: "플랜 비교") {
+        StandardSheetContainer(title: "settings.plan_comparison.title".localized) { // 플랜 비교
             ScrollView {
                 VStack(spacing: 24) {
                     freePlanSection
@@ -20,17 +20,17 @@ struct PlanComparisonSheet: View {
     private var freePlanSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             planHeader(
-                title: "무료 플랜",
+                title: "plan.free.title".localized, // 무료 플랜
                 isCurrent: !subscriptionManager.isSubscribed,
                 badgeStyle: .solid(.green)
             )
 
             VStack(alignment: .leading, spacing: 12) {
-                PlanFeatureRow(icon: "envelope.fill", text: "봉투 3개까지", isIncluded: true, warningStyle: .standard)
-                PlanFeatureRow(icon: "arrow.clockwise", text: "지속형 봉투", isIncluded: false)
-                PlanFeatureRow(icon: "list.bullet", text: "봉투당 거래 30개까지", isIncluded: true, warningStyle: .standard)
-                PlanFeatureRow(icon: "calendar", text: "최근 3개월 데이터 접근", isIncluded: true, warningStyle: .standard)
-                PlanFeatureRow(icon: "icloud.fill", text: "iCloud 동기화", isIncluded: false)
+                PlanFeatureRow(icon: "envelope.fill", text: "plan.feature.envelopes_3".localized, isIncluded: true, warningStyle: .standard) // 봉투 3개까지
+                PlanFeatureRow(icon: "arrow.clockwise", text: "plan.feature.persistent_envelope".localized, isIncluded: false) // 지속형 봉투
+                PlanFeatureRow(icon: "list.bullet", text: "plan.feature.transactions_30".localized, isIncluded: true, warningStyle: .standard) // 봉투당 거래 30개까지
+                PlanFeatureRow(icon: "calendar", text: "plan.feature.months_3".localized, isIncluded: true, warningStyle: .standard) // 최근 3개월 데이터 접근
+                PlanFeatureRow(icon: "icloud.fill", text: "plan.feature.cloud_sync".localized, isIncluded: false) // iCloud 동기화
             }
         }
         .padding()
@@ -45,7 +45,7 @@ struct PlanComparisonSheet: View {
     private var premiumPlanSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             planHeader(
-                title: "프리미엄 플랜",
+                title: "plan.premium.title".localized, // 프리미엄 플랜
                 isCurrent: subscriptionManager.isSubscribed,
                 badgeStyle: .gradient(
                     LinearGradient(
@@ -57,12 +57,12 @@ struct PlanComparisonSheet: View {
             )
 
             VStack(alignment: .leading, spacing: 12) {
-                PlanFeatureRow(icon: "envelope.fill", text: "무제한 봉투", isIncluded: true, isPremium: true)
-                PlanFeatureRow(icon: "arrow.clockwise", text: "지속형 봉투", isIncluded: true, isPremium: true)
-                PlanFeatureRow(icon: "list.bullet", text: "무제한 거래 기록", isIncluded: true, isPremium: true)
-                PlanFeatureRow(icon: "calendar", text: "무제한 데이터 접근", isIncluded: true, isPremium: true)
-                PlanFeatureRow(icon: "icloud.fill", text: "iCloud 동기화", isIncluded: true, isPremium: true)
-                PlanFeatureRow(icon: "sparkles", text: "앞으로 추가되는 기능들", isIncluded: true, isPremium: true)
+                PlanFeatureRow(icon: "envelope.fill", text: "plan.feature.envelopes_unlimited".localized, isIncluded: true, isPremium: true) // 무제한 봉투
+                PlanFeatureRow(icon: "arrow.clockwise", text: "plan.feature.persistent_envelope".localized, isIncluded: true, isPremium: true) // 지속형 봉투
+                PlanFeatureRow(icon: "list.bullet", text: "plan.feature.transactions_unlimited".localized, isIncluded: true, isPremium: true) // 무제한 거래 기록
+                PlanFeatureRow(icon: "calendar", text: "plan.feature.months_unlimited".localized, isIncluded: true, isPremium: true) // 무제한 데이터 접근
+                PlanFeatureRow(icon: "icloud.fill", text: "plan.feature.cloud_sync".localized, isIncluded: true, isPremium: true) // iCloud 동기화
+                PlanFeatureRow(icon: "sparkles", text: "plan.feature.future_features".localized, isIncluded: true, isPremium: true) // 앞으로 추가되는 기능들
             }
         }
         .padding()
@@ -88,7 +88,7 @@ struct PlanComparisonSheet: View {
                 .fontWeight(.bold)
 
             if isCurrent, let badgeStyle {
-                Text("현재 플랜")
+                Text("plan.current_badge".localized) // 현재 플랜
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)

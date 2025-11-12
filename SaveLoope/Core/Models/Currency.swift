@@ -15,9 +15,14 @@ struct Currency: Identifiable, Codable, Hashable {
         return !noDecimalCurrencies.contains(code)
     }
     
+    /// 다국어 지원된 통화 이름
+    var localizedName: String {
+        return "currency.name.\(code)".localized
+    }
+    
     /// 표시 이름 (예: "원 (KRW)")
     var displayName: String {
-        "\(name) (\(code))"
+        "\(localizedName) (\(code))"
     }
 }
 
@@ -67,7 +72,7 @@ extension Currency {
         Currency(id: "TRY", code: "TRY", symbol: "₺", name: "리라", localeIdentifier: "tr_TR"),
     ]
     
-    /// 기기 로케일에서 통화 코드 가져오기
+    /// 기기 로케일에서 통화 코드 가져오기 (실제 기기 지역 설정 기반)
     static func currencyFromDeviceLocale() -> Currency? {
         let locale = Locale.current
         guard let currencyCode = locale.currency?.identifier else {
@@ -75,6 +80,31 @@ extension Currency {
         }
         
         // 지원되는 통화 목록에서 찾기
+        return supportedCurrencies.first { $0.code == currencyCode }
+    }
+    
+    /// 앱 언어 설정에 따른 기본 통화 가져오기
+    static func currencyFromAppLanguage(_ languageCode: String) -> Currency? {
+        // 언어 코드에 따른 기본 통화 매핑
+        let currencyCode: String
+        switch languageCode {
+        case "ko":
+            currencyCode = "KRW" // 한국어 -> 원화
+        case "ja":
+            currencyCode = "JPY" // 일본어 -> 엔
+        case "zh-Hans":
+            currencyCode = "CNY" // 중국어 간체 -> 위안
+        case "zh-Hant":
+            currencyCode = "TWD" // 중국어 번체 -> 신대만 달러
+        case "en-US":
+            currencyCode = "USD" // 영어 미국 -> 달러
+        case "en-GB":
+            currencyCode = "GBP" // 영어 영국 -> 파운드
+        default:
+            // 지원하지 않는 언어는 영어(미국) 기본값 사용
+            currencyCode = "USD"
+        }
+        
         return supportedCurrencies.first { $0.code == currencyCode }
     }
     

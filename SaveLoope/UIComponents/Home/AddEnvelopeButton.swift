@@ -5,7 +5,7 @@ struct AddEnvelopeButton: View {
 
     var body: some View {
         Button(action: action) {
-            Text("봉투 추가")
+            Text("home.add_envelope".localized) // 봉투 추가
                 .font(.system(size:20, weight: .light))
                 .fontWeight(.bold)
                 .foregroundColor(.white)

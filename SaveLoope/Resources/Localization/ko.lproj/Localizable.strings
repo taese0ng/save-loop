@@ -1,0 +1,363 @@
+/*
+  Localizable.strings (Korean)
+  SaveLoope
+*/
+
+// MARK: - Common
+"common.ok" = "확인";
+"common.cancel" = "취소";
+"common.save" = "저장";
+"common.delete" = "삭제";
+"common.edit" = "편집";
+"common.add" = "추가";
+"common.done" = "완료";
+"common.close" = "닫기";
+"common.back" = "뒤로";
+"common.next" = "다음";
+"common.previous" = "이전";
+"common.search" = "검색";
+"common.settings" = "설정";
+"common.error" = "오류";
+"common.success" = "성공";
+"common.loading" = "로딩 중...";
+"common.alert" = "알림";
+"common.required" = "필수";
+
+// MARK: - Tabs
+"tab.home" = "홈";
+"tab.calendar" = "캘린더";
+"tab.settings" = "설정";
+
+// MARK: - Home
+"home.title" = "SaveLoope";
+"home.no_envelopes" = "봉투가 존재하지 않습니다.";
+"home.empty_state.title" = "첫 번째 봉투를 만들어보세요";
+"home.empty_state.description" = "봉투를 추가하여 예산 관리를 시작하세요";
+"home.add_envelope" = "봉투 추가";
+"home.edit_mode" = "편집";
+
+// MARK: - Envelope
+"envelope.name" = "봉투 이름";
+"envelope.budget" = "예산";
+"envelope.income" = "수입";
+"envelope.spent" = "지출";
+"envelope.remaining" = "남은 금액";
+"envelope.goal" = "목표";
+"envelope.balance" = "잔액";
+"envelope.type" = "유형";
+"envelope.type.oneTime" = "일회성";
+"envelope.type.recurring" = "반복";
+"envelope.type.normal" = "일반";
+"envelope.type.persistent" = "지속";
+"envelope.initial_balance" = "시작 잔액";
+"envelope.create" = "봉투 만들기";
+"envelope.edit" = "봉투 편집";
+"envelope.delete" = "봉투 삭제";
+"envelope.delete_confirm" = "이 봉투를 삭제하시겠습니까?";
+"envelope.limit_reached" = "제한 도달";
+"envelope.limit_message" = "무료 플랜에서는 월 3개까지만 봉투를 만들 수 있습니다.";
+"envelope.name_required" = "봉투 이름을 입력해주세요";
+"envelope.invalid_budget" = "올바른 시작 잔액을 입력해주세요";
+"envelope.persistent_premium_required" = "지속형 봉투는 프리미엄 기능입니다.\n프리미엄 플랜을 구독하시면 사용할 수 있습니다.";
+"envelope.name_exists" = "이미 같은 이름의 지속형 봉투가 존재합니다";
+"envelope.name_exists_current_month" = "이미 같은 이름의 봉투가 현재 월에 존재합니다";
+"envelope.type.description.normal" = "현재 월에만 적용되는 봉투입니다.\n다음 달에는 자동으로 사라집니다.";
+"envelope.type.description.recurring" = "매월 초 동일한 조건으로 자동 생성됩니다.\n잔액과 거래내역은 매월 초기화됩니다.";
+"envelope.type.description.persistent" = "삭제하기 전까지 계속 유지됩니다.\n잔액과 거래내역이 초기화되지 않습니다.\n\n⚠️ 생성 후에는 타입 변경이 불가능합니다.";
+
+// MARK: - Transaction
+"transaction.add" = "거래 추가";
+"transaction.edit" = "거래 편집";
+"transaction.delete" = "거래 삭제";
+"transaction.type" = "거래 유형";
+"transaction.type.income" = "수입";
+"transaction.type.expense" = "지출";
+"transaction.amount" = "금액";
+"transaction.note" = "메모";
+"transaction.date" = "날짜";
+"transaction.recurring" = "반복 거래";
+"transaction.empty" = "거래 내역이 없습니다.";
+
+// MARK: - Balance
+"balance.add_income" = "수입 추가";
+"balance.add_expense" = "지출 추가";
+"balance.total_income" = "총 수입";
+"balance.total_expense" = "총 지출";
+"balance.net_balance" = "순 잔액";
+
+// MARK: - Calendar
+"calendar.title" = "캘린더";
+"calendar.today" = "오늘";
+"calendar.month_summary" = "월간 요약";
+"calendar.no_transactions" = "거래 내역이 없습니다.";
+
+// MARK: - Settings
+"settings.title" = "설정";
+"settings.currency" = "통화";
+"settings.currency_settings" = "통화 설정";
+"settings.language" = "언어";
+"settings.membership" = "멤버십";
+"settings.membership.premium" = "프리미엄 멤버십";
+"settings.membership.subscribe_unlimited" = "무제한 기능 사용하기";
+"settings.plan_comparison" = "플랜 비교";
+"settings.sync" = "동기화";
+"settings.cloud_sync" = "iCloud 동기화";
+"settings.cloud_sync.title" = "iCloud 동기화";
+"settings.cloud_sync.enable" = "동기화 활성화";
+"settings.cloud_sync.disable" = "동기화 비활성화";
+"settings.cloud_sync.status" = "동기화 상태";
+"settings.cloud_sync.unavailable" = "iCloud를 사용할 수 없습니다";
+"settings.cloud_sync.premium_only" = "⭐️ iCloud 동기화는 프리미엄 전용 기능입니다";
+"settings.data" = "데이터";
+"settings.reset_data" = "데이터 초기화";
+"settings.reset_data_confirm" = "모든 봉투와 거래 기록이 삭제됩니다. 이 작업은 되돌릴 수 없습니다.";
+"settings.developer_mode" = "개발자 모드";
+"settings.developer_mode.enabled" = "개발자 모드가 활성화되었습니다. 🛠️";
+"settings.developer_mode.disabled" = "개발자 모드가 비활성화되었습니다.";
+"settings.developer_mode.unlock" = "개발자 모드 잠금 해제";
+"settings.developer_mode.password" = "비밀번호";
+"settings.developer_mode.password_prompt" = "개발자 전용 기능에 접근하려면 비밀번호를 입력하세요.";
+
+// MARK: - Subscription
+"subscription.title" = "프리미엄";
+"subscription.view_premium" = "프리미엄 보기";
+"subscription.upgrade" = "업그레이드";
+"subscription.restore" = "구매 복원";
+"subscription.status" = "구독 상태";
+"subscription.active" = "활성";
+"subscription.inactive" = "비활성";
+"subscription.free_plan" = "무료 플랜";
+"subscription.premium_plan" = "프리미엄 플랜";
+"subscription.monthly" = "월간";
+"subscription.yearly" = "연간";
+"subscription.terms" = "이용약관";
+"subscription.privacy" = "개인정보처리방침";
+
+// MARK: - Alerts
+"alert.app_restart_required" = "앱 재시작 필요";
+"alert.cloud_sync_enabled" = "iCloud 동기화가 활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요.";
+"alert.cloud_sync_disabled" = "iCloud 동기화가 비활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요.";
+"alert.cloud_unavailable" = "iCloud 사용 불가";
+"alert.cloud_not_logged_in" = "iCloud에 로그인되어 있지 않습니다. 설정 앱에서 iCloud에 로그인해주세요.";
+"alert.open_settings" = "설정으로 이동";
+
+// MARK: - Errors
+"error.unknown" = "알 수 없는 오류가 발생했습니다.";
+"error.save_failed" = "저장에 실패했습니다.";
+"error.load_failed" = "불러오기에 실패했습니다.";
+"error.delete_failed" = "삭제에 실패했습니다.";
+"error.network" = "네트워크 오류가 발생했습니다.";
+"error.balance_add" = "잔액 추가 중 오류가 발생했습니다";
+"error.expense_add" = "지출 등록 중 오류가 발생했습니다";
+"error.envelope_edit" = "봉투 수정 중 오류가 발생했습니다";
+"error.envelope_delete" = "봉투 삭제 중 오류가 발생했습니다";
+"error.transaction_edit" = "거래 수정 중 오류가 발생했습니다";
+
+// MARK: - Add Balance
+"add_balance.title" = "잔액추가";
+"add_balance.envelope" = "잔액추가 봉투";
+"add_balance.amount" = "추가 금액";
+"add_balance.date" = "추가 날짜";
+"add_balance.button" = "잔액 추가";
+"add_balance.select_envelope" = "봉투를 선택해주세요";
+"add_balance.invalid_amount" = "올바른 금액을 입력해주세요";
+
+// MARK: - Add Expense
+"add_expense.title" = "지출등록";
+"add_expense.envelope" = "지출 봉투";
+"add_expense.amount" = "지출 금액";
+"add_expense.date" = "지출 날짜";
+"add_expense.button" = "지출 등록";
+"add_expense.select_envelope" = "봉투를 선택해주세요";
+"add_expense.invalid_amount" = "올바른 금액을 입력해주세요";
+
+// MARK: - Detail Envelope
+"detail_envelope.initial_balance" = "시작 잔액";
+"detail_envelope.goal_balance" = "목표 잔액";
+"detail_envelope.current_balance" = "현재 잔액";
+"detail_envelope.spent_amount" = "지출 금액";
+"detail_envelope.transactions" = "거래 내역";
+"detail_envelope.no_transactions" = "거래 내역이 없습니다.";
+
+// MARK: - Edit Envelope
+"edit_envelope.title" = "봉투 수정";
+"edit_envelope.name" = "봉투 이름";
+"edit_envelope.initial_balance" = "시작 잔액";
+"edit_envelope.goal_balance" = "목표 잔액";
+"edit_envelope.type" = "봉투 타입";
+"edit_envelope.type.normal" = "일반";
+"edit_envelope.type.recurring" = "반복";
+"edit_envelope.type.persistent" = "지속";
+"edit_envelope.type.persistent_premium" = "지속 ⭐️";
+"edit_envelope.type_change_warning" = "반복 봉투를 다른 타입으로 변경하면 다음 달부터 자동 생성되지 않습니다.";
+"edit_envelope.persistent_change_blocked_title" = "지속형 봉투 변경 불가";
+"edit_envelope.persistent_change_blocked_message" = "지속형 봉투는 수정으로 변경할 수 없습니다.\n지속형 봉투가 필요하면 새로 생성해주세요.";
+"edit_envelope.persistent_no_change" = "지속형 봉투는 타입을 변경할 수 없습니다.\n타입을 변경하려면 삭제 후 새로 생성해주세요.";
+"edit_envelope.delete_confirm_title" = "봉투 삭제";
+"edit_envelope.delete_confirm_message" = "봉투와 관련된 모든 거래 내역이 삭제됩니다. 정말 삭제하시겠습니까?";
+"edit_envelope.type_change_title" = "봉투 타입 변경";
+"edit_envelope.complete" = "수정 완료";
+
+// MARK: - Edit Transaction
+"edit_transaction.title" = "거래 수정";
+"edit_transaction.envelope" = "봉투 선택";
+"edit_transaction.type" = "유형";
+"edit_transaction.amount" = "금액";
+"edit_transaction.date" = "날짜";
+"edit_transaction.note" = "설명";
+"edit_transaction.select_envelope" = "봉투를 선택해주세요";
+"edit_transaction.invalid_amount" = "올바른 금액을 입력해주세요";
+"edit_transaction.delete_confirm_title" = "거래 삭제";
+"edit_transaction.delete_confirm_message" = "정말로 이 거래를 삭제하시겠습니까?";
+"edit_transaction.complete" = "수정 완료";
+
+// MARK: - Calendar
+"calendar.weekday.sun" = "일";
+"calendar.weekday.mon" = "월";
+"calendar.weekday.tue" = "화";
+"calendar.weekday.wed" = "수";
+"calendar.weekday.thu" = "목";
+"calendar.weekday.fri" = "금";
+"calendar.weekday.sat" = "토";
+"calendar.total_income" = "총 수입";
+"calendar.total_expense" = "총 지출";
+"calendar.total_balance" = "총액";
+"calendar.envelope_unspecified" = "봉투 미지정";
+"calendar.transaction_count" = "%d건";
+"calendar.empty" = "거래내역이 없습니다";
+
+// MARK: - Currency Settings
+"currency.settings_title" = "통화 설정";
+"currency.device_badge" = "기본";
+"currency.loading" = "로딩 중...";
+"currency.name.KRW" = "원";
+"currency.name.JPY" = "엔";
+"currency.name.CNY" = "위안";
+"currency.name.HKD" = "홍콩 달러";
+"currency.name.SGD" = "싱가포르 달러";
+"currency.name.TWD" = "신대만 달러";
+"currency.name.THB" = "바트";
+"currency.name.VND" = "동";
+"currency.name.IDR" = "루피아";
+"currency.name.MYR" = "링깃";
+"currency.name.PHP" = "페소";
+"currency.name.INR" = "루피";
+"currency.name.EUR" = "유로";
+"currency.name.GBP" = "파운드";
+"currency.name.CHF" = "프랑";
+"currency.name.RUB" = "루블";
+"currency.name.PLN" = "즈워티";
+"currency.name.SEK" = "크로나";
+"currency.name.NOK" = "크로네";
+"currency.name.DKK" = "크로네";
+"currency.name.USD" = "달러";
+"currency.name.CAD" = "캐나다 달러";
+"currency.name.MXN" = "페소";
+"currency.name.BRL" = "레알";
+"currency.name.ARS" = "페소";
+"currency.name.CLP" = "페소";
+"currency.name.AUD" = "호주 달러";
+"currency.name.NZD" = "뉴질랜드 달러";
+"currency.name.AED" = "디르함";
+"currency.name.SAR" = "리얄";
+"currency.name.ILS" = "셰켈";
+"currency.name.TRY" = "리라";
+
+// MARK: - Subscription Details
+"subscription.header.title" = "프리미엄으로 업그레이드";
+"subscription.header.subtitle" = "무제한 봉투 생성과 고급 기능을 이용하세요";
+"subscription.current" = "현재 구독 중";
+"subscription.manage_button" = "구독 관리";
+"subscription.subscribed_active" = "구독 활성화됨";
+"subscription.lifetime_active" = "평생 이용권 활성화됨";
+"subscription.change_pending" = "구독 변경 예정";
+"subscription.change_to" = "%@으로 변경";
+"subscription.next_billing" = "다음 결제일";
+"subscription.auto_renew_off" = "자동 갱신 해제됨";
+"subscription.available_until" = "%@까지 이용 가능";
+"subscription.restore_button" = "구매 복원";
+"subscription.purchase_complete_title" = "구매 완료";
+"subscription.purchase_complete_message" = "%@ 구매가 완료되었습니다!";
+"subscription.purchase_failed_title" = "구매 실패";
+"subscription.purchase_failed_message" = "구매 중 오류가 발생했습니다.";
+"subscription.restore_complete_title" = "복원 완료";
+"subscription.restore_complete_message" = "구매 내역을 복원했습니다.";
+"subscription.restore_none_title" = "복원 결과";
+"subscription.restore_none_message" = "복원할 구매 내역이 없습니다.";
+"subscription.terms.cancel_anytime" = "• 구독은 언제든지 취소할 수 있습니다";
+"subscription.terms.no_refund" = "• 구독 취소 시 현재 기간 종료 후 자동 갱신되지 않습니다";
+"subscription.terms.auto_renew" = "• 구독 갱신 24시간 전까지 자동으로 갱신됩니다";
+"subscription.terms.manage" = "• '구독 관리' 버튼으로 취소 및 변경이 가능합니다";
+"subscription.product.popular" = "인기";
+"subscription.product.recommended" = "추천";
+"subscription.product.one_time" = "1회 결제";
+"subscription.product.subscribe" = "구독하기";
+"subscription.product.subscribed" = "구독 중";
+"subscription.product.pending" = "구독 예정";
+"subscription.product.period.day" = "일";
+"subscription.product.period.week" = "주";
+"subscription.product.period.month" = "월";
+"subscription.product.period.year" = "년";
+"subscription.product.monthly.display_name" = "월간 구독";
+"subscription.product.yearly.display_name" = "연간 구독";
+"subscription.product.lifetime.display_name" = "평생 이용권";
+"subscription.product.monthly.description" = "매월 자동 갱신";
+"subscription.product.yearly.description" = "매년 자동 갱신";
+"subscription.product.lifetime.description" = "한 번 구매로 영구 사용";
+"subscription.products.empty_title" = "제품을 불러올 수 없습니다";
+"subscription.products.empty_message" = "네트워크 연결을 확인해주세요";
+"subscription.products.retry" = "다시 시도";
+
+// MARK: - Settings Components
+"settings.membership.title" = "프리미엄 멤버십";
+"settings.membership.subscribed" = "%@ 구독 중";
+"settings.membership.unlimited" = "무제한 기능 사용하기";
+"settings.membership.section_header" = "멤버십";
+"settings.plan_comparison.title" = "플랜 비교";
+"settings.plan_comparison.subtitle" = "무료 vs 프리미엄 기능 비교";
+"settings.cloud_sync.title" = "iCloud 동기화";
+"settings.cloud_sync.section_header" = "동기화";
+"settings.cloud_sync.unavailable" = "iCloud를 사용할 수 없습니다";
+"settings.cloud_sync.premium_only" = "⭐️ iCloud 동기화는 프리미엄 전용 기능입니다";
+"settings.cloud_sync.description" = "iCloud를 사용하여 여러 기기 간에 데이터를 동기화합니다. 설정 변경은 앱을 재시작한 후 적용됩니다.";
+"settings.developer.section_header" = "개발자 도구";
+"settings.developer.reset_data" = "데이터 초기화";
+"settings.developer.disable_mode" = "개발자 모드 비활성화";
+"settings.developer.footer" = "⚠️ 개발자 전용 기능입니다. 데이터 초기화 시 모든 봉투(Envelope)와 거래 기록(Transaction Record)이 삭제됩니다.";
+"settings.currency.section_header" = "일반";
+"settings.currency.title" = "통화 설정";
+
+// MARK: - Plan Comparison
+"plan.free.title" = "무료 플랜";
+"plan.premium.title" = "프리미엄 플랜";
+"plan.current_badge" = "현재 플랜";
+"plan.feature.envelopes_3" = "봉투 3개까지";
+"plan.feature.envelopes_unlimited" = "무제한 봉투";
+"plan.feature.persistent_envelope" = "지속형 봉투";
+"plan.feature.transactions_30" = "봉투당 거래 30개까지";
+"plan.feature.transactions_unlimited" = "무제한 거래 기록";
+"plan.feature.months_3" = "최근 3개월 데이터 접근";
+"plan.feature.months_unlimited" = "무제한 데이터 접근";
+"plan.feature.cloud_sync" = "iCloud 동기화";
+"plan.feature.future_features" = "앞으로 추가되는 기능들";
+
+// MARK: - Transaction Components
+"transaction.income" = "수입";
+"transaction.expense" = "지출";
+"transaction.note_placeholder" = "설명";
+"transaction.recurring_label" = "매달 반복해서 생성";
+
+// MARK: - Premium Features
+"premium.lock.title" = "프리미엄 전용";
+"premium.lock.upgrade" = "업그레이드";
+"premium.limit_reached" = "제한 도달";
+"premium.view" = "프리미엄 보기";
+
+// MARK: - Date Format
+"date.format.year" = "%d년";
+"date.format.month" = "%d월";
+"date.format.year_month" = "%d년 %d월";
+"date.format.year_month_day" = "%d년 %d월 %d일";
+
+// MARK: - Envelope Balance
+"envelope.balance_label" = "잔액:";

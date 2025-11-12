@@ -93,14 +93,14 @@ extension View {
                             .font(.system(size: 40))
                             .foregroundColor(.white)
 
-                        Text("프리미엄 전용")
+                        Text("premium.lock.title".localized) // 프리미엄 전용
                             .font(.headline)
                             .foregroundColor(.white)
 
                         Button(action: {
                             showingSubscription.wrappedValue = true
                         }) {
-                            Text("업그레이드")
+                            Text("subscription.upgrade".localized) // 업그레이드
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 24)

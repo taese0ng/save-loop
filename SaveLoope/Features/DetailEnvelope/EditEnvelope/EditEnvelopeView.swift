@@ -25,16 +25,16 @@ struct EditEnvelopeView: View {
     var envelopeTypeDescription: String {
         // 지속형 봉투는 타입 변경 불가 안내
         if originalEnvelopeType == .persistent {
-            return "지속형 봉투는 타입을 변경할 수 없습니다.\n타입을 변경하려면 삭제 후 새로 생성해주세요."
+            return "edit_envelope.persistent_no_change".localized // 지속형 봉투는 타입을 변경할 수 없습니다.\n타입을 변경하려면 삭제 후 새로 생성해주세요.
         }
 
         switch selectedEnvelopeType {
         case .normal:
-            return "현재 월에만 적용되는 봉투입니다.\n다음 달에는 자동으로 사라집니다."
+            return "envelope.type.description.normal".localized // 현재 월에만 적용되는 봉투입니다.\n다음 달에는 자동으로 사라집니다.
         case .recurring:
-            return "매월 초 동일한 조건으로 자동 생성됩니다.\n잔액과 거래내역은 매월 초기화됩니다."
+            return "envelope.type.description.recurring".localized // 매월 초 동일한 조건으로 자동 생성됩니다.\n잔액과 거래내역은 매월 초기화됩니다.
         case .persistent:
-            return "삭제하기 전까지 계속 유지됩니다.\n잔액과 거래내역이 초기화되지 않습니다."
+            return "envelope.type.description.persistent".localized // 삭제하기 전까지 계속 유지됩니다.\n잔액과 거래내역이 초기화되지 않습니다.\n\n⚠️ 생성 후에는 타입 변경이 불가능합니다.
         }
     }
 
@@ -45,34 +45,34 @@ struct EditEnvelopeView: View {
     func handleEditEnvelope() {
         // 입력값 검증
         if envelopeName.isEmpty {
-            alertMessage = "봉투 이름을 입력해주세요"
+            alertMessage = "envelope.name_required".localized // 봉투 이름을 입력해주세요
             showingAlert = true
             return
         }
 
         guard let amount: Double = initialAmount, amount > 0 else {
-            alertMessage = "올바른 시작 잔액을 입력해주세요"
+            alertMessage = "envelope.invalid_budget".localized // 올바른 시작 잔액을 입력해주세요
             showingAlert = true
             return
         }
 
         // 지속형 봉투 타입 변경 차단 (최종 검증)
         if originalEnvelopeType == .persistent && selectedEnvelopeType != .persistent {
-            alertMessage = "지속형 봉투는 타입을 변경할 수 없습니다.\n타입을 변경하려면 삭제 후 새로 생성해주세요."
+            alertMessage = "edit_envelope.persistent_no_change".localized // 지속형 봉투는 타입을 변경할 수 없습니다.\n타입을 변경하려면 삭제 후 새로 생성해주세요.
             showingAlert = true
             return
         }
 
         // 지속형으로 변경 차단 (최종 검증)
         if originalEnvelopeType != .persistent && selectedEnvelopeType == .persistent {
-            alertMessage = "지속형 봉투는 수정으로 변경할 수 없습니다.\n지속형 봉투가 필요하면 새로 생성해주세요."
+            alertMessage = "edit_envelope.persistent_change_blocked_message".localized // 지속형 봉투는 수정으로 변경할 수 없습니다.\n지속형 봉투가 필요하면 새로 생성해주세요.
             showingAlert = true
             return
         }
 
         // 지속형 봉투는 프리미엄 전용
         if selectedEnvelopeType == .persistent && !subscriptionManager.isSubscribed {
-            alertMessage = "지속형 봉투는 프리미엄 기능입니다.\n프리미엄 플랜을 구독하시면 사용할 수 있습니다."
+            alertMessage = "envelope.persistent_premium_required".localized // 지속형 봉투는 프리미엄 기능입니다.\n프리미엄 플랜을 구독하시면 사용할 수 있습니다.
             showingAlert = true
             return
         }
@@ -96,7 +96,7 @@ struct EditEnvelopeView: View {
                 }
 
                 if existingPersistent != nil {
-                    alertMessage = "이미 같은 이름의 지속형 봉투가 존재합니다"
+                    alertMessage = "envelope.name_exists".localized // 이미 같은 이름의 지속형 봉투가 존재합니다
                     showingAlert = true
                     return
                 }
@@ -111,7 +111,7 @@ struct EditEnvelopeView: View {
                 }
 
                 if existingEnvelope != nil {
-                    alertMessage = "이미 같은 이름의 봉투가 현재 월에 존재합니다"
+                    alertMessage = "envelope.name_exists_current_month".localized // 이미 같은 이름의 봉투가 현재 월에 존재합니다
                     showingAlert = true
                     return
                 }
@@ -140,7 +140,7 @@ struct EditEnvelopeView: View {
             handleDismiss()
         } catch {
             print("❌ 봉투 수정 저장 실패: \(error.localizedDescription)")
-            alertMessage = "봉투 수정 중 오류가 발생했습니다"
+            alertMessage = "error.envelope_edit".localized // 봉투 수정 중 오류가 발생했습니다
             showingAlert = true
         }
     }
@@ -168,31 +168,31 @@ struct EditEnvelopeView: View {
             dismiss()
         } catch {
             print("❌ 봉투 삭제 실패: \(error.localizedDescription)")
-            alertMessage = "봉투 삭제 중 오류가 발생했습니다"
+            alertMessage = "error.envelope_delete".localized // 봉투 삭제 중 오류가 발생했습니다
             showingAlert = true
         }
     }
     
     var body: some View {
-        StandardSheetContainer(title: "봉투 수정") {
+        StandardSheetContainer(title: "edit_envelope.title".localized) { // 봉투 수정
             ScrollView {
                 VStack(spacing: 16) {
-                    LabeledTextField(label: "봉투 이름", text: $envelopeName, required: true)
-                    LabeledNumberField(label: "시작 잔액", value: $initialAmount, placeholder: "0", required: true, prefix: CurrencyManager.shared.currentSymbol)
-                    LabeledNumberField(label: "목표 잔액", value: $goalAmount, placeholder: "0", prefix: CurrencyManager.shared.currentSymbol)
+                    LabeledTextField(label: "edit_envelope.name".localized, text: $envelopeName, required: true) // 봉투 이름
+                    LabeledNumberField(label: "edit_envelope.initial_balance".localized, value: $initialAmount, placeholder: "0", required: true, prefix: CurrencyManager.shared.currentSymbol) // 시작 잔액
+                    LabeledNumberField(label: "edit_envelope.goal_balance".localized, value: $goalAmount, placeholder: "0", prefix: CurrencyManager.shared.currentSymbol) // 목표 잔액
 
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text("봉투 타입")
+                            Text("edit_envelope.type".localized) // 봉투 타입
                                 .font(.system(size: 16, weight: .medium))
                             Text("*")
                                 .foregroundColor(.red)
                         }
 
-                        Picker("봉투 타입", selection: $selectedEnvelopeType) {
-                            Text("일반 봉투").tag(EnvelopeType.normal)
-                            Text("반복 봉투").tag(EnvelopeType.recurring)
-                            Text(subscriptionManager.isSubscribed ? "지속 봉투" : "지속 봉투 ⭐️").tag(EnvelopeType.persistent)
+                        Picker("edit_envelope.type".localized, selection: $selectedEnvelopeType) { // 봉투 타입
+                            Text("edit_envelope.type.normal".localized).tag(EnvelopeType.normal) // 일반 봉투
+                            Text("edit_envelope.type.recurring".localized).tag(EnvelopeType.recurring) // 반복 봉투
+                            Text(subscriptionManager.isSubscribed ? "edit_envelope.type.persistent".localized : "edit_envelope.type.persistent_premium".localized).tag(EnvelopeType.persistent) // 지속 봉투 / 지속 봉투 ⭐️
                         }
                         .pickerStyle(.segmented)
                         .disabled(originalEnvelopeType == .persistent)
@@ -212,16 +212,16 @@ struct EditEnvelopeView: View {
             .scrollContentBackground(.hidden)
         } footer: {
             ActionButtons(
-                deleteTitle: "삭제",
-                confirmTitle: "수정 완료",
+                deleteTitle: "common.delete".localized, // 삭제
+                confirmTitle: "edit_envelope.complete".localized, // 수정 완료
                 onDelete: { showingDeleteAlert = true },
                 onConfirm: handleEditEnvelope
             )
         }
-        .alert("알림", isPresented: $showingAlert) {
-            Button("확인", role: .cancel) { }
-            if alertMessage.contains("프리미엄") {
-                Button("프리미엄 보기") {
+        .alert("common.alert".localized, isPresented: $showingAlert) { // 알림
+            Button("common.ok".localized, role: .cancel) { } // 확인
+            if alertMessage == "envelope.persistent_premium_required".localized {
+                Button("subscription.view_premium".localized) { // 프리미엄 보기
                     showingSubscription = true
                 }
             }
@@ -231,13 +231,13 @@ struct EditEnvelopeView: View {
         .sheet(isPresented: $showingSubscription) {
             SubscriptionView()
         }
-        .alert("봉투 삭제", isPresented: $showingDeleteAlert) {
-            Button("취소", role: .cancel) { }
-            Button("삭제", role: .destructive) {
+        .alert("edit_envelope.delete_confirm_title".localized, isPresented: $showingDeleteAlert) { // 봉투 삭제
+            Button("common.cancel".localized, role: .cancel) { } // 취소
+            Button("common.delete".localized, role: .destructive) { // 삭제
                 handleDeleteEnvelope()
             }
         } message: {
-            Text("봉투와 관련된 모든 거래 내역이 삭제됩니다. 정말 삭제하시겠습니까?")
+            Text("edit_envelope.delete_confirm_message".localized) // 봉투와 관련된 모든 거래 내역이 삭제됩니다. 정말 삭제하시겠습니까?
         }
         .onChange(of: selectedEnvelopeType) { oldValue, newValue in
             // 지속형 봉투는 타입 변경 완전 차단 (UI에서 비활성화되어 있지만 방어 코드)
@@ -263,12 +263,12 @@ struct EditEnvelopeView: View {
                 }
             }
         }
-        .alert("봉투 타입 변경", isPresented: $showingTypeChangeWarning) {
-            Button("취소", role: .cancel) {
+        .alert("edit_envelope.type_change_title".localized, isPresented: $showingTypeChangeWarning) { // 봉투 타입 변경
+            Button("common.cancel".localized, role: .cancel) { // 취소
                 selectedEnvelopeType = originalEnvelopeType
                 pendingEnvelopeType = nil
             }
-            Button("변경", role: .destructive) {
+            Button("common.edit".localized, role: .destructive) { // 편집
                 if let pending = pendingEnvelopeType {
                     // originalEnvelopeType을 업데이트하여 다시 체크되지 않도록 함
                     originalEnvelopeType = pending
@@ -277,14 +277,14 @@ struct EditEnvelopeView: View {
                 }
             }
         } message: {
-            return Text("반복 봉투를 다른 타입으로 변경하면 다음 달부터 자동 생성되지 않습니다.")
+            return Text("edit_envelope.type_change_warning".localized) // 반복 봉투를 다른 타입으로 변경하면 다음 달부터 자동 생성되지 않습니다.
         }
-        .alert("지속형 봉투 변경 불가", isPresented: $showingPersistentChangeWarning) {
-            Button("확인", role: .cancel) {
+        .alert("edit_envelope.persistent_change_blocked_title".localized, isPresented: $showingPersistentChangeWarning) { // 지속형 봉투 변경 불가
+            Button("common.ok".localized, role: .cancel) { // 확인
                 selectedEnvelopeType = originalEnvelopeType
             }
         } message: {
-            Text("지속형 봉투는 수정으로 변경할 수 없습니다.\n지속형 봉투가 필요하면 새로 생성해주세요.")
+            Text("edit_envelope.persistent_change_blocked_message".localized) // 지속형 봉투는 수정으로 변경할 수 없습니다.\n지속형 봉투가 필요하면 새로 생성해주세요.
         }
         .onAppear {
             // 초기값 설정

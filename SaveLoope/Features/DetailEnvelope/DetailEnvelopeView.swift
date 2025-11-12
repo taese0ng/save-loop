@@ -27,18 +27,18 @@ struct DetailEnvelopeView: View {
                     // 봉투 정보 섹션
                     VStack(spacing: 16) {
                         // 시작 잔액
-                        InfoRow(title: "시작 잔액", value: envelope.budget.formattedCurrency)
-                        
+                        InfoRow(title: "detail_envelope.initial_balance", value: envelope.budget.formattedCurrency)
+
                         // 목표 잔액
                         if envelope.goal > 0 {
-                            InfoRow(title: "목표 잔액", value: envelope.goal.formattedCurrency)
+                            InfoRow(title: "detail_envelope.goal_balance", value: envelope.goal.formattedCurrency)
                         }
-                        
+
                         // 현재 잔액
-                        InfoRow(title: "현재 잔액", value: envelope.remaining.formattedCurrency)
-                        
+                        InfoRow(title: "detail_envelope.current_balance", value: envelope.remaining.formattedCurrency)
+
                         // 지출 금액
-                        InfoRow(title: "지출 금액", value: envelope.spent.formattedCurrency)
+                        InfoRow(title: "detail_envelope.spent_amount", value: envelope.spent.formattedCurrency)
                     }
                     .padding()
                     .background(Color("CardBackground"))
@@ -47,13 +47,13 @@ struct DetailEnvelopeView: View {
                     
                     // 거래 내역 섹션
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("거래 내역")
+                        Text("detail_envelope.transactions".localized) // 거래 내역
                             .font(.headline)
                             .frame(maxWidth: .infinity, alignment: .center)
                             .padding(.horizontal)
                         
                         if filteredTransactions.isEmpty {
-                            Text("거래 내역이 없습니다.")
+                            Text("detail_envelope.no_transactions".localized) // 거래 내역이 없습니다.
                                 .foregroundColor(Color("SecondaryText"))
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .padding()

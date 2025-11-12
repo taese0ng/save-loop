@@ -176,11 +176,20 @@ struct CalendarView: View {
 
                 // 요일 헤더
                 HStack(spacing: 0) {
-                    ForEach(["일", "월", "화", "수", "목", "금", "토"], id: \.self) { day in
+                    let weekdays = [
+                        ("calendar.weekday.sun", "calendar.weekday.sun".localized), // 일
+                        ("calendar.weekday.mon", "calendar.weekday.mon".localized), // 월
+                        ("calendar.weekday.tue", "calendar.weekday.tue".localized), // 화
+                        ("calendar.weekday.wed", "calendar.weekday.wed".localized), // 수
+                        ("calendar.weekday.thu", "calendar.weekday.thu".localized), // 목
+                        ("calendar.weekday.fri", "calendar.weekday.fri".localized), // 금
+                        ("calendar.weekday.sat", "calendar.weekday.sat".localized)  // 토
+                    ]
+                    ForEach(weekdays, id: \.0) { key, day in
                         Text(day)
                             .font(.caption)
                             .fontWeight(.semibold)
-                            .foregroundColor(day == "일" ? .red : day == "토" ? .blue : Color("SecondaryText"))
+                            .foregroundColor(key == "calendar.weekday.sun" ? .red : key == "calendar.weekday.sat" ? .blue : Color("SecondaryText"))
                             .frame(maxWidth: .infinity)
                     }
                 }

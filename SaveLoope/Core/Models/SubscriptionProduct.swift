@@ -8,17 +8,17 @@ enum SubscriptionProduct: String, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .monthly: return "월간 구독"
-        case .yearly: return "연간 구독"
-        case .lifetime: return "평생 이용권"
+        case .monthly: return "subscription.product.monthly.display_name".localized // 월간 구독
+        case .yearly: return "subscription.product.yearly.display_name".localized // 연간 구독
+        case .lifetime: return "subscription.product.lifetime.display_name".localized // 평생 이용권
         }
     }
 
     var description: String {
         switch self {
-        case .monthly: return "매월 자동 갱신"
-        case .yearly: return "매년 자동 갱신"
-        case .lifetime: return "한 번 구매로 영구 사용"
+        case .monthly: return "subscription.product.monthly.description".localized // 매월 자동 갱신
+        case .yearly: return "subscription.product.yearly.description".localized // 매년 자동 갱신
+        case .lifetime: return "subscription.product.lifetime.description".localized // 한 번 구매로 영구 사용
         }
     }
 

@@ -4,14 +4,15 @@ import SwiftData
 struct TransactionRow: View {
     let transaction: TransactionRecord
     @ObservedObject private var currencyManager = CurrencyManager.shared
+    @ObservedObject private var localizationManager = LocalizationManager.shared
     var onClickMenu: (() -> Void)? = nil
     
-    private let dateFormatter: DateFormatter = {
+    private var dateFormatter: DateFormatter {
         let formatter: DateFormatter = DateFormatter()
         formatter.dateFormat = "yyyy.MM.dd"
-        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.locale = localizationManager.getCurrentLocale() // 현재 선택된 언어에 맞는 locale 설정
         return formatter
-    }()
+    }
     
     var body: some View {
         HStack {

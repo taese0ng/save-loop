@@ -51,7 +51,7 @@ public struct MonthDatePicker: View {
                 .fixedSize()
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                Text("\(String(selectedYear))년")
+                Text(String(format: "date.format.year".localized, selectedYear)) // %d년
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(Color("PrimaryText"))
                     .frame(width: 100)
@@ -127,7 +127,7 @@ struct MonthButton: View {
     
     var body: some View {
         Button(action: action) {
-            Text("\(month)월")
+            Text(String(format: "date.format.month".localized, month)) // %d월
                 .font(.system(size: 16, weight: .medium))
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)

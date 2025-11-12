@@ -11,8 +11,8 @@ struct TransactionTypePicker: View {
                 .foregroundColor(Color("PrimaryText"))
 
             Picker(label, selection: $selectedType) {
-                Text("수입").tag(TransactionType.income)
-                Text("지출").tag(TransactionType.expense)
+                Text("transaction.type.income".localized).tag(TransactionType.income) // 수입
+                Text("transaction.type.expense".localized).tag(TransactionType.expense) // 지출
             }
             .pickerStyle(.segmented)
         }

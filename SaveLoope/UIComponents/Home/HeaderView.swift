@@ -26,7 +26,7 @@ struct HeaderView: View {
         let calendar = Calendar.current
         let year = calendar.component(.year, from: currentDate)
         let month = calendar.component(.month, from: currentDate)
-        return "\(year)년 \(month)월"
+        return String(format: "date.format.year_month".localized, year, month) // "%d년 %d월"
     }
 
     /// 특정 날짜가 최근 3개월 이내인지 확인
@@ -145,9 +145,9 @@ struct HeaderView: View {
             .disabled(isCurrentMonth)
         }
         .padding(.horizontal)
-        .alert("제한 도달", isPresented: $showingMonthLimitAlert) {
-            Button("취소", role: .cancel) { }
-            Button("프리미엄 보기") {
+        .alert("premium.limit_reached".localized, isPresented: $showingMonthLimitAlert) { // 제한 도달
+            Button("common.cancel".localized, role: .cancel) { } // 취소
+            Button("premium.view".localized) { // 프리미엄 보기
                 showingSubscription = true
             }
         } message: {

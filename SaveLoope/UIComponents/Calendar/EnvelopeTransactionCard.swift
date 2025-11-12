@@ -7,7 +7,7 @@ struct EnvelopeTransactionCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            EnvelopeCardHeader(envelopeName: envelope?.name ?? "봉투 미지정", count: transactions.count)
+            EnvelopeCardHeader(envelopeName: envelope?.name ?? "calendar.envelope_unspecified".localized, count: transactions.count) // 봉투 미지정
 
             VStack(spacing: 0) {
                 ForEach(Array(transactions.enumerated()), id: \.element.id) { index, transaction in
@@ -42,7 +42,7 @@ struct EnvelopeCardHeader: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(.white)
             Spacer()
-            Text("\(count)건")
+            Text(String(format: "calendar.transaction_count".localized, count)) // %d건
                 .font(.caption)
                 .foregroundColor(.white.opacity(0.9))
         }

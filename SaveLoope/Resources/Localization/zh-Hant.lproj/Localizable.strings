@@ -1,0 +1,363 @@
+/*
+  Localizable.strings (Chinese - Traditional)
+  SaveLoope
+*/
+
+// MARK: - Common
+"common.ok" = "確定";
+"common.cancel" = "取消";
+"common.save" = "儲存";
+"common.delete" = "刪除";
+"common.edit" = "編輯";
+"common.add" = "新增";
+"common.done" = "完成";
+"common.close" = "關閉";
+"common.back" = "返回";
+"common.next" = "下一步";
+"common.previous" = "上一步";
+"common.search" = "搜尋";
+"common.settings" = "設定";
+"common.error" = "錯誤";
+"common.success" = "成功";
+"common.loading" = "載入中...";
+"common.alert" = "提示";
+"common.required" = "必填";
+
+// MARK: - Tabs
+"tab.home" = "首頁";
+"tab.calendar" = "行事曆";
+"tab.settings" = "設定";
+
+// MARK: - Home
+"home.title" = "SaveLoope";
+"home.no_envelopes" = "沒有信封。";
+"home.empty_state.title" = "建立您的第一個信封";
+"home.empty_state.description" = "新增信封開始管理您的預算";
+"home.add_envelope" = "新增信封";
+"home.edit_mode" = "編輯";
+
+// MARK: - Envelope
+"envelope.name" = "信封名稱";
+"envelope.budget" = "預算";
+"envelope.income" = "收入";
+"envelope.spent" = "支出";
+"envelope.remaining" = "剩餘";
+"envelope.goal" = "目標";
+"envelope.balance" = "餘額";
+"envelope.type" = "類型";
+"envelope.type.oneTime" = "單次";
+"envelope.type.recurring" = "循環";
+"envelope.type.normal" = "普通";
+"envelope.type.persistent" = "持續";
+"envelope.initial_balance" = "初始餘額";
+"envelope.create" = "建立信封";
+"envelope.edit" = "編輯信封";
+"envelope.delete" = "刪除信封";
+"envelope.delete_confirm" = "確定要刪除此信封嗎？";
+"envelope.limit_reached" = "已達上限";
+"envelope.limit_message" = "免費方案每月最多可建立 3 個信封。";
+"envelope.name_required" = "請輸入信封名稱";
+"envelope.invalid_budget" = "請輸入有效的初始餘額";
+"envelope.persistent_premium_required" = "持續型信封是進階功能。\n訂閱進階版即可使用此功能。";
+"envelope.name_exists" = "已存在同名的持續型信封";
+"envelope.name_exists_current_month" = "本月已存在同名信封";
+"envelope.type.description.normal" = "僅適用於當月。\n下月自動消失。";
+"envelope.type.description.recurring" = "每月初自動建立相同條件。\n餘額和交易記錄每月重設。";
+"envelope.type.description.persistent" = "刪除前持續保留。\n餘額和交易記錄不會重設。\n\n⚠️ 建立後無法變更類型。";
+
+// MARK: - Transaction
+"transaction.add" = "新增交易";
+"transaction.edit" = "編輯交易";
+"transaction.delete" = "刪除交易";
+"transaction.type" = "交易類型";
+"transaction.type.income" = "收入";
+"transaction.type.expense" = "支出";
+"transaction.amount" = "金額";
+"transaction.note" = "備註";
+"transaction.date" = "日期";
+"transaction.recurring" = "定期交易";
+"transaction.empty" = "沒有交易記錄。";
+
+// MARK: - Balance
+"balance.add_income" = "新增收入";
+"balance.add_expense" = "新增支出";
+"balance.total_income" = "總收入";
+"balance.total_expense" = "總支出";
+"balance.net_balance" = "淨餘額";
+
+// MARK: - Calendar
+"calendar.title" = "行事曆";
+"calendar.today" = "今天";
+"calendar.month_summary" = "每月摘要";
+"calendar.no_transactions" = "沒有交易記錄。";
+
+// MARK: - Settings
+"settings.title" = "設定";
+"settings.currency" = "貨幣";
+"settings.currency_settings" = "貨幣設定";
+"settings.language" = "語言";
+"settings.membership" = "會員資格";
+"settings.membership.premium" = "進階會員";
+"settings.membership.subscribe_unlimited" = "使用無限功能";
+"settings.plan_comparison" = "方案比較";
+"settings.sync" = "同步";
+"settings.cloud_sync" = "iCloud 同步";
+"settings.cloud_sync.title" = "iCloud同步";
+"settings.cloud_sync.enable" = "啟用同步";
+"settings.cloud_sync.disable" = "停用同步";
+"settings.cloud_sync.status" = "同步狀態";
+"settings.cloud_sync.unavailable" = "iCloud不可用";
+"settings.cloud_sync.premium_only" = "⭐️ iCloud同步是進階專屬功能";
+"settings.data" = "資料";
+"settings.reset_data" = "重設資料";
+"settings.reset_data_confirm" = "所有信封和交易記錄將被刪除。此操作無法復原。";
+"settings.developer_mode" = "開發者模式";
+"settings.developer_mode.enabled" = "開發者模式已啟用。🛠️";
+"settings.developer_mode.disabled" = "開發者模式已停用。";
+"settings.developer_mode.unlock" = "解鎖開發者模式";
+"settings.developer_mode.password" = "密碼";
+"settings.developer_mode.password_prompt" = "請輸入密碼以存取開發者功能。";
+
+// MARK: - Subscription
+"subscription.title" = "進階版";
+"subscription.view_premium" = "檢視進階版";
+"subscription.upgrade" = "升級";
+"subscription.restore" = "回復購買";
+"subscription.status" = "訂閱狀態";
+"subscription.active" = "有效";
+"subscription.inactive" = "無效";
+"subscription.free_plan" = "免費方案";
+"subscription.premium_plan" = "進階方案";
+"subscription.monthly" = "每月";
+"subscription.yearly" = "每年";
+"subscription.terms" = "服務條款";
+"subscription.privacy" = "隱私權政策";
+
+// MARK: - Alerts
+"alert.app_restart_required" = "需要重新啟動應用程式";
+"alert.cloud_sync_enabled" = "iCloud 同步將被啟用。請完全結束並重新啟動應用程式。";
+"alert.cloud_sync_disabled" = "iCloud 同步將被停用。請完全結束並重新啟動應用程式。";
+"alert.cloud_unavailable" = "iCloud 無法使用";
+"alert.cloud_not_logged_in" = "您未登入 iCloud。請在設定應用程式中登入 iCloud。";
+"alert.open_settings" = "開啟設定";
+
+// MARK: - Errors
+"error.unknown" = "發生未知錯誤。";
+"error.save_failed" = "儲存失敗。";
+"error.load_failed" = "載入失敗。";
+"error.delete_failed" = "刪除失敗。";
+"error.network" = "發生網路錯誤。";
+"error.balance_add" = "新增餘額時發生錯誤";
+"error.expense_add" = "新增支出時發生錯誤";
+"error.envelope_edit" = "編輯信封時發生錯誤";
+"error.envelope_delete" = "刪除信封時發生錯誤";
+"error.transaction_edit" = "編輯交易時發生錯誤";
+
+// MARK: - Add Balance
+"add_balance.title" = "新增餘額";
+"add_balance.envelope" = "餘額信封";
+"add_balance.amount" = "新增金額";
+"add_balance.date" = "新增日期";
+"add_balance.button" = "新增餘額";
+"add_balance.select_envelope" = "請選擇信封";
+"add_balance.invalid_amount" = "請輸入有效金額";
+
+// MARK: - Add Expense
+"add_expense.title" = "新增支出";
+"add_expense.envelope" = "支出信封";
+"add_expense.amount" = "支出金額";
+"add_expense.date" = "支出日期";
+"add_expense.button" = "新增支出";
+"add_expense.select_envelope" = "請選擇信封";
+"add_expense.invalid_amount" = "請輸入有效金額";
+
+// MARK: - Detail Envelope
+"detail_envelope.initial_balance" = "初始餘額";
+"detail_envelope.goal_balance" = "目標餘額";
+"detail_envelope.current_balance" = "當前餘額";
+"detail_envelope.spent_amount" = "支出金額";
+"detail_envelope.transactions" = "交易記錄";
+"detail_envelope.no_transactions" = "沒有交易記錄。";
+
+// MARK: - Edit Envelope
+"edit_envelope.title" = "編輯信封";
+"edit_envelope.name" = "信封名稱";
+"edit_envelope.initial_balance" = "初始餘額";
+"edit_envelope.goal_balance" = "目標餘額";
+"edit_envelope.type" = "信封類型";
+"edit_envelope.type.normal" = "普通";
+"edit_envelope.type.recurring" = "循環";
+"edit_envelope.type.persistent" = "持續";
+"edit_envelope.type.persistent_premium" = "持續 ⭐️";
+"edit_envelope.type_change_warning" = "將重複信封更改為其他類型將從下月起停止自動建立。";
+"edit_envelope.persistent_change_blocked_title" = "無法更改持續信封";
+"edit_envelope.persistent_change_blocked_message" = "持續信封無法透過編輯更改。\n如需持續信封，請建立新的。";
+"edit_envelope.persistent_no_change" = "持續信封無法更改類型。\n要更改類型，請刪除後重新建立。";
+"edit_envelope.delete_confirm_title" = "刪除信封";
+"edit_envelope.delete_confirm_message" = "與此信封相關的所有交易記錄將被刪除。確定要刪除嗎？";
+"edit_envelope.type_change_title" = "更改信封類型";
+"edit_envelope.complete" = "完成";
+
+// MARK: - Edit Transaction
+"edit_transaction.title" = "編輯交易";
+"edit_transaction.envelope" = "選擇信封";
+"edit_transaction.type" = "類型";
+"edit_transaction.amount" = "金額";
+"edit_transaction.date" = "日期";
+"edit_transaction.note" = "說明";
+"edit_transaction.select_envelope" = "請選擇信封";
+"edit_transaction.invalid_amount" = "請輸入有效金額";
+"edit_transaction.delete_confirm_title" = "刪除交易";
+"edit_transaction.delete_confirm_message" = "確定要刪除此交易嗎？";
+"edit_transaction.complete" = "完成";
+
+// MARK: - Calendar
+"calendar.weekday.sun" = "日";
+"calendar.weekday.mon" = "一";
+"calendar.weekday.tue" = "二";
+"calendar.weekday.wed" = "三";
+"calendar.weekday.thu" = "四";
+"calendar.weekday.fri" = "五";
+"calendar.weekday.sat" = "六";
+"calendar.total_income" = "總收入";
+"calendar.total_expense" = "總支出";
+"calendar.total_balance" = "總計";
+"calendar.envelope_unspecified" = "未指定信封";
+"calendar.transaction_count" = "%d筆";
+"calendar.empty" = "沒有交易記錄";
+
+// MARK: - Currency Settings
+"currency.settings_title" = "貨幣設定";
+"currency.device_badge" = "預設";
+"currency.loading" = "載入中...";
+"currency.name.KRW" = "韓元";
+"currency.name.JPY" = "日圓";
+"currency.name.CNY" = "人民幣";
+"currency.name.HKD" = "港幣";
+"currency.name.SGD" = "新加坡元";
+"currency.name.TWD" = "新台幣";
+"currency.name.THB" = "泰銖";
+"currency.name.VND" = "越南盾";
+"currency.name.IDR" = "印尼盾";
+"currency.name.MYR" = "林吉特";
+"currency.name.PHP" = "披索";
+"currency.name.INR" = "盧比";
+"currency.name.EUR" = "歐元";
+"currency.name.GBP" = "英鎊";
+"currency.name.CHF" = "法郎";
+"currency.name.RUB" = "盧布";
+"currency.name.PLN" = "茲羅提";
+"currency.name.SEK" = "克朗";
+"currency.name.NOK" = "克朗";
+"currency.name.DKK" = "克朗";
+"currency.name.USD" = "美元";
+"currency.name.CAD" = "加元";
+"currency.name.MXN" = "披索";
+"currency.name.BRL" = "里爾";
+"currency.name.ARS" = "披索";
+"currency.name.CLP" = "披索";
+"currency.name.AUD" = "澳元";
+"currency.name.NZD" = "紐西蘭元";
+"currency.name.AED" = "迪拉姆";
+"currency.name.SAR" = "里亞爾";
+"currency.name.ILS" = "謝克爾";
+"currency.name.TRY" = "里拉";
+
+// MARK: - Subscription Details
+"subscription.header.title" = "升級至進階版";
+"subscription.header.subtitle" = "建立無限信封並使用進階功能";
+"subscription.current" = "目前訂閱";
+"subscription.manage_button" = "管理訂閱";
+"subscription.subscribed_active" = "訂閱已啟用";
+"subscription.lifetime_active" = "終身授權已啟用";
+"subscription.change_pending" = "訂閱變更處理中";
+"subscription.change_to" = "變更為 %@";
+"subscription.next_billing" = "下次計費日期";
+"subscription.auto_renew_off" = "自動續訂已停用";
+"subscription.available_until" = "可用至 %@";
+"subscription.restore_button" = "回復購買";
+"subscription.purchase_complete_title" = "購買完成";
+"subscription.purchase_complete_message" = "%@ 購買完成！";
+"subscription.purchase_failed_title" = "購買失敗";
+"subscription.purchase_failed_message" = "購買過程中發生錯誤。";
+"subscription.restore_complete_title" = "回復完成";
+"subscription.restore_complete_message" = "已回復購買記錄。";
+"subscription.restore_none_title" = "回復結果";
+"subscription.restore_none_message" = "沒有可回復的購買記錄。";
+"subscription.terms.cancel_anytime" = "• 您可以隨時取消訂閱";
+"subscription.terms.no_refund" = "• 取消訂閱後目前期間結束後不會自動續訂";
+"subscription.terms.auto_renew" = "• 到期前24小時自動續訂";
+"subscription.terms.manage" = "• 使用「管理訂閱」按鈕取消和修改";
+"subscription.product.popular" = "熱門";
+"subscription.product.recommended" = "推薦";
+"subscription.product.one_time" = "一次性付款";
+"subscription.product.subscribe" = "訂閱";
+"subscription.product.subscribed" = "已訂閱";
+"subscription.product.pending" = "處理中";
+"subscription.product.period.day" = "天";
+"subscription.product.period.week" = "週";
+"subscription.product.period.month" = "月";
+"subscription.product.period.year" = "年";
+"subscription.product.monthly.display_name" = "月度訂閱";
+"subscription.product.yearly.display_name" = "年度訂閱";
+"subscription.product.lifetime.display_name" = "終身存取";
+"subscription.product.monthly.description" = "每月自動續訂";
+"subscription.product.yearly.description" = "每年自動續訂";
+"subscription.product.lifetime.description" = "一次購買，終身使用";
+"subscription.products.empty_title" = "無法載入產品";
+"subscription.products.empty_message" = "請檢查您的網路連線";
+"subscription.products.retry" = "重試";
+
+// MARK: - Settings Components
+"settings.membership.title" = "進階會員";
+"settings.membership.subscribed" = "已訂閱 %@";
+"settings.membership.unlimited" = "使用無限功能";
+"settings.membership.section_header" = "會員";
+"settings.plan_comparison.title" = "比較方案";
+"settings.plan_comparison.subtitle" = "免費版 vs 進階版功能";
+"settings.cloud_sync.title" = "iCloud 同步";
+"settings.cloud_sync.section_header" = "同步";
+"settings.cloud_sync.unavailable" = "iCloud 不可用";
+"settings.cloud_sync.premium_only" = "⭐️ iCloud 同步是進階專屬功能";
+"settings.cloud_sync.description" = "使用 iCloud 在多個裝置間同步資料。重新啟動應用程式後設定將生效。";
+"settings.developer.section_header" = "開發者工具";
+"settings.developer.reset_data" = "重置資料";
+"settings.developer.disable_mode" = "停用開發者模式";
+"settings.developer.footer" = "⚠️ 僅供開發者使用。重置資料將刪除所有信封和交易記錄。";
+"settings.currency.section_header" = "一般";
+"settings.currency.title" = "貨幣設定";
+
+// MARK: - Plan Comparison
+"plan.free.title" = "免費方案";
+"plan.premium.title" = "進階方案";
+"plan.current_badge" = "目前方案";
+"plan.feature.envelopes_3" = "最多3個信封";
+"plan.feature.envelopes_unlimited" = "無限信封";
+"plan.feature.persistent_envelope" = "持續信封";
+"plan.feature.transactions_30" = "每個信封最多30筆交易";
+"plan.feature.transactions_unlimited" = "無限交易記錄";
+"plan.feature.months_3" = "存取最近3個月";
+"plan.feature.months_unlimited" = "無限資料存取";
+"plan.feature.cloud_sync" = "iCloud 同步";
+"plan.feature.future_features" = "未來功能";
+
+// MARK: - Transaction Components
+"transaction.income" = "收入";
+"transaction.expense" = "支出";
+"transaction.note_placeholder" = "說明";
+"transaction.recurring_label" = "每月重複建立";
+
+// MARK: - Premium Features
+"premium.lock.title" = "進階專屬";
+"premium.lock.upgrade" = "升級";
+"premium.limit_reached" = "已達上限";
+"premium.view" = "檢視進階版";
+
+// MARK: - Date Format
+"date.format.year" = "%d年";
+"date.format.month" = "%d月";
+"date.format.year_month" = "%d年%d月";
+"date.format.year_month_day" = "%d年%d月%d日";
+
+// MARK: - Envelope Balance
+"envelope.balance_label" = "餘額:";

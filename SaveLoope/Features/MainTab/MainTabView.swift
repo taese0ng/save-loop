@@ -5,17 +5,17 @@ struct MainTabView: View {
 
     var body: some View {
         TabView {
-            Tab("봉투", systemImage: "envelope.fill") {
+            Tab("tab.home", systemImage: "envelope.fill") { // 홈
                 HomeView()
                     .environmentObject(dateSelection)
             }
 
-            Tab("캘린더", systemImage: "calendar") {
+            Tab("tab.calendar", systemImage: "calendar") { // 캘린더
                 CalendarView()
                     .environmentObject(dateSelection)
             }
 
-            Tab("설정", systemImage: "gearshape.fill") {
+            Tab("tab.settings", systemImage: "gearshape.fill") { // 설정
                 SettingsView()
             }
         }

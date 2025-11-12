@@ -165,7 +165,7 @@ struct HomeView: View {
                     if isCurrentMonth {
                         EmptyStateView(onAddEnvelope: moveAddEnvelopePage)
                     } else {
-                        Text("봉투가 존재하지 않습니다.")
+                        Text("home.no_envelopes".localized) // 봉투가 존재하지 않습니다.
                             .font(.title3)
                             .foregroundColor(Color("SecondaryText"))
                     }
@@ -211,9 +211,9 @@ struct HomeView: View {
                     dateSelection.selectedDate = Date()
                 }
             }
-            .alert("제한 도달", isPresented: $showingLimitAlert) {
-                Button("취소", role: .cancel) { }
-                Button("프리미엄 보기") {
+            .alert("envelope.limit_reached", isPresented: $showingLimitAlert) { // 제한 도달
+                Button("common.cancel", role: .cancel) { } // 취소
+                Button("subscription.view_premium") { // 프리미엄 보기
                     showingSubscription = true
                 }
             } message: {

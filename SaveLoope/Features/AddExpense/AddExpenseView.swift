@@ -14,7 +14,7 @@ struct AddExpenseView: View {
    @State private var showingDatePicker: Bool = false
    @State private var showingAlert: Bool = false
    @State private var alertMessage: String = ""
-   @State private var alertTitle: String = "알림"
+   @State private var alertTitle: String = ""
    @State private var note: String = ""
    @State private var isRecurring: Bool = false
    @State private var showingSubscription = false
@@ -31,16 +31,16 @@ struct AddExpenseView: View {
    func handleAddExpense() {
        // 입력값 검증
        guard let envelope = selectedEnvelope else {
-           alertTitle = "알림"
-           alertMessage = "봉투를 선택해주세요"
+           alertTitle = "common.alert".localized
+           alertMessage = "add_expense.select_envelope".localized
            showingAlert = true
            return
        }
 
        // 금액 검증
        guard let amountValue = amount, amountValue > 0 else {
-           alertTitle = "알림"
-           alertMessage = "올바른 금액을 입력해주세요"
+           alertTitle = "common.alert".localized
+           alertMessage = "add_expense.invalid_amount".localized
            showingAlert = true
            return
        }
@@ -53,7 +53,7 @@ struct AddExpenseView: View {
        )
 
        if !canAddTransaction {
-           alertTitle = "제한 도달"
+           alertTitle = "premium.limit_reached".localized
            alertMessage = PremiumFeatureManager.shared.getTransactionLimitMessage()
            showingAlert = true
            showingSubscription = true
@@ -90,7 +90,7 @@ struct AddExpenseView: View {
            print("❌ 지출 등록 저장 실패: \(error.localizedDescription)")
            // 롤백: 변경사항 되돌리기
            envelope.spent -= amountValue
-           alertMessage = "지출 등록 중 오류가 발생했습니다"
+           alertMessage = "error.expense_add".localized
            showingAlert = true
        }
    }
@@ -100,7 +100,7 @@ struct AddExpenseView: View {
           ScrollView {
               VStack(alignment: .leading, spacing: 20) {
                   RadioButtonGroup(
-                      title: "지출 봉투",
+                      title: "add_expense.envelope".localized, // 지출 봉투
                       items: filteredEnvelopes,
                       selectedItem: selectedEnvelope,
                       envelopeType: { $0.type },
@@ -112,9 +112,9 @@ struct AddExpenseView: View {
                           }
                       }
                   )
-                  
+
                   LabeledNumberField(
-                      label: "지출 금액",
+                      label: "add_expense.amount".localized, // 지출 금액
                       value: $amount,
                       placeholder: "0",
                       required: true,
@@ -122,21 +122,21 @@ struct AddExpenseView: View {
                   )
 
                   DatePickerButton(
-                      label: "지출 날짜",
+                      label: "add_expense.date".localized, // 지출 날짜
                       date: $date,
                       showingDatePicker: $showingDatePicker,
                       selectedDate: dateSelection.selectedDate
                   )
 
                   NoteTextField(
-                      label: "설명",
+                      label: "transaction.note".localized, // 메모
                       text: $note,
-                      placeholder: "설명"
+                      placeholder: "transaction.note_placeholder".localized // 설명
                   )
 
                   if let envelope = selectedEnvelope, envelope.isRecurring {
                       RecurringToggle(
-                          label: "매달 반복해서 생성",
+                          label: "transaction.recurring_label".localized, // 매달 반복해서 생성
                           isOn: $isRecurring
                       )
                   }
@@ -144,22 +144,22 @@ struct AddExpenseView: View {
                   Spacer()
 
                   SubmitButton(
-                      title: "지출 등록",
+                      title: "add_expense.button".localized, // 지출 등록
                       action: handleAddExpense
                   )
               }
               .padding()
           }
           .background(Color("Background"))
-          .navigationTitle("지출등록")
+          .navigationTitle("add_expense.title".localized) // 지출등록
           .navigationBarTitleDisplayMode(.inline)
           .navigationBarItems(leading: BackButton(onDismiss: handleDismiss))
           .toolbarBackground(Color("Background"), for: .navigationBar)
           .toolbarBackground(.visible, for: .navigationBar)
           .alert(alertTitle, isPresented: $showingAlert) {
-              Button("확인", role: .cancel) { }
+              Button("common.ok".localized, role: .cancel) { } // 확인
               if showingSubscription {
-                  Button("프리미엄 보기") {
+                  Button("premium.view".localized) { // 프리미엄 보기
                       // sheet will open automatically
                   }
               }

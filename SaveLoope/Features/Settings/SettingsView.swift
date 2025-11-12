@@ -125,48 +125,48 @@ struct SettingsView: View {
                 currentCurrencyName = CurrencyManager.shared.selectedCurrency.displayName
             }
         }
-        .alert("데이터 초기화", isPresented: $showingResetAlert) {
-            Button("취소", role: .cancel) { }
-            Button("초기화", role: .destructive) {
+        .alert("settings.reset_data", isPresented: $showingResetAlert) { // 데이터 초기화
+            Button("common.cancel", role: .cancel) { } // 취소
+            Button("common.delete", role: .destructive) { // 삭제
                 viewModel.resetAllData(context: modelContext)
             }
         } message: {
-            Text("모든 봉투와 거래 기록이 삭제됩니다. 이 작업은 되돌릴 수 없습니다.")
+            Text("settings.reset_data_confirm") // 모든 봉투와 거래 기록이 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
         }
-        .alert("앱 재시작 필요", isPresented: $showingSyncChangeAlert) {
-            Button("확인", role: .cancel) { }
+        .alert("alert.app_restart_required", isPresented: $showingSyncChangeAlert) { // 앱 재시작 필요
+            Button("common.ok", role: .cancel) { } // 확인
         } message: {
-            Text(cloudSyncManager.isCloudSyncEnabled 
-                ? "iCloud 동기화가 활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요." 
-                : "iCloud 동기화가 비활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요.")
+            Text(cloudSyncManager.isCloudSyncEnabled
+                ? "alert.cloud_sync_enabled" // iCloud 동기화가 활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요.
+                : "alert.cloud_sync_disabled") // iCloud 동기화가 비활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요.
         }
-        .alert("iCloud 사용 불가", isPresented: $showingCloudUnavailableAlert) {
-            Button("확인", role: .cancel) { }
-            Button("설정으로 이동") {
+        .alert("alert.cloud_unavailable", isPresented: $showingCloudUnavailableAlert) { // iCloud 사용 불가
+            Button("common.ok", role: .cancel) { } // 확인
+            Button("alert.open_settings") { // 설정으로 이동
                 if let url = URL(string: "App-Prefs:root=CASTLE") {
                     UIApplication.shared.open(url)
                 }
             }
         } message: {
-            Text(cloudSyncManager.cloudAccountError ?? "iCloud에 로그인되어 있지 않습니다. 설정 앱에서 iCloud에 로그인해주세요.")
+            Text(cloudSyncManager.cloudAccountError ?? "alert.cloud_not_logged_in".localized) // iCloud에 로그인되어 있지 않습니다. 설정 앱에서 iCloud에 로그인해주세요.
         }
-        .alert("개발자 모드", isPresented: $showingDeveloperModeAlert) {
-            Button("확인", role: .cancel) { }
+        .alert("settings.developer_mode", isPresented: $showingDeveloperModeAlert) { // 개발자 모드
+            Button("common.ok", role: .cancel) { } // 확인
         } message: {
-            Text(isDeveloperModeEnabled 
-                ? "개발자 모드가 활성화되었습니다. 🛠️" 
-                : "개발자 모드가 비활성화되었습니다.")
+            Text(isDeveloperModeEnabled
+                ? "settings.developer_mode.enabled" // 개발자 모드가 활성화되었습니다. 🛠️
+                : "settings.developer_mode.disabled") // 개발자 모드가 비활성화되었습니다.
         }
-        .alert("개발자 모드 잠금 해제", isPresented: $showingPasswordPrompt) {
-            SecureField("비밀번호", text: $passwordInput)
-            Button("취소", role: .cancel) {
+        .alert("settings.developer_mode.unlock", isPresented: $showingPasswordPrompt) { // 개발자 모드 잠금 해제
+            SecureField("settings.developer_mode.password", text: $passwordInput) // 비밀번호
+            Button("common.cancel", role: .cancel) { // 취소
                 passwordInput = ""
             }
-            Button("확인") {
+            Button("common.ok") { // 확인
                 handlePasswordInput()
             }
         } message: {
-            Text("개발자 전용 기능에 접근하려면 비밀번호를 입력하세요.")
+            Text("settings.developer_mode.password_prompt") // 개발자 전용 기능에 접근하려면 비밀번호를 입력하세요.
         }
     }
     

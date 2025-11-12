@@ -13,7 +13,7 @@ struct MonthSummaryView: View {
             VStack(alignment: .leading, spacing: 8) {
                 // 총 수입
                 HStack(spacing: 8) {
-                    Text("총 수입")
+                    Text("calendar.total_income".localized) // 총 수입
                         .font(.caption)
                         .foregroundColor(Color("SecondaryText"))
                         .frame(width: 50, alignment: .leading)
@@ -26,7 +26,7 @@ struct MonthSummaryView: View {
 
                 // 총 지출
                 HStack(spacing: 8) {
-                    Text("총 지출")
+                    Text("calendar.total_expense".localized) // 총 지출
                         .font(.caption)
                         .foregroundColor(Color("SecondaryText"))
                         .frame(width: 50, alignment: .leading)
@@ -44,7 +44,7 @@ struct MonthSummaryView: View {
 
             // 오른쪽: 총액
             VStack(alignment: .leading, spacing: 4) {
-                Text("총액")
+                Text("calendar.total_balance".localized) // 총액
                     .font(.caption)
                     .foregroundColor(Color("SecondaryText"))
                 Text("\(balance >= 0 ? "+" : "")\(balance.formattedCurrency)")

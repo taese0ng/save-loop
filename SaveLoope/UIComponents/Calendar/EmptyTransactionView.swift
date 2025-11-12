@@ -7,7 +7,7 @@ struct EmptyTransactionView: View {
             Image(systemName: "calendar.badge.exclamationmark")
                 .font(.system(size: 50))
                 .foregroundColor(.gray)
-            Text("거래내역이 없습니다")
+            Text("calendar.empty".localized) // 거래내역이 없습니다
                 .font(.headline)
                 .foregroundColor(.gray)
             Spacer()

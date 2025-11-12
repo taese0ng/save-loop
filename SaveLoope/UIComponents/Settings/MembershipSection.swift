@@ -19,12 +19,13 @@ struct MembershipSection: View {
                         .frame(width: 24)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("프리미엄 멤버십")
+                        Text("settings.membership.premium".localized) // 프리미엄 멤버십
                             .foregroundColor(.primary)
 
                         if subscriptionManager.isSubscribed,
                            case .subscribed(let product) = subscriptionManager.subscriptionStatus {
-                            Text("\(product.displayName) 구독 중")
+                            let localizedName = SubscriptionProduct.allCases.first(where: { $0.rawValue == product.id })?.displayName ?? product.displayName
+                            Text(String(format: "settings.membership.subscribed".localized, localizedName)) // %@ 구독 중
                                 .font(.caption)
                                 .foregroundStyle(
                                     LinearGradient(
@@ -34,7 +35,7 @@ struct MembershipSection: View {
                                     )
                                 )
                         } else {
-                            Text("무제한 기능 사용하기")
+                            Text("settings.membership.unlimited".localized) // 무제한 기능 사용하기
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -48,7 +49,7 @@ struct MembershipSection: View {
                 }
             }
         } header: {
-            Text("멤버십")
+            Text("settings.membership.section_header".localized) // 멤버십
         }
     }
 }

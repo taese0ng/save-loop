@@ -1,0 +1,363 @@
+/*
+  Localizable.strings (Japanese)
+  SaveLoope
+*/
+
+// MARK: - Common
+"common.ok" = "OK";
+"common.cancel" = "キャンセル";
+"common.save" = "保存";
+"common.delete" = "削除";
+"common.edit" = "編集";
+"common.add" = "追加";
+"common.done" = "完了";
+"common.close" = "閉じる";
+"common.back" = "戻る";
+"common.next" = "次へ";
+"common.previous" = "前へ";
+"common.search" = "検索";
+"common.settings" = "設定";
+"common.error" = "エラー";
+"common.success" = "成功";
+"common.loading" = "読み込み中...";
+"common.alert" = "通知";
+"common.required" = "必須";
+
+// MARK: - Tabs
+"tab.home" = "ホーム";
+"tab.calendar" = "カレンダー";
+"tab.settings" = "設定";
+
+// MARK: - Home
+"home.title" = "SaveLoope";
+"home.no_envelopes" = "封筒がありません。";
+"home.empty_state.title" = "最初の封筒を作成しましょう";
+"home.empty_state.description" = "封筒を追加して予算管理を始めましょう";
+"home.add_envelope" = "封筒を追加";
+"home.edit_mode" = "編集";
+
+// MARK: - Envelope
+"envelope.name" = "封筒名";
+"envelope.budget" = "予算";
+"envelope.income" = "収入";
+"envelope.spent" = "支出";
+"envelope.remaining" = "残高";
+"envelope.goal" = "目標";
+"envelope.balance" = "残高";
+"envelope.type" = "タイプ";
+"envelope.type.oneTime" = "1回限り";
+"envelope.type.recurring" = "繰り返し";
+"envelope.type.normal" = "通常";
+"envelope.type.persistent" = "持続";
+"envelope.initial_balance" = "初期残高";
+"envelope.create" = "封筒を作成";
+"envelope.edit" = "封筒を編集";
+"envelope.delete" = "封筒を削除";
+"envelope.delete_confirm" = "この封筒を削除してもよろしいですか？";
+"envelope.limit_reached" = "制限に達しました";
+"envelope.limit_message" = "無料プランでは月3個まで封筒を作成できます。";
+"envelope.name_required" = "封筒名を入力してください";
+"envelope.invalid_budget" = "正しい初期残高を入力してください";
+"envelope.persistent_premium_required" = "持続型封筒はプレミアム機能です。\nプレミアムプランに登録すると使用できます。";
+"envelope.name_exists" = "同じ名前の持続型封筒が既に存在します";
+"envelope.name_exists_current_month" = "同じ名前の封筒が今月既に存在します";
+"envelope.type.description.normal" = "今月のみ適用される封筒です。\n来月には自動的に消えます。";
+"envelope.type.description.recurring" = "毎月初に同じ条件で自動作成されます。\n残高と取引履歴は毎月リセットされます。";
+"envelope.type.description.persistent" = "削除するまで継続します。\n残高と取引履歴はリセットされません。\n\n⚠️ 作成後はタイプを変更できません。";
+
+// MARK: - Transaction
+"transaction.add" = "取引を追加";
+"transaction.edit" = "取引を編集";
+"transaction.delete" = "取引を削除";
+"transaction.type" = "取引タイプ";
+"transaction.type.income" = "収入";
+"transaction.type.expense" = "支出";
+"transaction.amount" = "金額";
+"transaction.note" = "メモ";
+"transaction.date" = "日付";
+"transaction.recurring" = "定期取引";
+"transaction.empty" = "取引履歴がありません。";
+
+// MARK: - Balance
+"balance.add_income" = "収入を追加";
+"balance.add_expense" = "支出を追加";
+"balance.total_income" = "総収入";
+"balance.total_expense" = "総支出";
+"balance.net_balance" = "純残高";
+
+// MARK: - Calendar
+"calendar.title" = "カレンダー";
+"calendar.today" = "今日";
+"calendar.month_summary" = "月次サマリー";
+"calendar.no_transactions" = "取引履歴がありません。";
+
+// MARK: - Settings
+"settings.title" = "設定";
+"settings.currency" = "通貨";
+"settings.currency_settings" = "通貨設定";
+"settings.language" = "言語";
+"settings.membership" = "メンバーシップ";
+"settings.membership.premium" = "プレミアムメンバーシップ";
+"settings.membership.subscribe_unlimited" = "無制限の機能を使用";
+"settings.plan_comparison" = "プラン比較";
+"settings.sync" = "同期";
+"settings.cloud_sync" = "iCloud同期";
+"settings.cloud_sync.title" = "iCloud同期";
+"settings.cloud_sync.enable" = "同期を有効にする";
+"settings.cloud_sync.disable" = "同期を無効にする";
+"settings.cloud_sync.status" = "同期状態";
+"settings.cloud_sync.unavailable" = "iCloudが利用できません";
+"settings.cloud_sync.premium_only" = "⭐️ iCloud同期はプレミアム専用機能です";
+"settings.data" = "データ";
+"settings.reset_data" = "データをリセット";
+"settings.reset_data_confirm" = "すべての封筒と取引記録が削除されます。この操作は元に戻せません。";
+"settings.developer_mode" = "開発者モード";
+"settings.developer_mode.enabled" = "開発者モードが有効になりました。🛠️";
+"settings.developer_mode.disabled" = "開発者モードが無効になりました。";
+"settings.developer_mode.unlock" = "開発者モードのロック解除";
+"settings.developer_mode.password" = "パスワード";
+"settings.developer_mode.password_prompt" = "開発者機能にアクセスするにはパスワードを入力してください。";
+
+// MARK: - Subscription
+"subscription.title" = "プレミアム";
+"subscription.view_premium" = "プレミアムを見る";
+"subscription.upgrade" = "アップグレード";
+"subscription.restore" = "購入を復元";
+"subscription.status" = "購読状態";
+"subscription.active" = "有効";
+"subscription.inactive" = "無効";
+"subscription.free_plan" = "無料プラン";
+"subscription.premium_plan" = "プレミアムプラン";
+"subscription.monthly" = "月額";
+"subscription.yearly" = "年額";
+"subscription.terms" = "利用規約";
+"subscription.privacy" = "プライバシーポリシー";
+
+// MARK: - Alerts
+"alert.app_restart_required" = "アプリの再起動が必要です";
+"alert.cloud_sync_enabled" = "iCloud同期が有効になります。アプリを完全に終了してから再起動してください。";
+"alert.cloud_sync_disabled" = "iCloud同期が無効になります。アプリを完全に終了してから再起動してください。";
+"alert.cloud_unavailable" = "iCloudが利用できません";
+"alert.cloud_not_logged_in" = "iCloudにサインインしていません。設定アプリでiCloudにサインインしてください。";
+"alert.open_settings" = "設定を開く";
+
+// MARK: - Errors
+"error.unknown" = "不明なエラーが発生しました。";
+"error.save_failed" = "保存に失敗しました。";
+"error.load_failed" = "読み込みに失敗しました。";
+"error.delete_failed" = "削除に失敗しました。";
+"error.network" = "ネットワークエラーが発生しました。";
+"error.balance_add" = "残高追加中にエラーが発生しました";
+"error.expense_add" = "支出登録中にエラーが発生しました";
+"error.envelope_edit" = "封筒編集中にエラーが発生しました";
+"error.envelope_delete" = "封筒削除中にエラーが発生しました";
+"error.transaction_edit" = "取引編集中にエラーが発生しました";
+
+// MARK: - Add Balance
+"add_balance.title" = "残高追加";
+"add_balance.envelope" = "残高追加封筒";
+"add_balance.amount" = "追加金額";
+"add_balance.date" = "追加日";
+"add_balance.button" = "残高を追加";
+"add_balance.select_envelope" = "封筒を選択してください";
+"add_balance.invalid_amount" = "正しい金額を入力してください";
+
+// MARK: - Add Expense
+"add_expense.title" = "支出登録";
+"add_expense.envelope" = "支出封筒";
+"add_expense.amount" = "支出金額";
+"add_expense.date" = "支出日";
+"add_expense.button" = "支出を登録";
+"add_expense.select_envelope" = "封筒を選択してください";
+"add_expense.invalid_amount" = "正しい金額を入力してください";
+
+// MARK: - Detail Envelope
+"detail_envelope.initial_balance" = "初期残高";
+"detail_envelope.goal_balance" = "目標残高";
+"detail_envelope.current_balance" = "現在の残高";
+"detail_envelope.spent_amount" = "支出金額";
+"detail_envelope.transactions" = "取引履歴";
+"detail_envelope.no_transactions" = "取引履歴がありません。";
+
+// MARK: - Edit Envelope
+"edit_envelope.title" = "封筒編集";
+"edit_envelope.name" = "封筒名";
+"edit_envelope.initial_balance" = "初期残高";
+"edit_envelope.goal_balance" = "目標残高";
+"edit_envelope.type" = "封筒タイプ";
+"edit_envelope.type.normal" = "通常";
+"edit_envelope.type.recurring" = "繰り返し";
+"edit_envelope.type.persistent" = "持続";
+"edit_envelope.type.persistent_premium" = "持続 ⭐️";
+"edit_envelope.type_change_warning" = "繰り返し封筒を他のタイプに変更すると、来月から自動作成されません。";
+"edit_envelope.persistent_change_blocked_title" = "継続封筒は変更不可";
+"edit_envelope.persistent_change_blocked_message" = "継続封筒は編集で変更できません。\n継続封筒が必要な場合は、新規作成してください。";
+"edit_envelope.persistent_no_change" = "継続封筒はタイプを変更できません。\nタイプを変更するには、削除して新規作成してください。";
+"edit_envelope.delete_confirm_title" = "封筒削除";
+"edit_envelope.delete_confirm_message" = "封筒に関連するすべての取引履歴が削除されます。本当に削除しますか?";
+"edit_envelope.type_change_title" = "封筒タイプ変更";
+"edit_envelope.complete" = "完了";
+
+// MARK: - Edit Transaction
+"edit_transaction.title" = "取引編集";
+"edit_transaction.envelope" = "封筒選択";
+"edit_transaction.type" = "タイプ";
+"edit_transaction.amount" = "金額";
+"edit_transaction.date" = "日付";
+"edit_transaction.note" = "説明";
+"edit_transaction.select_envelope" = "封筒を選択してください";
+"edit_transaction.invalid_amount" = "正しい金額を入力してください";
+"edit_transaction.delete_confirm_title" = "取引削除";
+"edit_transaction.delete_confirm_message" = "本当にこの取引を削除しますか?";
+"edit_transaction.complete" = "完了";
+
+// MARK: - Calendar
+"calendar.weekday.sun" = "日";
+"calendar.weekday.mon" = "月";
+"calendar.weekday.tue" = "火";
+"calendar.weekday.wed" = "水";
+"calendar.weekday.thu" = "木";
+"calendar.weekday.fri" = "金";
+"calendar.weekday.sat" = "土";
+"calendar.total_income" = "総収入";
+"calendar.total_expense" = "総支出";
+"calendar.total_balance" = "総額";
+"calendar.envelope_unspecified" = "封筒未指定";
+"calendar.transaction_count" = "%d件";
+"calendar.empty" = "取引履歴がありません";
+
+// MARK: - Currency Settings
+"currency.settings_title" = "通貨設定";
+"currency.device_badge" = "デフォルト";
+"currency.loading" = "読み込み中...";
+"currency.name.KRW" = "ウォン";
+"currency.name.JPY" = "円";
+"currency.name.CNY" = "元";
+"currency.name.HKD" = "香港ドル";
+"currency.name.SGD" = "シンガポールドル";
+"currency.name.TWD" = "ニュー台湾ドル";
+"currency.name.THB" = "バーツ";
+"currency.name.VND" = "ドン";
+"currency.name.IDR" = "ルピア";
+"currency.name.MYR" = "リンギット";
+"currency.name.PHP" = "ペソ";
+"currency.name.INR" = "ルピー";
+"currency.name.EUR" = "ユーロ";
+"currency.name.GBP" = "ポンド";
+"currency.name.CHF" = "フラン";
+"currency.name.RUB" = "ルーブル";
+"currency.name.PLN" = "ズウォティ";
+"currency.name.SEK" = "クローナ";
+"currency.name.NOK" = "クローネ";
+"currency.name.DKK" = "クローネ";
+"currency.name.USD" = "ドル";
+"currency.name.CAD" = "カナダドル";
+"currency.name.MXN" = "ペソ";
+"currency.name.BRL" = "レアル";
+"currency.name.ARS" = "ペソ";
+"currency.name.CLP" = "ペソ";
+"currency.name.AUD" = "オーストラリアドル";
+"currency.name.NZD" = "ニュージーランドドル";
+"currency.name.AED" = "ディルハム";
+"currency.name.SAR" = "リヤル";
+"currency.name.ILS" = "シェケル";
+"currency.name.TRY" = "リラ";
+
+// MARK: - Subscription Details
+"subscription.header.title" = "プレミアムにアップグレード";
+"subscription.header.subtitle" = "無制限の封筒作成と高度な機能を使用";
+"subscription.current" = "現在購読中";
+"subscription.manage_button" = "購読管理";
+"subscription.subscribed_active" = "購読有効";
+"subscription.lifetime_active" = "永久ライセンス有効";
+"subscription.change_pending" = "購読変更予定";
+"subscription.change_to" = "%@に変更";
+"subscription.next_billing" = "次回請求日";
+"subscription.auto_renew_off" = "自動更新無効";
+"subscription.available_until" = "%@まで利用可能";
+"subscription.restore_button" = "購入を復元";
+"subscription.purchase_complete_title" = "購入完了";
+"subscription.purchase_complete_message" = "%@ の購入が完了しました!";
+"subscription.purchase_failed_title" = "購入失敗";
+"subscription.purchase_failed_message" = "購入中にエラーが発生しました。";
+"subscription.restore_complete_title" = "復元完了";
+"subscription.restore_complete_message" = "購入履歴を復元しました。";
+"subscription.restore_none_title" = "復元結果";
+"subscription.restore_none_message" = "復元する購入履歴がありません。";
+"subscription.terms.cancel_anytime" = "• 購読はいつでもキャンセルできます";
+"subscription.terms.no_refund" = "• 購読キャンセル時は現在の期間終了後に自動更新されません";
+"subscription.terms.auto_renew" = "• 購読更新の24時間前に自動更新されます";
+"subscription.terms.manage" = "• 「購読管理」ボタンでキャンセルと変更が可能です";
+"subscription.product.popular" = "人気";
+"subscription.product.recommended" = "おすすめ";
+"subscription.product.one_time" = "1回払い";
+"subscription.product.subscribe" = "購読する";
+"subscription.product.subscribed" = "購読中";
+"subscription.product.pending" = "購読予定";
+"subscription.product.period.day" = "日";
+"subscription.product.period.week" = "週";
+"subscription.product.period.month" = "月";
+"subscription.product.period.year" = "年";
+"subscription.product.monthly.display_name" = "月額購読";
+"subscription.product.yearly.display_name" = "年額購読";
+"subscription.product.lifetime.display_name" = "永久利用権";
+"subscription.product.monthly.description" = "毎月自動更新";
+"subscription.product.yearly.description" = "毎年自動更新";
+"subscription.product.lifetime.description" = "一度の購入で永久利用";
+"subscription.products.empty_title" = "製品を読み込めません";
+"subscription.products.empty_message" = "ネットワーク接続を確認してください";
+"subscription.products.retry" = "再試行";
+
+// MARK: - Settings Components
+"settings.membership.title" = "プレミアムメンバーシップ";
+"settings.membership.subscribed" = "%@ 購読中";
+"settings.membership.unlimited" = "無制限機能を使用";
+"settings.membership.section_header" = "メンバーシップ";
+"settings.plan_comparison.title" = "プラン比較";
+"settings.plan_comparison.subtitle" = "無料 vs プレミアム機能";
+"settings.cloud_sync.title" = "iCloud同期";
+"settings.cloud_sync.section_header" = "同期";
+"settings.cloud_sync.unavailable" = "iCloudが利用できません";
+"settings.cloud_sync.premium_only" = "⭐️ iCloud同期はプレミアム専用機能です";
+"settings.cloud_sync.description" = "iCloudを使用して複数のデバイス間でデータを同期します。設定変更はアプリを再起動後に適用されます。";
+"settings.developer.section_header" = "開発者ツール";
+"settings.developer.reset_data" = "データ初期化";
+"settings.developer.disable_mode" = "開発者モード無効化";
+"settings.developer.footer" = "⚠️ 開発者専用機能です。データ初期化時にすべての封筒と取引履歴が削除されます。";
+"settings.currency.section_header" = "一般";
+"settings.currency.title" = "通貨設定";
+
+// MARK: - Plan Comparison
+"plan.free.title" = "無料プラン";
+"plan.premium.title" = "プレミアムプラン";
+"plan.current_badge" = "現在のプラン";
+"plan.feature.envelopes_3" = "封筒3個まで";
+"plan.feature.envelopes_unlimited" = "無制限封筒";
+"plan.feature.persistent_envelope" = "継続封筒";
+"plan.feature.transactions_30" = "封筒あたり取引30個まで";
+"plan.feature.transactions_unlimited" = "無制限取引履歴";
+"plan.feature.months_3" = "最近3ヶ月のデータアクセス";
+"plan.feature.months_unlimited" = "無制限データアクセス";
+"plan.feature.cloud_sync" = "iCloud同期";
+"plan.feature.future_features" = "今後追加される機能";
+
+// MARK: - Transaction Components
+"transaction.income" = "収入";
+"transaction.expense" = "支出";
+"transaction.note_placeholder" = "説明";
+"transaction.recurring_label" = "毎月繰り返し作成";
+
+// MARK: - Premium Features
+"premium.lock.title" = "プレミアム専用";
+"premium.lock.upgrade" = "アップグレード";
+"premium.limit_reached" = "制限到達";
+"premium.view" = "プレミアムを見る";
+
+// MARK: - Date Format
+"date.format.year" = "%d年";
+"date.format.month" = "%d月";
+"date.format.year_month" = "%d年%d月";
+"date.format.year_month_day" = "%d年%d月%d日";
+
+// MARK: - Envelope Balance
+"envelope.balance_label" = "残高:";

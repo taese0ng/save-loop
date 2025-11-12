@@ -17,12 +17,14 @@ struct CurrencySettingsView: View {
     }
 
     var body: some View {
-        StandardSheetContainer(title: "통화 설정") {
+        StandardSheetContainer(title: "currency.settings_title".localized) { // 통화 설정
             ScrollView {
                 LazyVStack(spacing: 0) {
                     ForEach(currencies) { currency in
                         let isSelected = selectedCurrencyCode == currency.code
-                        let isDeviceCurrency = Currency.currencyFromDeviceLocale()?.code == currency.code
+                        // 앱 언어 설정에 따른 통화인지 확인
+                        let languageCode = LocalizationManager.shared.currentLanguage
+                        let isDeviceCurrency = Currency.currencyFromAppLanguage(languageCode)?.code == currency.code
 
                         Button(action: {
                             // 햅틱 피드백
@@ -42,6 +44,8 @@ struct CurrencySettingsView: View {
                                 Text(currency.symbol)
                                     .font(.system(size: 18, weight: .semibold))
                                     .foregroundColor(isSelected ? .white : .primary)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.5) // 텍스트가 프레임 안에 맞도록 최대 50%까지 축소
                                     .frame(width: 44, height: 44)
                                     .background(
                                         Circle()
@@ -51,13 +55,13 @@ struct CurrencySettingsView: View {
                                 // 통화 정보
                                 VStack(alignment: .leading, spacing: 4) {
                                     HStack(spacing: 6) {
-                                        Text(currency.name)
+                                        Text(currency.localizedName) // 다국어 지원된 이름 사용
                                             .font(.system(size: 16, weight: isSelected ? .semibold : .medium))
                                             .foregroundColor(.primary)
                                             .lineLimit(1)
 
                                         if isDeviceCurrency {
-                                            Text("기기")
+                                            Text("currency.device_badge".localized) // 기기
                                                 .font(.system(size: 11, weight: .medium))
                                                 .foregroundColor(.white)
                                                 .padding(.horizontal, 6)

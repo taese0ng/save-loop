@@ -5,7 +5,7 @@ struct SubscriptionRestoreButton: View {
 
     var body: some View {
         Button(action: action) {
-            Text("구매 복원")
+            Text("subscription.restore_button".localized) // 구매 복원
                 .font(.subheadline)
                 .foregroundColor(.blue)
         }

@@ -6,7 +6,7 @@ struct InfoRow: View {
     
     var body: some View {
         HStack {
-            Text(title)
+            Text(title.localized)
                 .foregroundColor(Color("SecondaryText"))
             Spacer()
             Text(value)
