@@ -76,19 +76,24 @@ struct CalendarView: View {
         calendar.range(of: .day, in: .month, for: currentMonthDate)?.count ?? 30
     }
 
-    // 현재 월의 전체 거래내역 합산 (한 번만 필터링)
+    // 현재 갱신 주기의 전체 거래내역 합산 (갱신일 기준)
     private var monthlyTotals: (income: Double, expense: Double, balance: Double) {
-        // 선택된 월의 거래만 한 번 필터링
-        let monthTransactions = allTransactions.filter { transaction in
-            let transactionComponents = calendar.dateComponents([.year, .month], from: transaction.date)
-            return transactionComponents.year == selectedYear && transactionComponents.month == selectedMonth
+        let renewalDayManager = RenewalDayManager.shared
+        
+        // 선택된 날짜가 속한 갱신 주기 계산
+        let selectedCycle = renewalDayManager.getRenewalCycle(for: currentMonthDate)
+        
+        // 선택된 갱신 주기의 거래만 필터링
+        let cycleTransactions = allTransactions.filter { transaction in
+            let transactionCycle = renewalDayManager.getRenewalCycle(for: transaction.date)
+            return transactionCycle.year == selectedCycle.year && transactionCycle.month == selectedCycle.month
         }
 
         // 한 번의 순회로 수입과 지출 계산
         var income: Double = 0
         var expense: Double = 0
 
-        for transaction in monthTransactions {
+        for transaction in cycleTransactions {
             if transaction.type == .income {
                 income += transaction.amount
             } else {
@@ -238,7 +243,7 @@ struct CalendarView: View {
                                         Spacer()
                                     }
                                     Rectangle()
-                                        .fill(Color("Separator"))
+                                        .fill(Color("DividerColor"))
                                         .frame(width: 0.5)
                                 }
                             }
@@ -251,7 +256,7 @@ struct CalendarView: View {
                                         Spacer()
                                     }
                                     Rectangle()
-                                        .fill(Color("Separator"))
+                                        .fill(Color("DividerColor"))
                                         .frame(height: 0.5)
                                 }
                             }

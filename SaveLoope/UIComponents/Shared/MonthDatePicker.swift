@@ -38,7 +38,7 @@ public struct MonthDatePicker: View {
                 Button(action: { selectedYear -= 1 }) {
                     ZStack {
                         Circle()
-                            .fill(Color("Separator"))
+                            .fill(Color("DividerColor"))
                             .frame(width: 40, height: 40)
 
                         Image(systemName: "chevron.left")
@@ -63,7 +63,7 @@ public struct MonthDatePicker: View {
                 }) {
                     ZStack {
                         Circle()
-                            .fill(Color("Separator"))
+                            .fill(Color("DividerColor"))
                             .frame(width: 40, height: 40)
 
                         Image(systemName: "chevron.right")
@@ -131,7 +131,7 @@ struct MonthButton: View {
                 .font(.system(size: 16, weight: .medium))
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
-                .background(isSelected ? Color("PrimaryText").opacity(0.2) : Color("Separator"))
+                .background(isSelected ? Color("PrimaryText").opacity(0.2) : Color("DividerColor"))
                 .foregroundColor(isSelected ? Color("PrimaryText") : (isEnabled ? Color("PrimaryText") : Color("SecondaryText")))
                 .cornerRadius(8)
         }

@@ -65,7 +65,7 @@ struct TransactionRow: View {
         .padding()
         .background(Color("CardBackground"))
         .cornerRadius(8)
-        .shadow(color: Color("Separator"), radius: 5, x: 0, y: 2)
+        .shadow(color: Color("DividerColor"), radius: 5, x: 0, y: 2)
     }
 }
 

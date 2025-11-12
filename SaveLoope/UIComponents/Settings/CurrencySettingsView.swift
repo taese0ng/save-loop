@@ -9,6 +9,11 @@ struct CurrencySettingsView: View {
     private var currencyManager: CurrencyManager {
         CurrencyManager.shared
     }
+    
+    // currencies가 비어있으면 CurrencyManager에서 직접 가져오기
+    private var displayCurrencies: [Currency] {
+        currencies.isEmpty ? currencyManager.getCurrenciesWithDeviceFirst() : currencies
+    }
 
     init(currencies: [Currency], selectedCurrencyCode: String, onCurrencyChanged: ((String) -> Void)? = nil) {
         self.currencies = currencies
@@ -20,7 +25,7 @@ struct CurrencySettingsView: View {
         StandardSheetContainer(title: "currency.settings_title".localized) { // 통화 설정
             ScrollView {
                 LazyVStack(spacing: 0) {
-                    ForEach(currencies) { currency in
+                    ForEach(displayCurrencies) { currency in
                         let isSelected = selectedCurrencyCode == currency.code
                         // 앱 언어 설정에 따른 통화인지 확인
                         let languageCode = LocalizationManager.shared.currentLanguage
@@ -100,7 +105,7 @@ struct CurrencySettingsView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
 
-                        if currency.id != currencies.last?.id {
+                        if currency.id != displayCurrencies.last?.id {
                             Divider()
                                 .padding(.leading, 88)
                         }
@@ -112,6 +117,10 @@ struct CurrencySettingsView: View {
             .scrollContentBackground(.hidden)
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: selectedCurrencyCode)
+        .onAppear {
+            // 뷰가 나타날 때 현재 선택된 통화로 업데이트
+            selectedCurrencyCode = currencyManager.selectedCurrency.code
+        }
     }
 }
 

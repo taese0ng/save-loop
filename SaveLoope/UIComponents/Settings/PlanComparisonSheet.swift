@@ -38,7 +38,7 @@ struct PlanComparisonSheet: View {
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(Color("Separator"), lineWidth: 1)
+                .strokeBorder(Color("DividerColor"), lineWidth: 1)
         )
     }
 

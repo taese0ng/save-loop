@@ -13,10 +13,12 @@ class HomeViewModel: ObservableObject {
     func checkAndCreateRecurringEnvelopes(using context: ModelContext) {
         let calendar = Calendar.current
         let currentDate = Date()
-        let dateComponents = calendar.dateComponents([.year, .month], from: currentDate)
-        guard let currentYear = dateComponents.year,
-              let currentMonth = dateComponents.month else {
-            print("❌ 날짜 컴포넌트 추출 실패")
+        let renewalDayManager = RenewalDayManager.shared
+        
+        // 현재 날짜가 속한 갱신 주기 계산
+        let currentCycle = renewalDayManager.getRenewalCycle(for: currentDate)
+        guard let cycleStartDate = calendar.date(from: DateComponents(year: currentCycle.year, month: currentCycle.month, day: renewalDayManager.renewalDay)) else {
+            print("❌ 갱신 주기 시작일 계산 실패")
             return
         }
         
@@ -33,19 +35,24 @@ class HomeViewModel: ObservableObject {
                 $0.type == .recurring
             }
             
-            // 현재 월의 봉투들
-            let currentEnvelopes = allEnvelopes.filter { envelope in
-                let envelopeComponents = calendar.dateComponents([.year, .month], from: envelope.createdAt)
-                return envelopeComponents.year == currentYear && envelopeComponents.month == currentMonth
+            // 현재 갱신 주기의 봉투들 (갱신일 기준)
+            let currentCycleEnvelopes = allEnvelopes.filter { envelope in
+                // 지속형 봉투는 제외
+                if envelope.type == .persistent {
+                    return false
+                }
+                // 봉투의 갱신 주기 계산
+                let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
+                return envelopeCycle.year == currentCycle.year && envelopeCycle.month == currentCycle.month
             }
             
             for originalEnvelope in originalRecurringEnvelopes {
-                // 이미 현재 월에 생성된 봉투가 있는지 확인
-                let existingEnvelope = currentEnvelopes.first { existing in
+                // 이미 현재 갱신 주기에 생성된 봉투가 있는지 확인
+                let existingEnvelope = currentCycleEnvelopes.first { existing in
                     existing.parentId == originalEnvelope.id || existing.id == originalEnvelope.id
                 }
                 
-                // 현재 월에 해당하는 봉투가 없으면 생성
+                // 현재 갱신 주기에 해당하는 봉투가 없으면 생성
                 if existingEnvelope == nil {
                     let newEnvelope = Envelope(
                         name: originalEnvelope.name,
@@ -57,6 +64,8 @@ class HomeViewModel: ObservableObject {
                         parentId: originalEnvelope.id,
                         envelopeType: .recurring
                     )
+                    // 갱신 주기 시작일로 createdAt 설정
+                    newEnvelope.createdAt = cycleStartDate
                     // 원본 봉투의 sortOrder 상속
                     newEnvelope.sortOrder = originalEnvelope.sortOrder
                     context.insert(newEnvelope)
@@ -82,12 +91,10 @@ class HomeViewModel: ObservableObject {
     func checkAndCreateRecurringTransactions(using context: ModelContext) {
         let calendar = Calendar.current
         let currentDate = Date()
-        let dateComponents = calendar.dateComponents([.year, .month], from: currentDate)
-        guard let currentYear = dateComponents.year,
-              let currentMonth = dateComponents.month else {
-            print("❌ 날짜 컴포넌트 추출 실패")
-            return
-        }
+        let renewalDayManager = RenewalDayManager.shared
+        
+        // 현재 날짜가 속한 갱신 주기 계산
+        let currentCycle = renewalDayManager.getRenewalCycle(for: currentDate)
         
         // 모든 Envelope와 TransactionRecord를 가져옴
         let envelopeDescriptor = FetchDescriptor<Envelope>()
@@ -102,33 +109,37 @@ class HomeViewModel: ObservableObject {
                 $0.isRecurring && $0.parentId == $0.id
             }
             
-            // 현재 달에 이미 생성된 거래 내역 필터링
-            let currentTransactions = allTransactions.filter { transaction in
-                let transactionComponents = calendar.dateComponents([.year, .month], from: transaction.date)
-                return transactionComponents.year == currentYear && transactionComponents.month == currentMonth
+            // 현재 갱신 주기에 이미 생성된 거래 내역 필터링
+            let currentCycleTransactions = allTransactions.filter { transaction in
+                let transactionCycle = renewalDayManager.getRenewalCycle(for: transaction.date)
+                return transactionCycle.year == currentCycle.year && transactionCycle.month == currentCycle.month
             }
             
-            // 현재 달의 봉투 필터링
-            let currentEnvelopes = allEnvelopes.filter { envelope in
-                let envelopeComponents = calendar.dateComponents([.year, .month], from: envelope.createdAt)
-                return envelopeComponents.year == currentYear && envelopeComponents.month == currentMonth
+            // 현재 갱신 주기의 봉투 필터링
+            let currentCycleEnvelopes = allEnvelopes.filter { envelope in
+                // 지속형 봉투는 제외
+                if envelope.type == .persistent {
+                    return false
+                }
+                let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
+                return envelopeCycle.year == currentCycle.year && envelopeCycle.month == currentCycle.month
             }
             
             for originalTransaction in originalRecurringTransactions {
-                // 이미 현재 월에 생성된 거래 내역이 있는지 확인
-                let existingTransaction = currentTransactions.first { existing in
+                // 이미 현재 갱신 주기에 생성된 거래 내역이 있는지 확인
+                let existingTransaction = currentCycleTransactions.first { existing in
                     existing.parentId == originalTransaction.id || existing.id == originalTransaction.id
                 }
                 
-                // 현재 월에 해당하는 거래 내역이 없으면 생성
+                // 현재 갱신 주기에 해당하는 거래 내역이 없으면 생성
                 if existingTransaction == nil {
-                    // 해당 거래에 연결된 봉투가 있는 경우, 현재 달의 해당하는 봉투 찾기
+                    // 해당 거래에 연결된 봉투가 있는 경우, 현재 갱신 주기의 해당하는 봉투 찾기
                     var matchingCurrentEnvelope: Envelope? = nil
                     
                     if let oldEnvelope = originalTransaction.envelope {
-                        // parentId를 기반으로 현재 달의 봉투 찾기
+                        // parentId를 기반으로 현재 갱신 주기의 봉투 찾기
                         let originalEnvelopeId = oldEnvelope.parentId ?? oldEnvelope.id
-                        matchingCurrentEnvelope = currentEnvelopes.first { envelope in
+                        matchingCurrentEnvelope = currentCycleEnvelopes.first { envelope in
                             envelope.id == originalEnvelopeId || envelope.parentId == originalEnvelopeId
                         }
                         
@@ -141,16 +152,40 @@ class HomeViewModel: ObservableObject {
                         continue
                     }
                     
-                    // 현재 날짜의 동일한 일자로 설정
-                    let dayComponent = calendar.component(.day, from: originalTransaction.date)
-                    var newDate = calendar.date(from: DateComponents(year: currentYear, month: currentMonth, day: dayComponent)) ?? currentDate
+                    // 원본 거래의 일자 계산 (갱신 주기 내에서의 상대 일자)
+                    let originalDay = calendar.component(.day, from: originalTransaction.date)
+                    let originalCycle = renewalDayManager.getRenewalCycle(for: originalTransaction.date)
                     
-                    // 월말 처리 (예: 30일이 없는 2월 등) - 수정된 로직
-                    if calendar.component(.month, from: newDate) != currentMonth {
-                        // 현재 월의 마지막 날 계산
-                        if let range = calendar.range(of: .day, in: .month, for: currentDate) {
-                            let lastDay: Int = range.upperBound - 1
-                            newDate = calendar.date(from: DateComponents(year: currentYear, month: currentMonth, day: lastDay)) ?? currentDate
+                    // 현재 갱신 주기 시작일 계산
+                    guard let cycleStartDate = calendar.date(from: DateComponents(year: currentCycle.year, month: currentCycle.month, day: renewalDayManager.renewalDay)) else {
+                        continue
+                    }
+                    
+                    // 원본 거래가 원래 갱신 주기에서 몇 일째인지 계산
+                    let daysFromCycleStart: Int
+                    if originalDay >= renewalDayManager.renewalDay {
+                        // 갱신일 이후
+                        daysFromCycleStart = originalDay - renewalDayManager.renewalDay
+                    } else {
+                        // 갱신일 이전 (이전 달의 마지막 부분)
+                        // 이전 달의 마지막 날짜 계산
+                        if let prevMonth = calendar.date(byAdding: .month, value: -1, to: calendar.date(from: DateComponents(year: originalCycle.year, month: originalCycle.month, day: 1))!) {
+                            let daysInPrevMonth = calendar.range(of: .day, in: .month, for: prevMonth)?.count ?? 30
+                            daysFromCycleStart = (daysInPrevMonth - renewalDayManager.renewalDay + 1) + originalDay
+                        } else {
+                            daysFromCycleStart = originalDay
+                        }
+                    }
+                    
+                    // 현재 갱신 주기에서 동일한 상대 일자 계산
+                    var newDate = calendar.date(byAdding: .day, value: daysFromCycleStart, to: cycleStartDate) ?? currentDate
+                    
+                    // 월말 처리 (예: 30일이 없는 2월 등)
+                    let newDateCycle = renewalDayManager.getRenewalCycle(for: newDate)
+                    if newDateCycle.year != currentCycle.year || newDateCycle.month != currentCycle.month {
+                        // 현재 갱신 주기의 마지막 날 계산
+                        if let nextCycleStart = calendar.date(byAdding: .month, value: 1, to: cycleStartDate) {
+                            newDate = calendar.date(byAdding: .day, value: -1, to: nextCycleStart) ?? currentDate
                         }
                     }
                     

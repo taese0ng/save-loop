@@ -20,10 +20,10 @@ struct EnvelopeTransactionCard: View {
         }
         .background(Color("CardBackground"))
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: Color("Separator"), radius: 8, x: 0, y: 2)
+        .shadow(color: Color("DividerColor"), radius: 8, x: 0, y: 2)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(Color("Separator"), lineWidth: 1)
+                .strokeBorder(Color("DividerColor"), lineWidth: 1)
         )
         .padding(.horizontal, 16)
     }

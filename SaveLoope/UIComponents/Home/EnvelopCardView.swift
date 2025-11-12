@@ -45,7 +45,7 @@ struct EnvelopeCardView: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(Color("Separator"))
+                        .fill(Color("DividerColor"))
                         .frame(height: 6)
 
                     Capsule()
@@ -61,7 +61,7 @@ struct EnvelopeCardView: View {
         .frame(maxWidth: .infinity)
         .background(Color("CardBackground"))
         .cornerRadius(12)
-        .shadow(color: Color("Separator"), radius: 5, x: 0, y: 2)
+        .shadow(color: Color("DividerColor"), radius: 5, x: 0, y: 2)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.gray.opacity(0.3), lineWidth: 1)

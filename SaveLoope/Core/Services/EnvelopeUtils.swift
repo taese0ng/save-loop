@@ -17,13 +17,16 @@ enum EnvelopeUtils {
     }
     
     /// 선택된 날짜에 맞는 봉투들을 필터링하고 정렬
+    @MainActor
     static func filterAndSortEnvelopes(
         _ allEnvelopes: [Envelope],
         selectedDate: Date,
         calendar: Calendar = .current
     ) -> [Envelope] {
-        let selectedYear = calendar.component(.year, from: selectedDate)
-        let selectedMonth = calendar.component(.month, from: selectedDate)
+        let renewalDayManager = RenewalDayManager.shared
+        
+        // 선택된 날짜가 속한 갱신 주기 계산
+        let selectedCycle = renewalDayManager.getRenewalCycle(for: selectedDate)
         
         return allEnvelopes
             .filter { envelope in
@@ -32,9 +35,10 @@ enum EnvelopeUtils {
                     return true
                 }
                 
-                // 일반/반복 봉투는 선택된 월과 일치하는 것만
-                return calendar.component(.year, from: envelope.createdAt) == selectedYear &&
-                       calendar.component(.month, from: envelope.createdAt) == selectedMonth
+                // 일반/반복 봉투는 선택된 갱신 주기와 일치하는 것만
+                let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
+                return envelopeCycle.year == selectedCycle.year &&
+                       envelopeCycle.month == selectedCycle.month
             }
             .sorted { env1, env2 in
                 // sortOrder가 0이면 Int.max로 취급 (맨 뒤로)

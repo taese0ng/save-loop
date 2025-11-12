@@ -43,7 +43,7 @@ struct DetailEnvelopeView: View {
                     .padding()
                     .background(Color("CardBackground"))
                     .cornerRadius(12)
-                    .shadow(color: Color("Separator"), radius: 5, x: 0, y: 2)
+                    .shadow(color: Color("DividerColor"), radius: 5, x: 0, y: 2)
                     
                     // 거래 내역 섹션
                     VStack(alignment: .leading, spacing: 12) {
@@ -91,7 +91,7 @@ struct DetailEnvelopeView: View {
                     .presentationDetents([.large])
                     .presentationDragIndicator(.hidden)
             }
-            .onChange(of: shouldDismiss) { newValue in
+            .onChange(of: shouldDismiss) { oldValue, newValue in
                 if newValue {
                     dismiss()
                 }

@@ -12,7 +12,7 @@ struct SheetHeader<Trailing: View>: View {
     var body: some View {
         VStack(spacing: 8) {
             RoundedRectangle(cornerRadius: 2.5)
-                .fill(Color("Separator").opacity(1))
+                .fill(Color("DividerColor").opacity(1))
                 .frame(width: 36, height: 5)
                 .padding(.top, 8)
 

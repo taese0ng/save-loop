@@ -120,23 +120,26 @@ struct HomeView: View {
     }
     
     func moveAddEnvelopePage() {
-        let calendar = Calendar.current
         let now = Date()
-        let dateComponents = calendar.dateComponents([.year, .month], from: now)
-        guard let currentYear = dateComponents.year,
-              let currentMonth = dateComponents.month else {
-            return
-        }
+        let renewalDayManager = RenewalDayManager.shared
+        let currentCycle = renewalDayManager.getRenewalCycle(for: now)
 
-        // 현재 월에 생성된 봉투만 카운트 (지속형 봉투는 최초 생성 월에만 카운트)
-        let currentMonthCreatedCount = allEnvelopes.filter { envelope in
-            let envelopeComponents = calendar.dateComponents([.year, .month], from: envelope.createdAt)
-            return envelopeComponents.year == currentYear && envelopeComponents.month == currentMonth
+        // 현재 갱신 주기에 생성된 봉투만 카운트 (지속형 봉투는 최초 생성 갱신 주기에만 카운트)
+        let currentCycleCreatedCount = allEnvelopes.filter { envelope in
+            if envelope.type == .persistent {
+                // 지속형 봉투는 생성 갱신 주기 기준
+                let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
+                return envelopeCycle.year == currentCycle.year && envelopeCycle.month == currentCycle.month
+            } else {
+                // 일반/반복 봉투는 현재 갱신 주기 기준
+                let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
+                return envelopeCycle.year == currentCycle.year && envelopeCycle.month == currentCycle.month
+            }
         }.count
 
         // 프리미엄 기능 체크
         let canCreate = PremiumFeatureManager.shared.canCreateMoreEnvelopes(
-            currentCount: currentMonthCreatedCount,
+            currentCount: currentCycleCreatedCount,
             isSubscribed: subscriptionManager.isSubscribed
         )
 

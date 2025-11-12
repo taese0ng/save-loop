@@ -31,6 +31,7 @@
 // MARK: - Home
 "home.title" = "SaveLoope";
 "home.no_envelopes" = "沒有信封。";
+"header.renewal_day_info" = "更新日: %d日";
 "home.empty_state.title" = "建立您的第一個信封";
 "home.empty_state.description" = "新增信封開始管理您的預算";
 "home.add_envelope" = "新增信封";
@@ -43,6 +44,7 @@
 "envelope.spent" = "支出";
 "envelope.remaining" = "剩餘";
 "envelope.goal" = "目標";
+"envelope.goal_balance" = "目標餘額";
 "envelope.balance" = "餘額";
 "envelope.type" = "類型";
 "envelope.type.oneTime" = "單次";
@@ -95,6 +97,11 @@
 "settings.title" = "設定";
 "settings.currency" = "貨幣";
 "settings.currency_settings" = "貨幣設定";
+"settings.renewal_day" = "信封更新日";
+"settings.renewal_day.description" = "每月{day}日更新";
+"settings.renewal_day.section_header" = "信封設定";
+"settings.renewal_day.footer" = "信封在每月設定的日期更新。\n例如：如果設定為25日，則每月25日開始新的週期。\n\n日曆中的總收入、總支出、總餘額也按此更新日進行匯總。";
+"settings.renewal_day.select" = "選擇更新日";
 "settings.language" = "語言";
 "settings.membership" = "會員資格";
 "settings.membership.premium" = "進階會員";

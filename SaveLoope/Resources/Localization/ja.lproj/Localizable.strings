@@ -31,6 +31,7 @@
 // MARK: - Home
 "home.title" = "SaveLoope";
 "home.no_envelopes" = "封筒がありません。";
+"header.renewal_day_info" = "更新日: %d日";
 "home.empty_state.title" = "最初の封筒を作成しましょう";
 "home.empty_state.description" = "封筒を追加して予算管理を始めましょう";
 "home.add_envelope" = "封筒を追加";
@@ -43,6 +44,7 @@
 "envelope.spent" = "支出";
 "envelope.remaining" = "残高";
 "envelope.goal" = "目標";
+"envelope.goal_balance" = "目標残高";
 "envelope.balance" = "残高";
 "envelope.type" = "タイプ";
 "envelope.type.oneTime" = "1回限り";
@@ -95,6 +97,11 @@
 "settings.title" = "設定";
 "settings.currency" = "通貨";
 "settings.currency_settings" = "通貨設定";
+"settings.renewal_day" = "封筒更新日";
+"settings.renewal_day.description" = "毎月{day}日に更新";
+"settings.renewal_day.section_header" = "封筒設定";
+"settings.renewal_day.footer" = "設定した日付に封筒が更新されます。\n例：25日に設定すると、毎月25日から新しいサイクルが始まります。\n\nカレンダーの総収入、総支出、総額もこの更新日を基準に集計されます。";
+"settings.renewal_day.select" = "更新日を選択してください";
 "settings.language" = "言語";
 "settings.membership" = "メンバーシップ";
 "settings.membership.premium" = "プレミアムメンバーシップ";

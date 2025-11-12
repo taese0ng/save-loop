@@ -60,7 +60,7 @@ struct MonthSummaryView: View {
         .frame(height: 80)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color("Separator"))
+                .fill(Color("DividerColor"))
         )
     }
 }

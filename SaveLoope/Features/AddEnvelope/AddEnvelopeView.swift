@@ -51,10 +51,9 @@ struct AddEnvelopeView: View {
         }
         
         // 중복 이름 체크
-        let calendar: Calendar = Calendar.current
         let currentDate: Date = Date()
-        let currentYear: Int = calendar.component(.year, from: currentDate)
-        let currentMonth: Int = calendar.component(.month, from: currentDate)
+        let renewalDayManager = RenewalDayManager.shared
+        let currentCycle = renewalDayManager.getRenewalCycle(for: currentDate)
 
         let descriptor = FetchDescriptor<Envelope>()
         do {
@@ -73,12 +72,14 @@ struct AddEnvelopeView: View {
                     return
                 }
             } else {
-                // 일반/반복 봉투는 현재 월에서만 체크 (지속형은 제외)
+                // 일반/반복 봉투는 현재 갱신 주기에서만 체크 (지속형은 제외)
                 let existingEnvelope = allEnvelopes.first { envelope in
-                    envelope.name == envelopeName &&
-                    envelope.type != .persistent &&
-                    calendar.component(.year, from: envelope.createdAt) == currentYear &&
-                    calendar.component(.month, from: envelope.createdAt) == currentMonth
+                    if envelope.name != envelopeName || envelope.type == .persistent {
+                        return false
+                    }
+                    let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
+                    return envelopeCycle.year == currentCycle.year &&
+                           envelopeCycle.month == currentCycle.month
                 }
 
                 if existingEnvelope != nil {
@@ -101,6 +102,14 @@ struct AddEnvelopeView: View {
             // 반복 생성이 필요한 경우 parentId를 자기 자신으로 설정
             if selectedEnvelopeType == .recurring {
                 newEnvelope.parentId = newEnvelope.id
+            }
+            
+            // 일반/반복 봉투는 현재 갱신 주기 시작일로 createdAt 설정
+            if selectedEnvelopeType != .persistent {
+                let calendar = Calendar.current
+                if let cycleStartDate = calendar.date(from: DateComponents(year: currentCycle.year, month: currentCycle.month, day: renewalDayManager.renewalDay)) {
+                    newEnvelope.createdAt = cycleStartDate
+                }
             }
 
             // 마지막 순서로 설정 (최대 sortOrder + 1)
@@ -131,7 +140,7 @@ struct AddEnvelopeView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     LabeledTextField(label: "envelope.name".localized, text: $envelopeName, required: true) // 봉투 이름
                     LabeledNumberField(label: "envelope.initial_balance".localized, value: $initialAmount, placeholder: "0", required: true, prefix: CurrencyManager.shared.currentSymbol) // 시작 잔액
-                    LabeledNumberField(label: "envelope.goal".localized, value: $goalAmount, placeholder: "0", prefix: CurrencyManager.shared.currentSymbol) // 목표 잔액
+                    LabeledNumberField(label: "envelope.goal_balance".localized, value: $goalAmount, placeholder: "0", prefix: CurrencyManager.shared.currentSymbol) // 목표 잔액
 
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
@@ -142,9 +151,9 @@ struct AddEnvelopeView: View {
                         }
 
                         Picker("envelope.type".localized, selection: $selectedEnvelopeType) { // 봉투 타입
-                            Text("envelope.type.normal").tag(EnvelopeType.normal) // 일반 봉투
-                            Text("envelope.type.recurring").tag(EnvelopeType.recurring) // 반복 봉투
-                            Text(subscriptionManager.isSubscribed ? "envelope.type.persistent" : "envelope.type.persistent".localized + " ⭐️").tag(EnvelopeType.persistent) // 지속 봉투
+                            Text("envelope.type.normal".localized).tag(EnvelopeType.normal) // 일반 봉투
+                            Text("envelope.type.recurring".localized).tag(EnvelopeType.recurring) // 반복 봉투
+                            Text(subscriptionManager.isSubscribed ? "envelope.type.persistent".localized : "envelope.type.persistent".localized + " ⭐️").tag(EnvelopeType.persistent) // 지속 봉투
                         }
                         .pickerStyle(.segmented)
 

@@ -3,12 +3,12 @@ import SwiftUI
 struct CloudSyncSection: View {
     @ObservedObject var subscriptionManager: SubscriptionManager
     @ObservedObject var cloudSyncManager: CloudSyncManager
-    @Binding var showingSubscriptionView: Bool
     @Binding var showingCloudUnavailableAlert: Bool
     @Binding var showingSyncChangeAlert: Bool
+    @State private var showingSubscriptionView = false
 
     var body: some View {
-        Section {
+        VStack(spacing: 12) {
             HStack {
                 Image(systemName: "icloud")
                     .foregroundColor(.blue)
@@ -52,17 +52,11 @@ struct CloudSyncSection: View {
                         .foregroundColor(.secondary)
                 }
             }
-        } header: {
-            Text("settings.cloud_sync.section_header".localized) // 동기화
-        } footer: {
-            VStack(alignment: .leading, spacing: 4) {
-                if !subscriptionManager.isSubscribed {
-                    Text("settings.cloud_sync.premium_only".localized) // ⭐️ iCloud 동기화는 프리미엄 전용 기능입니다
-                        .foregroundColor(.blue)
-                }
-                Text("settings.cloud_sync.description".localized) // iCloud를 사용하여 여러 기기 간에 데이터를 동기화합니다. 설정 변경은 앱을 재시작한 후 적용됩니다.
-                    .foregroundColor(.secondary)
-            }
+        }
+        .sheet(isPresented: $showingSubscriptionView) {
+            SubscriptionView(showsCloseButton: false)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.hidden)
         }
     }
 }

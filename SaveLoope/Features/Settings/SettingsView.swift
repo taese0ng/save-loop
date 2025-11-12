@@ -9,14 +9,7 @@ struct SettingsView: View {
     @State private var showingResetAlert: Bool = false
     @State private var showingSyncChangeAlert: Bool = false
     @State private var showingCloudUnavailableAlert: Bool = false
-    @State private var showingSubscriptionView: Bool = false
-    @State private var showingPlanComparison: Bool = false
 
-    // 통화 설정 관련
-    @State private var showingCurrencySettings: Bool = false
-    @State private var currencies: [Currency] = []
-    @State private var selectedCurrencyCode: String = ""
-    @State private var currentCurrencyName: String = ""
 
     // 개발자 모드 관련 (앱 세션 동안만 유지, 재시작 시 자동 비활성화)
     @State private var isDeveloperModeEnabled: Bool = false
@@ -43,12 +36,6 @@ struct SettingsView: View {
             // 뷰가 나타날 때 iCloud 상태 다시 확인
             await cloudSyncManager.checkCloudAccountStatus()
         }
-        .onAppear {
-            // 초기 통화 이름 설정
-            if currentCurrencyName.isEmpty {
-                currentCurrencyName = CurrencyManager.shared.selectedCurrency.displayName
-            }
-        }
         .onDisappear {
             // 뷰가 사라질 때 타이머 정리
             tapTimer?.invalidate()
@@ -58,34 +45,30 @@ struct SettingsView: View {
     
     private var settingsList: some View {
         List {
-            CurrencySettingsSection(
-                currentCurrencyName: currentCurrencyName,
-                onTap: {
-                    // 데이터 준비
-                    if currencies.isEmpty {
-                        currencies = CurrencyManager.shared.getCurrenciesWithDeviceFirst()
-                        selectedCurrencyCode = CurrencyManager.shared.selectedCurrency.code
-                    }
-                    showingCurrencySettings = true
-                }
-            )
+            Section {
+                CurrencySettingsSection()
+                
+                RenewalDaySettingsSection()
+                
+                CloudSyncSection(
+                    subscriptionManager: subscriptionManager,
+                    cloudSyncManager: cloudSyncManager,
+                    showingCloudUnavailableAlert: $showingCloudUnavailableAlert,
+                    showingSyncChangeAlert: $showingSyncChangeAlert
+                )
+            } header: {
+                Text("settings.currency.section_header".localized) // 일반
+            }
             
-            MembershipSection(
-                subscriptionManager: subscriptionManager,
-                onTap: { showingSubscriptionView = true }
-            )
+            Section {
+                MembershipSection(
+                    subscriptionManager: subscriptionManager
+                )
 
-            PlanComparisonSection(
-                onTap: { showingPlanComparison = true }
-            )
-
-            CloudSyncSection(
-                subscriptionManager: subscriptionManager,
-                cloudSyncManager: cloudSyncManager,
-                showingSubscriptionView: $showingSubscriptionView,
-                showingCloudUnavailableAlert: $showingCloudUnavailableAlert,
-                showingSyncChangeAlert: $showingSyncChangeAlert
-            )
+                PlanComparisonSection()
+            } header: {
+                Text("settings.membership.section_header".localized) // 멤버십
+            }
 
             // 개발자 전용 섹션
             if isDeveloperModeEnabled {
@@ -98,33 +81,6 @@ struct SettingsView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color("Background"))
-        .sheet(isPresented: $showingSubscriptionView) {
-            SubscriptionView(showsCloseButton: false)
-                .presentationDetents([.large])
-                .presentationDragIndicator(.hidden)
-        }
-        .sheet(isPresented: $showingPlanComparison) {
-            PlanComparisonSheet(subscriptionManager: subscriptionManager)
-                .presentationDetents([.large])
-                .presentationDragIndicator(.hidden)
-        }
-        .sheet(isPresented: $showingCurrencySettings) {
-            CurrencySettingsView(
-                currencies: currencies,
-                selectedCurrencyCode: selectedCurrencyCode,
-                onCurrencyChanged: { newCode in
-                    selectedCurrencyCode = newCode
-                }
-            )
-            .presentationDetents([.large])
-            .presentationDragIndicator(.hidden)
-        }
-        .onChange(of: showingCurrencySettings) { oldValue, newValue in
-            // sheet가 닫힐 때 통화 이름 업데이트
-            if oldValue && !newValue {
-                currentCurrencyName = CurrencyManager.shared.selectedCurrency.displayName
-            }
-        }
         .alert("settings.reset_data", isPresented: $showingResetAlert) { // 데이터 초기화
             Button("common.cancel", role: .cancel) { } // 취소
             Button("common.delete", role: .destructive) { // 삭제

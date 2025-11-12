@@ -3,6 +3,7 @@ import SwiftUI
 struct HeaderView: View {
     @Binding var currentDate: Date
     @ObservedObject private var subscriptionManager = SubscriptionManager.shared
+    @ObservedObject private var renewalDayManager = RenewalDayManager.shared
 
     @State private var showingDatePicker: Bool = false
     @State private var selectedYear: Int
@@ -27,6 +28,10 @@ struct HeaderView: View {
         let year = calendar.component(.year, from: currentDate)
         let month = calendar.component(.month, from: currentDate)
         return String(format: "date.format.year_month".localized, year, month) // "%d년 %d월"
+    }
+    
+    private var renewalDayInfo: String {
+        return String(format: "header.renewal_day_info".localized, renewalDayManager.renewalDay) // "갱신일: %d일"
     }
 
     /// 특정 날짜가 최근 3개월 이내인지 확인
@@ -89,7 +94,7 @@ struct HeaderView: View {
             Button(action: moveToPreviousMonth) {
                 ZStack {
                     Circle()
-                        .fill(Color("Separator"))
+                        .fill(Color("DividerColor"))
                         .frame(width: 38, height: 38)
 
                     Image(systemName: "chevron.left")
@@ -106,10 +111,16 @@ struct HeaderView: View {
             Button(action: {
                 showingDatePicker = true
             }) {
-                Text(formattedDate)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.primary)
+                VStack(spacing: 2) {
+                    Text(formattedDate)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                    
+                    Text(renewalDayInfo)
+                        .font(.caption2)
+                        .foregroundColor(Color("SecondaryText"))
+                }
             }
             .sheet(isPresented: $showingDatePicker) {
                 NavigationView {
@@ -131,7 +142,7 @@ struct HeaderView: View {
             Button(action: moveToNextMonth) {
                 ZStack {
                     Circle()
-                        .fill(Color("Separator"))
+                        .fill(Color("DividerColor"))
                         .frame(width: 38, height: 38)
 
                     Image(systemName: "chevron.right")
