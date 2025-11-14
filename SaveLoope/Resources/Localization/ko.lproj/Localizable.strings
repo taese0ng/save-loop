@@ -102,6 +102,7 @@
 "settings.renewal_day.section_header" = "봉투 설정";
 "settings.renewal_day.footer" = "매월 설정한 날짜에 봉투가 갱신됩니다.\n예: 25일로 설정하면 매월 25일부터 새로운 주기가 시작됩니다.\n\n캘린더의 총수입, 총지출, 총액도 이 갱신일을 기준으로 집계됩니다.";
 "settings.renewal_day.select" = "갱신일을 선택하세요";
+"settings.renewal_day.day_format" = "{day}일";
 "settings.language" = "언어";
 "settings.membership" = "멤버십";
 "settings.membership.premium" = "프리미엄 멤버십";

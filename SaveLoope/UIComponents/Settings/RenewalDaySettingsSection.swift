@@ -51,6 +51,17 @@ struct RenewalDayPickerView: View {
             title: "settings.renewal_day".localized // 봉투 갱신일
         ) {
             VStack(spacing: 0) {
+                // Picker
+                Picker("settings.renewal_day".localized, selection: $selectedDay) {
+                    ForEach(1...31, id: \.self) { day in
+                        Text("settings.renewal_day.day_format".localized.replacingOccurrences(of: "{day}", with: "\(day)"))
+                            .tag(day)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(height: 180)
+                .padding(.top, 20)
+                
                 // 설명 텍스트
                 Text("settings.renewal_day.footer".localized) // 매월 설정한 날짜에 봉투가 갱신됩니다. 예: 25일로 설정하면 매월 25일부터 새로운 주기가 시작됩니다.
                     .font(.subheadline)
@@ -58,17 +69,7 @@ struct RenewalDayPickerView: View {
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                
-                // Picker
-                Picker("settings.renewal_day".localized, selection: $selectedDay) {
-                    ForEach(1...31, id: \.self) { day in
-                        Text("\(day)일").tag(day)
-                    }
-                }
-                .pickerStyle(.wheel)
-                .frame(height: 180)
-                .padding(.top, 20)
+                    .padding(.vertical, 20)
             }
         } footer: {
             // 완료 버튼
@@ -92,7 +93,7 @@ struct RenewalDayPickerView: View {
             }
             .padding(.horizontal, 20)
         }
-        .presentationDetents([.height(450)])
+        .presentationDetents([.height(460)])
     }
 }
 

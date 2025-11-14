@@ -102,6 +102,7 @@
 "settings.renewal_day.section_header" = "信封设置";
 "settings.renewal_day.footer" = "信封在每月设定的日期更新。\n例如：如果设置为25日，则每月25日开始新的周期。\n\n日历中的总收入、总支出、总余额也按此更新日进行汇总。";
 "settings.renewal_day.select" = "选择更新日";
+"settings.renewal_day.day_format" = "{day}日";
 "settings.language" = "语言";
 "settings.membership" = "会员资格";
 "settings.membership.premium" = "高级会员";

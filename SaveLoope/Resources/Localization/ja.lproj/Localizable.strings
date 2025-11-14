@@ -102,6 +102,7 @@
 "settings.renewal_day.section_header" = "封筒設定";
 "settings.renewal_day.footer" = "設定した日付に封筒が更新されます。\n例：25日に設定すると、毎月25日から新しいサイクルが始まります。\n\nカレンダーの総収入、総支出、総額もこの更新日を基準に集計されます。";
 "settings.renewal_day.select" = "更新日を選択してください";
+"settings.renewal_day.day_format" = "{day}日";
 "settings.language" = "言語";
 "settings.membership" = "メンバーシップ";
 "settings.membership.premium" = "プレミアムメンバーシップ";

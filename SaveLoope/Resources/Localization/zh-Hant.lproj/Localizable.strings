@@ -102,6 +102,7 @@
 "settings.renewal_day.section_header" = "信封設定";
 "settings.renewal_day.footer" = "信封在每月設定的日期更新。\n例如：如果設定為25日，則每月25日開始新的週期。\n\n日曆中的總收入、總支出、總餘額也按此更新日進行匯總。";
 "settings.renewal_day.select" = "選擇更新日";
+"settings.renewal_day.day_format" = "{day}日";
 "settings.language" = "語言";
 "settings.membership" = "會員資格";
 "settings.membership.premium" = "進階會員";
