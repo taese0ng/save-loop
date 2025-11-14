@@ -106,6 +106,7 @@
 "settings.renewal_day.day_format" = "{day}";
 "settings.renewal_day.last_day" = "Last Day";
 "settings.renewal_day.description.last_day" = "Renews on last day of month";
+"settings.renewal_day.premium_only" = "⭐️ Premium Feature";
 "settings.language" = "Language";
 "settings.membership" = "Membership";
 "settings.membership.premium" = "Premium Membership";
@@ -349,6 +350,7 @@
 "plan.feature.transactions_unlimited" = "Unlimited transactions";
 "plan.feature.months_3" = "Access last 3 months";
 "plan.feature.months_unlimited" = "Unlimited data access";
+"plan.feature.renewal_day" = "Custom Renewal Day";
 "plan.feature.cloud_sync" = "iCloud Sync";
 "plan.feature.future_features" = "Future features";
 
@@ -360,6 +362,9 @@
 
 // MARK: - Premium Features
 "premium.lock.title" = "Premium Only";
+"premium.subscribe" = "Subscribe";
+"premium.feature.renewal_day.title" = "Premium Feature";
+"premium.feature.renewal_day.message" = "Custom renewal day is a premium feature.\nWould you like to subscribe to Premium?";
 "premium.lock.upgrade" = "Upgrade";
 "premium.limit_reached" = "Limit Reached";
 "premium.view" = "View Premium";

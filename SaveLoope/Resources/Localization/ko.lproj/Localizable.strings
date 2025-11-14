@@ -106,6 +106,7 @@
 "settings.renewal_day.day_format" = "{day}일";
 "settings.renewal_day.last_day" = "말일";
 "settings.renewal_day.description.last_day" = "매월 말일 갱신";
+"settings.renewal_day.premium_only" = "⭐️ 프리미엄 전용 기능";
 "settings.language" = "언어";
 "settings.membership" = "멤버십";
 "settings.membership.premium" = "프리미엄 멤버십";
@@ -349,6 +350,7 @@
 "plan.feature.transactions_unlimited" = "무제한 거래 기록";
 "plan.feature.months_3" = "최근 3개월 데이터 접근";
 "plan.feature.months_unlimited" = "무제한 데이터 접근";
+"plan.feature.renewal_day" = "봉투 갱신일 설정";
 "plan.feature.cloud_sync" = "iCloud 동기화";
 "plan.feature.future_features" = "앞으로 추가되는 기능들";
 
@@ -360,6 +362,9 @@
 
 // MARK: - Premium Features
 "premium.lock.title" = "프리미엄 전용";
+"premium.subscribe" = "구독하기";
+"premium.feature.renewal_day.title" = "프리미엄 전용 기능";
+"premium.feature.renewal_day.message" = "봉투 갱신일 설정은 프리미엄 전용 기능입니다.\n프리미엄 멤버십에 가입하시겠습니까?";
 "premium.lock.upgrade" = "업그레이드";
 "premium.limit_reached" = "제한 도달";
 "premium.view" = "프리미엄 보기";

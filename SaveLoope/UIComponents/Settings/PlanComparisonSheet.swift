@@ -30,6 +30,7 @@ struct PlanComparisonSheet: View {
                 PlanFeatureRow(icon: "arrow.clockwise", text: "plan.feature.persistent_envelope".localized, isIncluded: false) // 지속형 봉투
                 PlanFeatureRow(icon: "list.bullet", text: "plan.feature.transactions_30".localized, isIncluded: true, warningStyle: .standard) // 봉투당 거래 30개까지
                 PlanFeatureRow(icon: "calendar", text: "plan.feature.months_3".localized, isIncluded: true, warningStyle: .standard) // 최근 3개월 데이터 접근
+                PlanFeatureRow(icon: "calendar.badge.clock", text: "plan.feature.renewal_day".localized, isIncluded: false) // 봉투 갱신일 설정
                 PlanFeatureRow(icon: "icloud.fill", text: "plan.feature.cloud_sync".localized, isIncluded: false) // iCloud 동기화
             }
         }
@@ -61,6 +62,7 @@ struct PlanComparisonSheet: View {
                 PlanFeatureRow(icon: "arrow.clockwise", text: "plan.feature.persistent_envelope".localized, isIncluded: true, isPremium: true) // 지속형 봉투
                 PlanFeatureRow(icon: "list.bullet", text: "plan.feature.transactions_unlimited".localized, isIncluded: true, isPremium: true) // 무제한 거래 기록
                 PlanFeatureRow(icon: "calendar", text: "plan.feature.months_unlimited".localized, isIncluded: true, isPremium: true) // 무제한 데이터 접근
+                PlanFeatureRow(icon: "calendar.badge.clock", text: "plan.feature.renewal_day".localized, isIncluded: true, isPremium: true) // 봉투 갱신일 설정
                 PlanFeatureRow(icon: "icloud.fill", text: "plan.feature.cloud_sync".localized, isIncluded: true, isPremium: true) // iCloud 동기화
                 PlanFeatureRow(icon: "sparkles", text: "plan.feature.future_features".localized, isIncluded: true, isPremium: true) // 앞으로 추가되는 기능들
             }

@@ -11,7 +11,6 @@ class HomeViewModel: ObservableObject {
     
     /// 반복 생성이 필요한 봉투들을 확인하고 생성
     func checkAndCreateRecurringEnvelopes(using context: ModelContext) {
-        let calendar = Calendar.current
         let currentDate = Date()
         let renewalDayManager = RenewalDayManager.shared
         

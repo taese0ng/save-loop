@@ -217,6 +217,9 @@ class SubscriptionManager: ObservableObject {
 
             // 구독이 해지된 경우 iCloud 동기화 자동 비활성화
             await CloudSyncManager.shared.checkSubscriptionAndDisableSyncIfNeeded()
+            
+            // 구독이 해지된 경우 갱신일을 1일로 리셋
+            RenewalDayManager.shared.resetToDefaultForNonSubscriber()
         }
     }
 

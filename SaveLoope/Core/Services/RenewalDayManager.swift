@@ -7,10 +7,27 @@ import SwiftUI
 class RenewalDayManager: ObservableObject {
     @MainActor static let shared = RenewalDayManager()
     
-    /// 갱신일 (1-28일, 0=말일, 기본값: 1일)
-    @Published var renewalDay: Int {
+    /// 저장된 갱신일 (내부용)
+    private var _storedRenewalDay: Int {
         didSet {
-            UserDefaults.standard.set(renewalDay, forKey: "envelopeRenewalDay")
+            UserDefaults.standard.set(_storedRenewalDay, forKey: "envelopeRenewalDay")
+        }
+    }
+    
+    /// 갱신일 (1-28일, 0=말일, 기본값: 1일)
+    /// 비구독자는 항상 1일로 반환됨
+    var renewalDay: Int {
+        get {
+            // 비구독자는 무조건 1일
+            if !SubscriptionManager.shared.isSubscribed {
+                return 1
+            }
+            return _storedRenewalDay
+        }
+        set {
+            _storedRenewalDay = newValue
+            // Published처럼 동작하도록 수동으로 알림
+            objectWillChange.send()
         }
     }
     
@@ -26,20 +43,35 @@ class RenewalDayManager: ObservableObject {
         // 유효한 범위(0=말일, 1-28일)인지 확인
         // 기존 사용자를 위해 29-31일도 허용하되 28일로 조정
         if savedDay == 0 {
-            self.renewalDay = savedDay // 말일
+            self._storedRenewalDay = savedDay // 말일
         } else if savedDay >= 1 && savedDay <= 28 {
-            self.renewalDay = savedDay
+            self._storedRenewalDay = savedDay
         } else if savedDay >= 29 && savedDay <= 31 {
             // 기존 사용자의 29-31일 설정은 28일로 마이그레이션
-            self.renewalDay = 28
+            self._storedRenewalDay = 28
             print("ℹ️ 갱신일이 \(savedDay)일에서 28일로 조정되었습니다.")
         } else {
-            self.renewalDay = defaultRenewalDay
+            self._storedRenewalDay = defaultRenewalDay
         }
     }
     
-    /// 갱신일 변경
+    /// 구독 해지 시 갱신일을 1일로 리셋
+    func resetToDefaultForNonSubscriber() {
+        if !SubscriptionManager.shared.isSubscribed && _storedRenewalDay != defaultRenewalDay {
+            print("ℹ️ 구독 해지로 인해 갱신일이 1일로 변경되었습니다.")
+            _storedRenewalDay = defaultRenewalDay
+            objectWillChange.send()
+        }
+    }
+    
+    /// 갱신일 변경 (프리미엄 전용)
     func setRenewalDay(_ day: Int) {
+        // 프리미엄 구독자만 변경 가능
+        guard SubscriptionManager.shared.isSubscribed else {
+            print("⚠️ 갱신일 변경은 프리미엄 전용 기능입니다.")
+            return
+        }
+        
         guard (day >= 1 && day <= 28) || day == RenewalDayManager.lastDayOfMonth else {
             print("⚠️ 갱신일은 1-28 사이의 값 또는 말일(0)이어야 합니다.")
             return

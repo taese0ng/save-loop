@@ -106,6 +106,7 @@
 "settings.renewal_day.day_format" = "{day}日";
 "settings.renewal_day.last_day" = "月末";
 "settings.renewal_day.description.last_day" = "毎月月末に更新";
+"settings.renewal_day.premium_only" = "⭐️ プレミアム専用機能";
 "settings.language" = "言語";
 "settings.membership" = "メンバーシップ";
 "settings.membership.premium" = "プレミアムメンバーシップ";
@@ -349,6 +350,7 @@
 "plan.feature.transactions_unlimited" = "無制限取引履歴";
 "plan.feature.months_3" = "最近3ヶ月のデータアクセス";
 "plan.feature.months_unlimited" = "無制限データアクセス";
+"plan.feature.renewal_day" = "封筒更新日設定";
 "plan.feature.cloud_sync" = "iCloud同期";
 "plan.feature.future_features" = "今後追加される機能";
 
@@ -360,6 +362,9 @@
 
 // MARK: - Premium Features
 "premium.lock.title" = "プレミアム専用";
+"premium.subscribe" = "登録する";
+"premium.feature.renewal_day.title" = "プレミアム専用機能";
+"premium.feature.renewal_day.message" = "封筒更新日設定はプレミアム専用機能です。\nプレミアムメンバーシップに登録しますか？";
 "premium.lock.upgrade" = "アップグレード";
 "premium.limit_reached" = "制限到達";
 "premium.view" = "プレミアムを見る";

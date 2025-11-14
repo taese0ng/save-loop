@@ -106,6 +106,7 @@
 "settings.renewal_day.day_format" = "{day}日";
 "settings.renewal_day.last_day" = "月末";
 "settings.renewal_day.description.last_day" = "每月月末更新";
+"settings.renewal_day.premium_only" = "⭐️ 進階專屬功能";
 "settings.language" = "語言";
 "settings.membership" = "會員資格";
 "settings.membership.premium" = "進階會員";
@@ -349,6 +350,7 @@
 "plan.feature.transactions_unlimited" = "無限交易記錄";
 "plan.feature.months_3" = "存取最近3個月";
 "plan.feature.months_unlimited" = "無限資料存取";
+"plan.feature.renewal_day" = "自訂更新日";
 "plan.feature.cloud_sync" = "iCloud 同步";
 "plan.feature.future_features" = "未來功能";
 
@@ -360,6 +362,9 @@
 
 // MARK: - Premium Features
 "premium.lock.title" = "進階專屬";
+"premium.subscribe" = "訂閱";
+"premium.feature.renewal_day.title" = "進階功能";
+"premium.feature.renewal_day.message" = "自訂更新日是進階功能。\n您要訂閱進階會員嗎？";
 "premium.lock.upgrade" = "升級";
 "premium.limit_reached" = "已達上限";
 "premium.view" = "檢視進階版";
