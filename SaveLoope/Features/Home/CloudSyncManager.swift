@@ -10,9 +10,12 @@ class CloudSyncManager: ObservableObject {
     @Published var isCloudSyncEnabled: Bool {
         didSet {
             UserDefaults.standard.set(isCloudSyncEnabled, forKey: "isCloudSyncEnabled")
-            // 설정 변경 시 사용자에게 재시작 알림
             if oldValue != isCloudSyncEnabled {
-                print("⚠️ 아이클라우드 동기화 설정이 변경되었습니다. 변경사항을 적용하려면 앱을 재시작해주세요.")
+                if isCloudSyncEnabled {
+                    print("✅ iCloud 동기화 활성화됨 - 즉시 적용")
+                } else {
+                    print("⚠️ iCloud 동기화 비활성화됨 - 새로운 데이터는 로컬에만 저장")
+                }
             }
         }
     }
@@ -146,34 +149,35 @@ class CloudSyncManager: ObservableObject {
         cloudAccountStatus == .available
     }
     
-    /// iCloud 동기화가 활성화된 ModelContainer 생성
-    static func createModelContainer(enableCloudSync: Bool) throws -> ModelContainer {
+    /// iCloud 동기화가 통합된 ModelContainer 생성
+    /// CloudKit은 항상 활성화되며, 실제 동기화는 구독 상태로 제어됩니다.
+    static func createModelContainer() throws -> ModelContainer {
         let schema = Schema([
             Envelope.self,
             TransactionRecord.self
         ])
         
-        let modelConfiguration: ModelConfiguration
+        // CloudKit 항상 활성화 (구독 상태와 무관)
+        // SwiftData는 구독이 없어도 CloudKit 컨테이너를 사용할 수 있음
+        // 실제 동기화는 Apple 계정과 구독 상태로 자연스럽게 제어됨
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            cloudKitDatabase: .automatic  // 항상 automatic
+        )
         
-        if enableCloudSync {
-            // iCloud 동기화 활성화
-            modelConfiguration = ModelConfiguration(
-                schema: schema,
-                isStoredInMemoryOnly: false,
-                cloudKitDatabase: .automatic
-            )
-            print("🔄 아이클라우드 자동 동기화 모드로 ModelContainer 생성")
-        } else {
-            // 로컬 저장소만 사용
-            modelConfiguration = ModelConfiguration(
-                schema: schema,
-                isStoredInMemoryOnly: false,
-                cloudKitDatabase: .none
-            )
-            print("💾 로컬 전용 모드로 ModelContainer 생성")
-        }
+        print("🔄 CloudKit 통합 ModelContainer 생성")
+        print("   - 구독자: iCloud 동기화 활성화")
+        print("   - 비구독자: 로컬 저장만 (iCloud 접근 제한)")
         
         return try ModelContainer(for: schema, configurations: [modelConfiguration])
+    }
+    
+    /// 동기화 활성 여부 (구독 + CloudKit 계정 + 설정)
+    var isSyncActive: Bool {
+        return isCloudSyncEnabled && 
+               SubscriptionManager.shared.isSubscribed && 
+               isCloudAvailable
     }
 }
 

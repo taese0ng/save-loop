@@ -7,7 +7,6 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext: ModelContext
     @EnvironmentObject private var cloudSyncManager: CloudSyncManager
     @State private var showingResetAlert: Bool = false
-    @State private var showingSyncChangeAlert: Bool = false
     @State private var showingCloudUnavailableAlert: Bool = false
 
 
@@ -53,8 +52,7 @@ struct SettingsView: View {
                 CloudSyncSection(
                     subscriptionManager: subscriptionManager,
                     cloudSyncManager: cloudSyncManager,
-                    showingCloudUnavailableAlert: $showingCloudUnavailableAlert,
-                    showingSyncChangeAlert: $showingSyncChangeAlert
+                    showingCloudUnavailableAlert: $showingCloudUnavailableAlert
                 )
             } header: {
                 Text("settings.currency.section_header".localized) // 일반
@@ -88,13 +86,6 @@ struct SettingsView: View {
             }
         } message: {
             Text("settings.reset_data_confirm") // 모든 봉투와 거래 기록이 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
-        }
-        .alert("alert.app_restart_required", isPresented: $showingSyncChangeAlert) { // 앱 재시작 필요
-            Button("common.ok", role: .cancel) { } // 확인
-        } message: {
-            Text(cloudSyncManager.isCloudSyncEnabled
-                ? "alert.cloud_sync_enabled" // iCloud 동기화가 활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요.
-                : "alert.cloud_sync_disabled") // iCloud 동기화가 비활성화됩니다. 앱을 완전히 종료한 후 다시 시작해주세요.
         }
         .alert("alert.cloud_unavailable", isPresented: $showingCloudUnavailableAlert) { // iCloud 사용 불가
             Button("common.ok", role: .cancel) { } // 확인

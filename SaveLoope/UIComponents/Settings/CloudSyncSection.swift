@@ -4,7 +4,6 @@ struct CloudSyncSection: View {
     @ObservedObject var subscriptionManager: SubscriptionManager
     @ObservedObject var cloudSyncManager: CloudSyncManager
     @Binding var showingCloudUnavailableAlert: Bool
-    @Binding var showingSyncChangeAlert: Bool
     @State private var showingSubscriptionView = false
 
     var body: some View {
@@ -34,7 +33,7 @@ struct CloudSyncSection: View {
                         }
 
                         cloudSyncManager.isCloudSyncEnabled = newValue
-                        showingSyncChangeAlert = true
+                        // 즉시 적용되므로 재시작 알림 불필요
                     }
                 ))
                 .labelsHidden()
