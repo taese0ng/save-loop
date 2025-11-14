@@ -343,6 +343,7 @@
 "plan.free.title" = "무료 플랜";
 "plan.premium.title" = "프리미엄 플랜";
 "plan.current_badge" = "현재 플랜";
+"plan.feature.envelopes_2" = "봉투 2개까지";
 "plan.feature.envelopes_3" = "봉투 3개까지";
 "plan.feature.envelopes_unlimited" = "무제한 봉투";
 "plan.feature.persistent_envelope" = "지속형 봉투";

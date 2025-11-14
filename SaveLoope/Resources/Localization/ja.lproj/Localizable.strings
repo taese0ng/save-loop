@@ -343,6 +343,7 @@
 "plan.free.title" = "無料プラン";
 "plan.premium.title" = "プレミアムプラン";
 "plan.current_badge" = "現在のプラン";
+"plan.feature.envelopes_2" = "封筒2個まで";
 "plan.feature.envelopes_3" = "封筒3個まで";
 "plan.feature.envelopes_unlimited" = "無制限封筒";
 "plan.feature.persistent_envelope" = "継続封筒";

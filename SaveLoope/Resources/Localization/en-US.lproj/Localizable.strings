@@ -343,6 +343,7 @@
 "plan.free.title" = "Free Plan";
 "plan.premium.title" = "Premium Plan";
 "plan.current_badge" = "Current Plan";
+"plan.feature.envelopes_2" = "Up to 2 envelopes";
 "plan.feature.envelopes_3" = "Up to 3 envelopes";
 "plan.feature.envelopes_unlimited" = "Unlimited envelopes";
 "plan.feature.persistent_envelope" = "Persistent envelopes";

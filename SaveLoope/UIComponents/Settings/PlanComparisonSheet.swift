@@ -26,7 +26,7 @@ struct PlanComparisonSheet: View {
             )
 
             VStack(alignment: .leading, spacing: 12) {
-                PlanFeatureRow(icon: "envelope.fill", text: "plan.feature.envelopes_3".localized, isIncluded: true, warningStyle: .standard) // 봉투 3개까지
+                PlanFeatureRow(icon: "envelope.fill", text: "plan.feature.envelopes_2".localized, isIncluded: true, warningStyle: .standard) // 봉투 2개까지
                 PlanFeatureRow(icon: "arrow.clockwise", text: "plan.feature.persistent_envelope".localized, isIncluded: false) // 지속형 봉투
                 PlanFeatureRow(icon: "list.bullet", text: "plan.feature.transactions_30".localized, isIncluded: true, warningStyle: .standard) // 봉투당 거래 30개까지
                 PlanFeatureRow(icon: "calendar", text: "plan.feature.months_3".localized, isIncluded: true, warningStyle: .standard) // 최근 3개월 데이터 접근

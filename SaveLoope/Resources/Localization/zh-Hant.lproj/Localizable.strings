@@ -343,6 +343,7 @@
 "plan.free.title" = "免費方案";
 "plan.premium.title" = "進階方案";
 "plan.current_badge" = "目前方案";
+"plan.feature.envelopes_2" = "最多2個信封";
 "plan.feature.envelopes_3" = "最多3個信封";
 "plan.feature.envelopes_unlimited" = "無限信封";
 "plan.feature.persistent_envelope" = "持續信封";

@@ -11,7 +11,7 @@ class PremiumFeatureManager {
     // MARK: - 무료 사용자 제한
 
     /// 무료 사용자 최대 봉투 개수
-    let maxEnvelopesForFree = 3
+    let maxEnvelopesForFree = 2
 
     /// 무료 사용자 최대 저장 가능한 월 수
     let maxMonthsForFree = 3
