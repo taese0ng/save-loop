@@ -32,6 +32,7 @@
 "home.title" = "SaveLoope";
 "home.no_envelopes" = "봉투가 존재하지 않습니다.";
 "header.renewal_day_info" = "갱신일: %d일";
+"header.renewal_day_info.last_day" = "갱신일: 말일";
 "home.empty_state.title" = "첫 번째 봉투를 만들어보세요";
 "home.empty_state.description" = "봉투를 추가하여 예산 관리를 시작하세요";
 "home.add_envelope" = "봉투 추가";
@@ -103,6 +104,8 @@
 "settings.renewal_day.footer" = "매월 설정한 날짜에 봉투가 갱신됩니다.\n예: 25일로 설정하면 매월 25일부터 새로운 주기가 시작됩니다.\n\n캘린더의 총수입, 총지출, 총액도 이 갱신일을 기준으로 집계됩니다.";
 "settings.renewal_day.select" = "갱신일을 선택하세요";
 "settings.renewal_day.day_format" = "{day}일";
+"settings.renewal_day.last_day" = "말일";
+"settings.renewal_day.description.last_day" = "매월 말일 갱신";
 "settings.language" = "언어";
 "settings.membership" = "멤버십";
 "settings.membership.premium" = "프리미엄 멤버십";

@@ -17,7 +17,7 @@ class HomeViewModel: ObservableObject {
         
         // 현재 날짜가 속한 갱신 주기 계산
         let currentCycle = renewalDayManager.getRenewalCycle(for: currentDate)
-        guard let cycleStartDate = calendar.date(from: DateComponents(year: currentCycle.year, month: currentCycle.month, day: renewalDayManager.renewalDay)) else {
+        guard let cycleStartDate = renewalDayManager.getCycleStartDate(year: currentCycle.year, month: currentCycle.month) else {
             print("❌ 갱신 주기 시작일 계산 실패")
             return
         }
@@ -152,38 +152,27 @@ class HomeViewModel: ObservableObject {
                         continue
                     }
                     
-                    // 원본 거래의 일자 계산 (갱신 주기 내에서의 상대 일자)
-                    let originalDay = calendar.component(.day, from: originalTransaction.date)
-                    let originalCycle = renewalDayManager.getRenewalCycle(for: originalTransaction.date)
-                    
                     // 현재 갱신 주기 시작일 계산
-                    guard let cycleStartDate = calendar.date(from: DateComponents(year: currentCycle.year, month: currentCycle.month, day: renewalDayManager.renewalDay)) else {
+                    guard let cycleStartDate = renewalDayManager.getCycleStartDate(year: currentCycle.year, month: currentCycle.month) else {
                         continue
                     }
                     
-                    // 원본 거래가 원래 갱신 주기에서 몇 일째인지 계산
-                    let daysFromCycleStart: Int
-                    if originalDay >= renewalDayManager.renewalDay {
-                        // 갱신일 이후
-                        daysFromCycleStart = originalDay - renewalDayManager.renewalDay
-                    } else {
-                        // 갱신일 이전 (이전 달의 마지막 부분)
-                        // 이전 달의 마지막 날짜 계산
-                        if let prevMonth = calendar.date(byAdding: .month, value: -1, to: calendar.date(from: DateComponents(year: originalCycle.year, month: originalCycle.month, day: 1))!) {
-                            let daysInPrevMonth = calendar.range(of: .day, in: .month, for: prevMonth)?.count ?? 30
-                            daysFromCycleStart = (daysInPrevMonth - renewalDayManager.renewalDay + 1) + originalDay
-                        } else {
-                            daysFromCycleStart = originalDay
-                        }
+                    // 원본 거래의 갱신 주기 시작일 계산
+                    let originalCycle = renewalDayManager.getRenewalCycle(for: originalTransaction.date)
+                    guard let originalCycleStartDate = renewalDayManager.getCycleStartDate(year: originalCycle.year, month: originalCycle.month) else {
+                        continue
                     }
                     
-                    // 현재 갱신 주기에서 동일한 상대 일자 계산
-                    var newDate = calendar.date(byAdding: .day, value: daysFromCycleStart, to: cycleStartDate) ?? currentDate
+                    // 원본 거래가 원래 갱신 주기 시작일로부터 며칠 후인지 계산
+                    let daysFromStart = calendar.dateComponents([.day], from: originalCycleStartDate, to: originalTransaction.date).day ?? 0
                     
-                    // 월말 처리 (예: 30일이 없는 2월 등)
+                    // 현재 갱신 주기 시작일에 동일한 일수를 더함
+                    var newDate = calendar.date(byAdding: .day, value: daysFromStart, to: cycleStartDate) ?? currentDate
+                    
+                    // 새 날짜가 현재 갱신 주기를 벗어나는지 확인
                     let newDateCycle = renewalDayManager.getRenewalCycle(for: newDate)
                     if newDateCycle.year != currentCycle.year || newDateCycle.month != currentCycle.month {
-                        // 현재 갱신 주기의 마지막 날 계산
+                        // 현재 갱신 주기의 마지막 날로 조정
                         if let nextCycleStart = calendar.date(byAdding: .month, value: 1, to: cycleStartDate) {
                             newDate = calendar.date(byAdding: .day, value: -1, to: nextCycleStart) ?? currentDate
                         }

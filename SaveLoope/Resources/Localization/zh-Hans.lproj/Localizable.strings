@@ -32,6 +32,7 @@
 "home.title" = "SaveLoope";
 "home.no_envelopes" = "没有信封。";
 "header.renewal_day_info" = "更新日: %d日";
+"header.renewal_day_info.last_day" = "更新日: 月末";
 "home.empty_state.title" = "创建您的第一个信封";
 "home.empty_state.description" = "添加信封开始管理您的预算";
 "home.add_envelope" = "添加信封";
@@ -103,6 +104,8 @@
 "settings.renewal_day.footer" = "信封在每月设定的日期更新。\n例如：如果设置为25日，则每月25日开始新的周期。\n\n日历中的总收入、总支出、总余额也按此更新日进行汇总。";
 "settings.renewal_day.select" = "选择更新日";
 "settings.renewal_day.day_format" = "{day}日";
+"settings.renewal_day.last_day" = "月末";
+"settings.renewal_day.description.last_day" = "每月月末更新";
 "settings.language" = "语言";
 "settings.membership" = "会员资格";
 "settings.membership.premium" = "高级会员";

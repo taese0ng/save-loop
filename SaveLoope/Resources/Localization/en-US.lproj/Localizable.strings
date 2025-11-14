@@ -32,6 +32,7 @@
 "home.title" = "SaveLoope";
 "home.no_envelopes" = "No envelopes found.";
 "header.renewal_day_info" = "Renewal: %dth";
+"header.renewal_day_info.last_day" = "Renewal: Last Day";
 "home.empty_state.title" = "Create your first envelope";
 "home.empty_state.description" = "Add an envelope to start managing your budget";
 "home.add_envelope" = "Add Envelope";
@@ -103,6 +104,8 @@
 "settings.renewal_day.footer" = "Envelopes are renewed on the set date each month.\nFor example, if set to the 25th, a new cycle starts on the 25th of each month.\n\nThe total income, expense, and balance in the calendar are also calculated based on this renewal day.";
 "settings.renewal_day.select" = "Select renewal day";
 "settings.renewal_day.day_format" = "{day}";
+"settings.renewal_day.last_day" = "Last Day";
+"settings.renewal_day.description.last_day" = "Renews on last day of month";
 "settings.language" = "Language";
 "settings.membership" = "Membership";
 "settings.membership.premium" = "Premium Membership";

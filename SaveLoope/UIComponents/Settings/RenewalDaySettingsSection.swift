@@ -4,6 +4,14 @@ struct RenewalDaySettingsSection: View {
     @ObservedObject private var renewalDayManager = RenewalDayManager.shared
     @State private var showingRenewalDayPicker = false
     
+    private var renewalDayDescription: String {
+        if renewalDayManager.isLastDayOfMonth {
+            return "settings.renewal_day.description.last_day".localized // 매월 말일 갱신
+        } else {
+            return "settings.renewal_day.description".localized.replacingOccurrences(of: "{day}", with: "\(renewalDayManager.renewalDay)")
+        }
+    }
+    
     var body: some View {
         Button(action: {
             showingRenewalDayPicker = true
@@ -17,7 +25,7 @@ struct RenewalDaySettingsSection: View {
                     Text("settings.renewal_day".localized) // 봉투 갱신일
                         .foregroundColor(.primary)
                     
-                    Text("settings.renewal_day.description".localized.replacingOccurrences(of: "{day}", with: "\(renewalDayManager.renewalDay)"))
+                    Text(renewalDayDescription)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -53,10 +61,14 @@ struct RenewalDayPickerView: View {
             VStack(spacing: 0) {
                 // Picker
                 Picker("settings.renewal_day".localized, selection: $selectedDay) {
-                    ForEach(1...31, id: \.self) { day in
+                    // 1-28일
+                    ForEach(1...28, id: \.self) { day in
                         Text("settings.renewal_day.day_format".localized.replacingOccurrences(of: "{day}", with: "\(day)"))
                             .tag(day)
                     }
+                    // 말일
+                    Text("settings.renewal_day.last_day".localized) // 말일
+                        .tag(RenewalDayManager.lastDayOfMonth)
                 }
                 .pickerStyle(.wheel)
                 .frame(height: 180)

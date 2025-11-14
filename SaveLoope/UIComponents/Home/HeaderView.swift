@@ -31,7 +31,11 @@ struct HeaderView: View {
     }
     
     private var renewalDayInfo: String {
-        return String(format: "header.renewal_day_info".localized, renewalDayManager.renewalDay) // "갱신일: %d일"
+        if renewalDayManager.isLastDayOfMonth {
+            return "header.renewal_day_info.last_day".localized // "갱신일: 말일"
+        } else {
+            return String(format: "header.renewal_day_info".localized, renewalDayManager.renewalDay) // "갱신일: %d일"
+        }
     }
 
     /// 특정 날짜가 최근 3개월 이내인지 확인
