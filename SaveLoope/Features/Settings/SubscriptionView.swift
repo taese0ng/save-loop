@@ -95,6 +95,9 @@ struct SubscriptionView: View {
                                 showingAlert = true
                             }
                         }
+                        
+                        // 구독 해지 안내
+                        UnsubscribeInfoSection()
 
                         SubscriptionTermsView()
                     }
@@ -146,6 +149,30 @@ struct SubscriptionView: View {
         }
     }
 
+}
+
+// MARK: - 구독 해지 안내 섹션
+struct UnsubscribeInfoSection: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Image(systemName: "info.circle.fill")
+                    .font(.system(size: 16))
+                    .foregroundColor(.orange)
+                Text("premium.unsubscribe.title".localized) // 구독 해지 시 변경 사항
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(Color("PrimaryText"))
+            }
+            
+            Text("premium.unsubscribe.message".localized)
+                .font(.system(size: 13))
+                .foregroundColor(Color("SecondaryText"))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(16)
+        .background(Color.orange.opacity(0.1))
+        .cornerRadius(12)
+    }
 }
 
 #Preview {

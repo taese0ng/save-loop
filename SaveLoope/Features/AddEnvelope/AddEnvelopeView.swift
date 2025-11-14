@@ -14,6 +14,13 @@ struct AddEnvelopeView: View {
     @State private var alertMessage: String = ""
     @State private var showingSubscription: Bool = false
     
+    // 지속형 봉투 만료일 설정
+    @State private var hasExpirationDate: Bool = false
+    @State private var expirationDate: Date = {
+        // 기본값: 1년 후
+        Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date()
+    }()
+    
     var envelopeTypeDescription: String {
         switch selectedEnvelopeType {
         case .normal:
@@ -106,10 +113,14 @@ struct AddEnvelopeView: View {
             
             // 일반/반복 봉투는 현재 갱신 주기 시작일로 createdAt 설정
             if selectedEnvelopeType != .persistent {
-                let calendar = Calendar.current
-                if let cycleStartDate = calendar.date(from: DateComponents(year: currentCycle.year, month: currentCycle.month, day: renewalDayManager.renewalDay)) {
+                if let cycleStartDate = renewalDayManager.getCycleStartDate(year: currentCycle.year, month: currentCycle.month) {
                     newEnvelope.createdAt = cycleStartDate
                 }
+            }
+            
+            // 지속형 봉투의 만료일 설정
+            if selectedEnvelopeType == .persistent && hasExpirationDate {
+                newEnvelope.expirationDate = expirationDate
             }
 
             // 마지막 순서로 설정 (최대 sortOrder + 1)
@@ -164,6 +175,34 @@ struct AddEnvelopeView: View {
                             .padding(.top, 4)
                     }
                     .padding(.vertical, 8)
+                    
+                    // 지속형 봉투 만료일 설정
+                    if selectedEnvelopeType == .persistent {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Toggle(isOn: $hasExpirationDate) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("envelope.expiration_date.title".localized) // 만료일 설정
+                                        .font(.system(size: 16, weight: .medium))
+                                    Text("envelope.expiration_date.description".localized) // 설정한 날짜까지만 봉투를 사용합니다
+                                        .font(.caption)
+                                        .foregroundColor(Color("SecondaryText"))
+                                }
+                            }
+                            .tint(.blue)
+                            
+                            if hasExpirationDate {
+                                DatePicker(
+                                    "envelope.expiration_date.select".localized, // 만료일 선택
+                                    selection: $expirationDate,
+                                    in: Date()...,
+                                    displayedComponents: .date
+                                )
+                                .datePickerStyle(.compact)
+                                .padding(.top, 4)
+                            }
+                        }
+                        .padding(.vertical, 8)
+                    }
 
                     Spacer()
                         .frame(height: 40)

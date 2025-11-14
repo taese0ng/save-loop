@@ -368,6 +368,8 @@
 "premium.lock.upgrade" = "Upgrade";
 "premium.limit_reached" = "Limit Reached";
 "premium.view" = "View Premium";
+"premium.unsubscribe.title" = "Changes When Unsubscribing";
+"premium.unsubscribe.message" = "When you unsubscribe, the following changes will occur:\n\n• Persistent envelopes will be hidden (restored upon resubscription)\n• Renewal day will be changed to the 1st of each month\n• iCloud sync will be automatically disabled\n• Envelope creation will be limited to 5 per month\n• Transaction records will be limited to 30 per envelope\n• Data access will be limited to the last 3 months\n\nAll existing data will be safely stored.";
 
 // MARK: - Date Format
 "date.format.year" = "%d";
@@ -377,3 +379,8 @@
 
 // MARK: - Envelope Balance
 "envelope.balance_label" = "Balance:";
+
+// MARK: - Envelope Expiration Date
+"envelope.expiration_date.title" = "Set Expiration Date";
+"envelope.expiration_date.description" = "Envelope will be available until the set date";
+"envelope.expiration_date.select" = "Select Expiration Date";

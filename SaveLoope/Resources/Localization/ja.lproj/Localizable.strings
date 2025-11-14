@@ -368,6 +368,8 @@
 "premium.lock.upgrade" = "アップグレード";
 "premium.limit_reached" = "制限到達";
 "premium.view" = "プレミアムを見る";
+"premium.unsubscribe.title" = "購読解除時の変更";
+"premium.unsubscribe.message" = "購読を解除すると、以下の変更が発生します：\n\n• 永続型封筒が非表示になります（再購読時に復元）\n• 更新日が毎月1日に変更されます\n• iCloud同期が自動的に無効になります\n• 封筒の作成が月5個に制限されます\n• 取引記録が封筒あたり30個に制限されます\n• データアクセスが直近3か月に制限されます\n\n既存のデータはすべて安全に保管されます。";
 
 // MARK: - Date Format
 "date.format.year" = "%d年";
@@ -377,3 +379,8 @@
 
 // MARK: - Envelope Balance
 "envelope.balance_label" = "残高:";
+
+// MARK: - Envelope Expiration Date
+"envelope.expiration_date.title" = "有効期限を設定";
+"envelope.expiration_date.description" = "設定した日付まで封筒を使用できます";
+"envelope.expiration_date.select" = "有効期限を選択";

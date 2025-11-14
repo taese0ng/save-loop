@@ -368,6 +368,8 @@
 "premium.lock.upgrade" = "升級";
 "premium.limit_reached" = "已達上限";
 "premium.view" = "檢視進階版";
+"premium.unsubscribe.title" = "取消訂閱時的更改";
+"premium.unsubscribe.message" = "取消訂閱後，將發生以下更改：\n\n• 持久信封將被隱藏（重新訂閱時恢復）\n• 續訂日將更改為每月1日\n• iCloud同步將自動禁用\n• 信封創建將限制為每月5個\n• 交易記錄將限制為每個信封30條\n• 數據訪問將限制為最近3個月\n\n所有現有數據都將安全保存。";
 
 // MARK: - Date Format
 "date.format.year" = "%d年";
@@ -377,3 +379,8 @@
 
 // MARK: - Envelope Balance
 "envelope.balance_label" = "餘額:";
+
+// MARK: - Envelope Expiration Date
+"envelope.expiration_date.title" = "設定到期日期";
+"envelope.expiration_date.description" = "信封將在設定的日期前可用";
+"envelope.expiration_date.select" = "選擇到期日期";

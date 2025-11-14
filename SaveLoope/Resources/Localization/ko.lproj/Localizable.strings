@@ -368,6 +368,8 @@
 "premium.lock.upgrade" = "업그레이드";
 "premium.limit_reached" = "제한 도달";
 "premium.view" = "프리미엄 보기";
+"premium.unsubscribe.title" = "구독 해지 시 변경 사항";
+"premium.unsubscribe.message" = "구독을 해지하면 다음과 같이 변경됩니다:\n\n• 지속형 봉투가 비활성화되어 보이지 않게 됩니다 (재구독 시 복원)\n• 봉투 갱신일이 매월 1일로 변경됩니다\n• iCloud 동기화가 자동으로 비활성화됩니다\n• 봉투 생성이 월 5개로 제한됩니다\n• 거래 기록이 봉투당 30개로 제한됩니다\n• 데이터 접근이 최근 3개월로 제한됩니다\n\n기존 데이터는 모두 안전하게 보관됩니다.";
 
 // MARK: - Date Format
 "date.format.year" = "%d년";
@@ -377,3 +379,8 @@
 
 // MARK: - Envelope Balance
 "envelope.balance_label" = "잔액:";
+
+// MARK: - Envelope Expiration Date
+"envelope.expiration_date.title" = "만료일 설정";
+"envelope.expiration_date.description" = "설정한 날짜까지만 봉투를 사용합니다";
+"envelope.expiration_date.select" = "만료일 선택";

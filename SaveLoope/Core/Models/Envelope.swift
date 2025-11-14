@@ -20,6 +20,7 @@ final class Envelope: Hashable {
     var parentId: UUID?
     var envelopeType: String = EnvelopeType.normal.rawValue
     var sortOrder: Int = 0
+    var expirationDate: Date? = nil  // 지속형 봉투 만료일 (구독 해지 시 설정)
 
     init(name: String, budget: Double, income: Double = 0, spent: Double = 0, goal: Double = 0, isRecurring: Bool = false, parentId: UUID? = nil, envelopeType: EnvelopeType = .normal) {
         self.id = UUID()
@@ -32,6 +33,7 @@ final class Envelope: Hashable {
         self.isRecurring = isRecurring
         self.parentId = parentId
         self.envelopeType = envelopeType.rawValue
+        self.expirationDate = nil
     }
 
     var type: EnvelopeType {
@@ -42,6 +44,18 @@ final class Envelope: Hashable {
             envelopeType = newValue.rawValue
             isRecurring = (newValue == .recurring)
         }
+    }
+    
+    /// 지속형 봉투가 만료되었는지 확인
+    var isExpired: Bool {
+        guard type == .persistent else { return false }
+        guard let expiration = expirationDate else { return false }
+        return Date() > expiration
+    }
+    
+    /// 봉투가 활성 상태인지 확인 (만료되지 않았거나 지속형이 아님)
+    var isActive: Bool {
+        return !isExpired
     }
     
     var remaining: Double {

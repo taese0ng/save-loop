@@ -220,6 +220,9 @@ class SubscriptionManager: ObservableObject {
             
             // 구독이 해지된 경우 갱신일을 1일로 리셋
             RenewalDayManager.shared.resetToDefaultForNonSubscriber()
+            
+            // 구독이 해지된 경우 지속형 봉투 만료 처리
+            await expirePersistentEnvelopesOnUnsubscribe()
         }
     }
 
@@ -331,6 +334,13 @@ class SubscriptionManager: ObservableObject {
     /// 특정 제품 구독 여부 확인
     func isSubscribed(to productIdentifier: String) -> Bool {
         return purchasedProducts.contains { $0.id == productIdentifier }
+    }
+    
+    /// 구독 해지 시 지속형 봉투 만료 처리
+    private func expirePersistentEnvelopesOnUnsubscribe() async {
+        // SwiftData context가 필요하므로 앱에서 전달받아야 함
+        // 여기서는 로직만 정의하고 실제 구현은 별도 함수로 분리
+        print("ℹ️ 지속형 봉투 만료 처리 필요 (앱 레벨에서 처리)")
     }
 }
 

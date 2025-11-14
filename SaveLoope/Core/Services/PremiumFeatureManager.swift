@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import SwiftData
 
 /// 프리미엄 기능 관리
 class PremiumFeatureManager {
@@ -71,6 +72,91 @@ class PremiumFeatureManager {
     /// 프리미엄 전용 기능 메시지
     func getPremiumOnlyMessage(feature: String) -> String {
         return "\(feature)은(는) 프리미엄 전용 기능입니다.\n지금 업그레이드하고 더 많은 기능을 사용해보세요!"
+    }
+    
+    // MARK: - 구독 해지 처리
+    
+    /// 구독 해지 시 지속형 봉투 만료 처리
+    @MainActor
+    func expirePersistentEnvelopesOnUnsubscribe(context: ModelContext) {
+        let descriptor = FetchDescriptor<Envelope>(
+            predicate: #Predicate<Envelope> { $0.envelopeType == "persistent" }
+        )
+        
+        do {
+            let persistentEnvelopes = try context.fetch(descriptor)
+            let now = Date()
+            
+            var expiredCount = 0
+            for envelope in persistentEnvelopes {
+                // 이미 만료된 봉투는 skip
+                if envelope.expirationDate != nil {
+                    continue
+                }
+                
+                envelope.expirationDate = now
+                expiredCount += 1
+            }
+            
+            if expiredCount > 0 {
+                try context.save()
+                print("✅ 지속형 봉투 \(expiredCount)개 만료 처리 완료")
+            }
+        } catch {
+            print("❌ 지속형 봉투 만료 처리 실패: \(error)")
+        }
+    }
+    
+    /// 구독 재개 시 지속형 봉투 활성화
+    @MainActor
+    func reactivatePersistentEnvelopesOnSubscribe(context: ModelContext) {
+        let descriptor = FetchDescriptor<Envelope>(
+            predicate: #Predicate<Envelope> { $0.envelopeType == "persistent" }
+        )
+        
+        do {
+            let persistentEnvelopes = try context.fetch(descriptor)
+            
+            var reactivatedCount = 0
+            for envelope in persistentEnvelopes {
+                if envelope.expirationDate != nil {
+                    envelope.expirationDate = nil
+                    reactivatedCount += 1
+                }
+            }
+            
+            if reactivatedCount > 0 {
+                try context.save()
+                print("✅ 지속형 봉투 \(reactivatedCount)개 재활성화 완료")
+            }
+        } catch {
+            print("❌ 지속형 봉투 재활성화 실패: \(error)")
+        }
+    }
+    
+    /// 현재 갱신 주기의 봉투 개수 계산 (UI 로직 중복 제거용)
+    @MainActor
+    func getCurrentCycleEnvelopeCount(
+        allEnvelopes: [Envelope],
+        currentCycle: (year: Int, month: Int),
+        renewalDayManager: RenewalDayManager
+    ) -> Int {
+        return allEnvelopes.filter { envelope in
+            // 만료된 봉투는 제외
+            if envelope.isExpired {
+                return false
+            }
+            
+            if envelope.type == .persistent {
+                // 지속형 봉투는 생성 갱신 주기 기준
+                let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
+                return envelopeCycle.year == currentCycle.year && envelopeCycle.month == currentCycle.month
+            } else {
+                // 일반/반복 봉투는 현재 갱신 주기 기준
+                let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
+                return envelopeCycle.year == currentCycle.year && envelopeCycle.month == currentCycle.month
+            }
+        }.count
     }
 }
 

@@ -124,18 +124,12 @@ struct HomeView: View {
         let renewalDayManager = RenewalDayManager.shared
         let currentCycle = renewalDayManager.getRenewalCycle(for: now)
 
-        // 현재 갱신 주기에 생성된 봉투만 카운트 (지속형 봉투는 최초 생성 갱신 주기에만 카운트)
-        let currentCycleCreatedCount = allEnvelopes.filter { envelope in
-            if envelope.type == .persistent {
-                // 지속형 봉투는 생성 갱신 주기 기준
-                let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
-                return envelopeCycle.year == currentCycle.year && envelopeCycle.month == currentCycle.month
-            } else {
-                // 일반/반복 봉투는 현재 갱신 주기 기준
-                let envelopeCycle = renewalDayManager.getRenewalCycle(for: envelope.createdAt)
-                return envelopeCycle.year == currentCycle.year && envelopeCycle.month == currentCycle.month
-            }
-        }.count
+        // 현재 갱신 주기에 생성된 봉투 개수 계산
+        let currentCycleCreatedCount = PremiumFeatureManager.shared.getCurrentCycleEnvelopeCount(
+            allEnvelopes: allEnvelopes,
+            currentCycle: currentCycle,
+            renewalDayManager: renewalDayManager
+        )
 
         // 프리미엄 기능 체크
         let canCreate = PremiumFeatureManager.shared.canCreateMoreEnvelopes(
@@ -212,6 +206,16 @@ struct HomeView: View {
                 // 무료 사용자가 3개월 이전 데이터를 보고 있으면 현재 월로 이동
                 if !subscriptionManager.isSubscribed && !isWithinThreeMonths(dateSelection.selectedDate) {
                     dateSelection.selectedDate = Date()
+                }
+            }
+            .onChange(of: subscriptionManager.isSubscribed) { oldValue, newValue in
+                // 구독 해지 시 지속형 봉투 만료 처리
+                if oldValue && !newValue {
+                    PremiumFeatureManager.shared.expirePersistentEnvelopesOnUnsubscribe(context: modelContext)
+                }
+                // 구독 시작 시 지속형 봉투 재활성화
+                else if !oldValue && newValue {
+                    PremiumFeatureManager.shared.reactivatePersistentEnvelopesOnSubscribe(context: modelContext)
                 }
             }
             .alert("envelope.limit_reached", isPresented: $showingLimitAlert) { // 제한 도달

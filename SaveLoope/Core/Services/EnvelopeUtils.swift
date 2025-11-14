@@ -30,7 +30,12 @@ enum EnvelopeUtils {
         
         return allEnvelopes
             .filter { envelope in
-                // 지속형 봉투는 항상 포함
+                // 만료된 봉투는 제외
+                if envelope.isExpired {
+                    return false
+                }
+                
+                // 지속형 봉투는 항상 포함 (만료되지 않은 경우)
                 if envelope.type == .persistent {
                     return true
                 }
